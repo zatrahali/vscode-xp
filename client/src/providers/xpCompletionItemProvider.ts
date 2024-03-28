@@ -94,7 +94,33 @@ export class XpCompletionItemProvider implements vscode.CompletionItemProvider {
 			Log.warn("Ошибка при считывании: " + error.message);
 		}
 
-		return new XpCompletionItemProvider(autocompleteSignatures);
+		const completionItemProvider = new XpCompletionItemProvider(autocompleteSignatures);
+		configuration.getContext().subscriptions.push(
+			vscode.languages.registerCompletionItemProvider(
+				[
+					{
+						scheme: 'file',
+						language: 'xp'
+					},
+					{
+						scheme: 'file',
+						language: 'co'
+					},
+					{
+						scheme: 'file',
+						language: 'en'
+					},
+					{
+						scheme: 'file',
+						language: 'flt'
+					},
+				],
+				completionItemProvider,
+				"$"
+			)
+		);
+
+		return completionItemProvider;
 	}
 
 	public provideCompletionItems(

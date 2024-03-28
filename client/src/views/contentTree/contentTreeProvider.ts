@@ -42,6 +42,7 @@ import { OpenTableCommand } from './commands/openTableCommand';
 import { LocalizationEditorViewProvider } from '../localization/localizationEditorViewProvider';
 import { CommandHelper } from '../../helpers/commandHelper';
 import { SortHelper } from '../../helpers/sortHelper';
+import { OpenTableDefaultsCommand } from './commands/openTableDefaultValuesCommand';
 
 export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeBaseItem> {
 
@@ -319,6 +320,16 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 					const unpackKbFilePath = fileInfos.fsPath; 
 					const packCommand = new PackKbCommand(config, selectedPackage, unpackKbFilePath);
 					await packCommand.execute();
+				}
+			)
+		);
+
+		context.subscriptions.push(
+			vscode.commands.registerCommand(
+				ContentTreeProvider.showTableDefaultsCommand,
+				async (table: Table) => {
+					const command = new OpenTableDefaultsCommand(config, table);
+					command.execute();
 				}
 			)
 		);

@@ -25,7 +25,6 @@ export class XpEnumValuesCompletionItemProvider implements vscode.CompletionItem
 	public static async init(configuration: Configuration): Promise<XpEnumValuesCompletionItemProvider> {
 
 		let taxonomySignatures: any[] = [];
-
 		try {
 			// Добавляем поля таксономии.
 			taxonomySignatures = await TaxonomyHelper.getTaxonomySignaturesPlain(configuration);
@@ -38,7 +37,25 @@ export class XpEnumValuesCompletionItemProvider implements vscode.CompletionItem
 			Log.warn(`Не удалось считать описания полей таксономии. Автодополнение значений enum работать не будет.`, error);
 		}
 
-		return new XpEnumValuesCompletionItemProvider(taxonomySignatures);
+		const literalItemProvider = new XpEnumValuesCompletionItemProvider(taxonomySignatures);
+		configuration.getContext().subscriptions.push(
+			vscode.languages.registerCompletionItemProvider(
+				[
+					{
+						scheme: 'file',
+						language: 'co'
+					},
+					{
+						scheme: 'file',
+						language: 'xp'
+					}
+				],
+				literalItemProvider,
+				"\""
+			)
+		);
+
+		return literalItemProvider;
 	}
 
 	public provideCompletionItems(
