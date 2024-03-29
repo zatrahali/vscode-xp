@@ -77,29 +77,14 @@
     "languages": [
       {
         "id": "yaml",
-        "aliases": [
-          "TableLists"
-        ],
         "extensions": [
           ".tl"
         ]
       },
       {
         "id": "yaml",
-        "aliases": [
-          "Wld"
-        ],
         "extensions": [
           ".wld"
-        ]
-      },
-      {
-        "id": "json",
-        "aliases": [
-          "NormEvents"
-        ],
-        "extensions": [
-          ".js"
         ]
       },
       {
