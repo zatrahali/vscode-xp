@@ -1,5 +1,10 @@
 # Change Log
 
+## 3.13.15 (Pre-Release)
+
+- починена кнопка открытия базы знаний в welcome-сообщении;
+- исправлена ошибка потери ContentLabels после сохранения метаданных (special thanks @paran0id_34).
+
 ## 3.13.14 (Pre-Release)
 
 - добавлены полезные примеры для функций `join` и `remove` (special thanks @zBlur);

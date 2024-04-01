@@ -32,7 +32,7 @@
 	"xp.views.knowledgebaseTree.importKbFileCommand": "Импортировать из файла .kb",
 	"xp.views.knowledgebaseTree.exportKbFileCommand": "Экспортировать в файл .kb",
 
-	"xp.views.knowledgebaseTree.defaultContent": "Это расширение помогает разрабатывать правила для обработки событий на языке eXtraction and Processing (XP).\nЧтобы начать, [откройте базу знаний](command:SiemContentEditor.openKnowledgebaseCommand) или создайте новую.\nПриятной работы!",
+	"xp.views.knowledgebaseTree.defaultContent": "Это расширение помогает разрабатывать правила для обработки событий на языке eXtraction and Processing (XP).\nЧтобы начать, [откройте базу знаний](command:xp.contentTree.openKnowledgebaseCommand) или создайте новую.\nПриятной работы!",
 
 	"xp.views.modularTestsListView.title": "Модульные тесты",
 	"xp.views.modularTestsListView.defaultContent": "Модульные тесты отсутствуют"

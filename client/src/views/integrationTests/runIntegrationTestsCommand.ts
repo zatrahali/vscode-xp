@@ -72,7 +72,7 @@ export class RunIntegrationTestsCommand extends Command {
 			} 
 
 			this.params.rule.setStatus(ContentItemStatus.Default);
-			DialogHelper.showError(`Все тесты не были пройдены. Также возможно наличие синтаксических ошибок в коде правила или его зависимостях`);
+			DialogHelper.showError(`Все тесты не были пройдены. Возможно наличие синтаксических ошибок в коде правила или его зависимостях. Смотри Output`);
 			ContentTreeProvider.refresh(this.params.rule);
 			return true;
 		});

@@ -32,7 +32,7 @@
 	"xp.views.knowledgebaseTree.importKbFileCommand": "Import packages from kb file",
 	"xp.views.knowledgebaseTree.exportKbFileCommand": "Export package to kb file",
 
-	"xp.views.knowledgebaseTree.defaultContent": "Welcome! This extension will help you develop rules in the eXtraction and Processing (XP) language. To get started, open the knowledge base.\n[Open Knowledge Base](command:SiemContentEditor.openKnowledgebaseCommand)\nHave fun!",
+	"xp.views.knowledgebaseTree.defaultContent": "Welcome! This extension will help you develop rules in the eXtraction and Processing (XP) language. To get started, open the knowledge base.\n[Open Knowledge Base](command:xp.contentTree.openKnowledgebaseCommand)\nHave fun!",
 
 	"xp.views.modularTestsListView.title": "Unit tests",
 	"xp.views.modularTestsListView.defaultContent": "No unit tests"
