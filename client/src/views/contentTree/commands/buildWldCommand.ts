@@ -85,7 +85,7 @@ export class BuildWldCommand extends ViewCommand {
 				}
 
 				if(executionResult.exitCode != 0) {
-					DialogHelper.showError("Ошибка сборки wld-файлов, смотри Output");
+					DialogHelper.showError("Ошибка сборки wld-файлов. [Смотри Output](command:xp.commonCommands.showOutputChannel)");
 					return;
 				}
 

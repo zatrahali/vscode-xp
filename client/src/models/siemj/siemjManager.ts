@@ -361,7 +361,7 @@ export class SiemjManager {
 	private processOutput(siemjOutput: string): void {
 		if(siemjOutput.includes(this.ERROR_SUBSTRING)) {
 			this.config.getOutputChannel().show();
-			throw new XpException("Ошибка выполнения siemj. Смотри Output");
+			throw new XpException("Ошибка выполнения siemj. [Смотри Output](command:xp.commonCommands.showOutputChannel)");
 		}
 	}
 

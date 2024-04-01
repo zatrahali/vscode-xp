@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { Command, CommandParams } from '../command';
+import { Command, CommandParams } from '../../models/command/command';
 import { TestHelper } from '../../helpers/testHelper';
 import { DialogHelper } from '../../helpers/dialogHelper';
 import { RunIntegrationTestDialog } from '../runIntegrationDialog';
@@ -72,7 +72,7 @@ export class RunIntegrationTestsCommand extends Command {
 			} 
 
 			this.params.rule.setStatus(ContentItemStatus.Default);
-			DialogHelper.showError(`Все тесты не были пройдены. Возможно наличие синтаксических ошибок в коде правила или его зависимостях. Смотри Output`);
+			DialogHelper.showError(`Все тесты не были пройдены. Возможно наличие синтаксических ошибок в коде правила или его зависимостях. [Смотри Output](command:xp.commonCommands.showOutputChannel)`);
 			ContentTreeProvider.refresh(this.params.rule);
 			return true;
 		});

@@ -36,6 +36,7 @@ import { XpHoverProvider } from './providers/xpHoverProvider';
 import { OriginsManager } from './models/content/originsManager';
 import { DefaultTLValuesEditorViewProvider } from './views/defaultTLValues/defaultTLValuesEditorViewProvider';
 import { LocalizationEditorViewProvider } from './views/localization/localizationEditorViewProvider';
+import { CommonCommands } from './models/command/commonCommands';
 
 export let Log: Logger;
 let client: LanguageClient;
@@ -128,6 +129,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 		SetContentTypeCommand.init(config);
 		InitKBRootCommand.init(config);
 		RetroCorrelationViewController.init(config);
+		CommonCommands.init(config);
 
 		const templateFilePath = path.join(
 			config.getExtensionPath(),
