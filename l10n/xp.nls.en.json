@@ -49,7 +49,7 @@
     "View.Metainfo.Improvements": "Possible improvements", 
     "View.Metainfo.References": "References",
     "View.Metainfo.DataSources": "Sources and events",
-    "View.Metainfo.MITRE": "MITRE ATT&CK",
+    "View.Metainfo.MITRE": "MITRE ATT&CK Tactics and Techniques",
 
     "MacroName": "Macro name",
 
@@ -58,17 +58,17 @@
     "NameReserved": "This name is reserved and cannot be used",
     "AlreadyExists": "This name already exists",
 
-    "View.CorrelateLogFiles": "Correlate log files",
+    "View.CorrelateLogFiles": "Correlation from files",
     "View.CorrelateLogFiles.AddEventFiles": "Add event files",
-    "View.CorrelateLogFiles.CorrelateEvents": "Correlate",
+    "View.CorrelateLogFiles.CorrelateEvents": "Run correlation",
     "View.CorrelateLogFiles.CorrelationEvents": "Correlation events",
 
     "View.Localization.Title": "Localization {0}",
-    "View.Localization.Description": "Description",
-    "View.Localization.CheckLocalizations": "Check localizations",
+    "View.Localization.Description": "Description of the rule",
+    "View.Localization.CheckLocalizations": "Result of checking",
     "View.Localization.LocalizationExamples": "Localization examples",
-    "View.Localization.LocalizationСriteria": "Localization criteria",
-    "View.Localization.Сriteria": "Сriteria",
+    "View.Localization.LocalizationСriteria": "Conditions for localization",
+    "View.Localization.Сriteria": "Condition",
 
     "View.TableList.CreateTitle": "Create a table list",
     "View.TableList.OpenTitle": "{0}",

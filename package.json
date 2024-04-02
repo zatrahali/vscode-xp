@@ -602,7 +602,7 @@
       },
       {
         "command": "KnowledgebaseTree.onElementSelectionChange",
-        "title": "Вызывается при выборе правила",
+        "title": "Called when a rule is selected",
         "category": "Internal"
       },
       {
@@ -639,30 +639,30 @@
       },
       {
         "command": "ModularTestContentEditorView.showEditor",
-        "title": "Показать модульный тест",
+        "title": "Show unit tests",
         "category": "%xp.commonCommandCategory%"
       },
       {
         "command": "ModularTestsListView.runTests",
-        "title": "Запустить все модульные тесты",
+        "title": "%xp.views.modularTestsListView.runAll%",
         "category": "%xp.commonCommandCategory%",
         "icon": "$(run-all)"
       },
       {
         "command": "ModularTestsListView.addTest",
-        "title": "Создать модульный тест",
+        "title": "%xp.views.modularTestsListView.create%",
         "category": "%xp.commonCommandCategory%",
         "icon": "$(add)"
       },
       {
         "command": "ModularTestsListView.reloadAndRefresh",
-        "title": "Обновить список модульных тестов",
+        "title": "%xp.views.modularTestsListView.refresh%",
         "category": "%xp.commonCommandCategory%",
         "icon": "$(refresh)"
       },
       {
         "command": "ModularTestsListView.removeTest",
-        "title": "Удалить модульный тест",
+        "title": "%xp.views.modularTestsListView.remove%",
         "category": "%xp.commonCommandCategory%",
         "icon": "$(refresh)"
       },
@@ -673,7 +673,7 @@
       },
       {
         "command": "IntegrationTestEditorView.onTestSelectionChange",
-        "title": "Выбран интеграционный тест",
+        "title": "Show integration tests",
         "category": "%xp.commonCommandCategory%"
       },
       {

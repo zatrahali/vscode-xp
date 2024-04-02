@@ -49,7 +49,7 @@
     "View.Metainfo.Improvements": "Возможные улучшения", 
     "View.Metainfo.References": "Ссылки",
     "View.Metainfo.DataSources": "Источники и события",
-    "View.Metainfo.MITRE": "MITRE ATT&CK",
+    "View.Metainfo.MITRE": "Тактики и техники MITRE ATT&CK",
 
     "MacroName": "Название макроса",
 
@@ -58,17 +58,17 @@
     "NameReserved": "Это название зарезервировано и не может быть использовано",
     "AlreadyExists": "Такое название уже используется",
 
-    "View.CorrelateLogFiles": "Корреляция лог-файлов",
+    "View.CorrelateLogFiles": "Корреляция из файлов",
     "View.CorrelateLogFiles.AddEventFiles": "Добавить файлы с событиями",
-    "View.CorrelateLogFiles.CorrelateEvents": "Коррелировать",
+    "View.CorrelateLogFiles.CorrelateEvents": "Запустить корреляцию",
     "View.CorrelateLogFiles.CorrelationEvents": "Корреляционные события",
 
     "View.Localization.Title": "Локализация {0}",
-    "View.Localization.Description": "Описание",
+    "View.Localization.Description": "Описание правила",
     "View.Localization.CheckLocalizations": "Проверить локализацию",
-    "View.Localization.LocalizationExamples": "Примеры локализации",
-    "View.Localization.LocalizationСriteria": "Критерии локализации",
-    "View.Localization.Сriteria": "Критерий",
+    "View.Localization.LocalizationExamples": "Результат проверки",
+    "View.Localization.LocalizationСriteria": "Условия для локализации",
+    "View.Localization.Сriteria": "Условие",
 
     "View.TableList.CreateTitle": "Создать табличный список",
     "View.TableList.OpenTitle": "{0}",
