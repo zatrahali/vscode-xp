@@ -260,8 +260,8 @@
 		],
 		"examples" : [
 			"object.process.cmdline = \"In^vok^e-We^^bRe^que^st\"",
-			"replace(object.process.cmdline, \"\", \"^\")",
-			"# Invoke-WebRequest"
+			"$result = replace(object.process.cmdline, \"\", \"^\")",
+			"# $result = \"Invoke-WebRequest\""
 		]
 	},
 	{
