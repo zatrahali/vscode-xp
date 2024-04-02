@@ -529,7 +529,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 				this._config.getMessage("View.ObjectTree.Message.Cancel"),
 			);
 			
-			if (answer === this._config.getMessage("Yes")) {		
+			if (answer === this._config.getMessage("View.ObjectTree.Message.Create")) {		
 				return vscode.commands.executeCommand(InitKBRootCommand.Name, this._config, this._knowledgebaseDirectoryPath);
 			}
 		}
