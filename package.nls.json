@@ -3,6 +3,8 @@
 
 	"xp.commonCommands.showOutputChannel": "Show extension output",
 
+	"xp.commonCommands.showExtensionSettings" : "Show extension settings", 
+
 	"xp.views.knowledgebaseTree.title": "Object tree",
 	"xp.views.knowledgebaseTree.refreshContentTreeCommand": "Refresh tree",
 	"xp.views.knowledgebaseTree.openKnowledgebaseCommand": "Open knowledge base",

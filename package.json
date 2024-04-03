@@ -302,13 +302,19 @@
         {
           "command": "xp.retroCorrelationShow",
           "when": "view == KnowledgebaseTree",
-          "group": "dots@4"
+          "group": "dots_a@4"
         },
         {
           "command": "xp.commonCommands.showOutputChannel",
           "when": "view == KnowledgebaseTree",
-          "group": "dots@5"
+          "group": "dots_b@5"
         },
+        {
+          "command": "xp.commonCommands.showExtensionSettings",
+          "when": "view == KnowledgebaseTree",
+          "group": "dots_c@6"
+        },
+
         {
           "command": "ModularTestsListView.addTest",
           "when": "view == ModularTestsListView",
@@ -474,6 +480,11 @@
       ]
     },
     "commands": [
+      {
+        "command": "xp.commonCommands.showExtensionSettings",
+        "title": "%xp.commonCommands.showExtensionSettings%",
+        "category": "%xp.commonCommandCategory%"
+      },
       {
         "command": "xp.commonCommands.showOutputChannel",
         "title": "%xp.commonCommands.showOutputChannel%",

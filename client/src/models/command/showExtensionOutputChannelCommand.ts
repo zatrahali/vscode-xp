@@ -1,7 +1,7 @@
 import { Configuration } from '../configuration';
 import { Command } from './command';
 
-export class ShowExtensionOutputChannel extends Command {
+export class ShowExtensionOutputChannelCommand extends Command {
 	constructor(private config: Configuration) {
 		super();
 	}

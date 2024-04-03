@@ -632,9 +632,17 @@
 			"    }",
 			"",
 			"    on ${2:eventName} {",
-			"        ",
+			"        # Обязательные поля корреляционного события",
+			"        \\$action = action",
+			"        \\$object = object",
+			"        \\$status = status",
 			"    }",
-			""
+			"",
+			"    emit {",
+			"        # Обязательные поля корреляционного события",
+			"        \\$correlation_type = \"event\"",
+			"        \\$importance = \"medium\"",
+			"    }"
 		]
 	},
 	"if else endif": {

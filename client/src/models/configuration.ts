@@ -151,7 +151,7 @@ export class Configuration {
 	 * @returns путь к директории со всеми SDK утилитами.
 	 */
 	public getKbtBaseDirectory(): string {
-		const configuration = vscode.workspace.getConfiguration("xpConfig");
+		const configuration = vscode.workspace.getConfiguration(this.CONFIGURATION_PREFIX);
 		const basePath = configuration.get<string>("kbtBaseDirectory");
 		this.checkKbtToolPath("KBT", basePath);
 
@@ -163,7 +163,7 @@ export class Configuration {
 	 * @returns внутреннее имя расширения.
 	 */
 	public getExtensionSettingsPrefix() : string {
-		return "xpConfig";
+		return this.CONFIGURATION_PREFIX;
 	}
 
 	public getResourcesUri() : vscode.Uri {
