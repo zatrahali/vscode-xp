@@ -62,9 +62,9 @@ export class LocalizationService {
 
         return new LocalizationSuite(
             path.join(this.extensionPath, `package.nls.json`),
-            path.join(this.extensionPath, 'l10n', `${LocalizationService.LOCALIZATION_FILE_PREFIX}.nls.${this.defaultLanguageTag}.json`),
+            path.join(this.extensionPath, LocalizationService.LOCALIZATION_DIRNAME, `${LocalizationService.LOCALIZATION_FILE_PREFIX}.nls.${this.defaultLanguageTag}.json`),
             this.defaultLanguageTag,
-            path.join(this.extensionPath, 'l10n', `not-localized.nls.json`)
+            path.join(this.extensionPath, LocalizationService.LOCALIZATION_DIRNAME, `not-localized.nls.json`)
         );
     }
 
@@ -91,7 +91,7 @@ export class LocalizationService {
             localizations.add(
                 new LocalizationSuite(
                     path.join(this.extensionPath, `package.nls.${tag}.json`),
-                    path.join(this.extensionPath, 'l10n', `${LocalizationService.LOCALIZATION_FILE_PREFIX}.nls.${tag}.json`),
+                    path.join(this.extensionPath, LocalizationService.LOCALIZATION_DIRNAME, `${LocalizationService.LOCALIZATION_FILE_PREFIX}.nls.${tag}.json`),
                     tag
                 ));
         }
@@ -107,7 +107,7 @@ export class LocalizationService {
             return extractedLanguageTag;
         };
 
-        const localizationFolder = path.join(this.extensionPath, 'l10n');
+        const localizationFolder = path.join(this.extensionPath, LocalizationService.LOCALIZATION_DIRNAME);
         const additionalSupportedLanguageTags: string[] = [];
 
         fs.readdirSync(localizationFolder).filter(fileName => fileName.startsWith(LocalizationService.LOCALIZATION_FILE_PREFIX))
@@ -122,5 +122,5 @@ export class LocalizationService {
     }
 
     public static LOCALIZATION_FILE_PREFIX = "xp";
-
+    public static LOCALIZATION_DIRNAME = 'l10n';
 }

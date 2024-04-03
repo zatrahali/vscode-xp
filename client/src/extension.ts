@@ -11,7 +11,7 @@ import {
 	TransportKind
 } from 'vscode-languageclient/node';
 
-import { XpSignatureHelpProvider } from './providers/signature/xpSignatureHelpProvider';
+import { XpSignatureHelpProvider } from './providers/function/xpSignatureHelpProvider';
 import { XpRenameProvide } from './providers/xpRenameProvider';
 import { UnitTestContentEditorViewProvider } from './views/unitTestEditor/unitTestEditorViewProvider';
 import { UnitTestsListViewProvider } from './views/unitTestEditor/unitTestsListViewProvider';
@@ -22,7 +22,7 @@ import { XpCompletionItemProvider } from './providers/xpCompletionItemProvider';
 import { ContentTreeProvider } from './views/contentTree/contentTreeProvider';
 import { RunningCorrelationGraphProvider } from './views/correlationGraph/runningCorrelationGraphProvider';
 import { TableListsEditorViewProvider } from './views/tableListsEditor/tableListsEditorViewProvider';
-import { XpDocumentHighlightProvider } from './providers/highlight/xpDocumentHighlightProvider';
+import { XpDocumentHighlightProvider } from './providers/function/xpDocumentHighlightProvider';
 import { SetContentTypeCommand } from './contentType/setContentTypeCommand';
 import { YamlHelper } from './helpers/yamlHelper';
 import { InitKBRootCommand } from './views/contentTree/commands/initKnowledgebaseRootCommand';

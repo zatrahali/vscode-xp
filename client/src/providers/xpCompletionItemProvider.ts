@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import * as classTransformer from 'class-transformer';
 
 import { FileSystemHelper } from '../helpers/fileSystemHelper';
 import { Configuration } from '../models/configuration';
-import { CompleteSignature } from './signature/completeSignature';
+import { CompleteSignature } from './function/completeSignature';
 import { TaxonomyHelper } from '../helpers/taxonomyHelper';
 import { DialogHelper } from '../helpers/dialogHelper';
 import { Log } from '../extension';
+import { FunctionsLocalePathLocator } from '../models/locator/functionsLocalePathLocator';
 
 /**
  * Позволяет сформировать необходимые списки автодополнения одинаковые для всех типов контента.
@@ -27,7 +27,8 @@ export class XpCompletionItemProvider implements vscode.CompletionItemProvider {
 		let autocompleteSignatures: vscode.CompletionItem[] = [];
 
 		// Считываем автодополнение функций.
-		const signaturesFilePath = path.join(configuration.getContext().extensionPath, "syntaxes", "co.signature.json");
+		const locator = new FunctionsLocalePathLocator(vscode.env.language, configuration.getContext().extensionPath);
+		const signaturesFilePath = locator.getLocaleFilePath();
 		try {
 			const signaturesFileContent = await FileSystemHelper.readContentFile(signaturesFilePath);
 			const functionSignaturesPlain = JSON.parse(signaturesFileContent);

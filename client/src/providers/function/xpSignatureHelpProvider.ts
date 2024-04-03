@@ -1,20 +1,20 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import * as classTransformer from 'class-transformer';
 
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { CompleteSignature } from './completeSignature';
 import { FunctionNameParser } from './functionNameParser';
 import { Log } from '../../extension';
+import { FunctionsLocalePathLocator } from '../../models/locator/functionsLocalePathLocator';
 
 export class XpSignatureHelpProvider implements vscode.SignatureHelpProvider {
 
-	constructor(private _parser: FunctionNameParser , private _signatures: CompleteSignature[]) {
+	constructor(private parser: FunctionNameParser , private signatures: CompleteSignature[]) {
 	}
 
 	public static async init(context : vscode.ExtensionContext) : Promise<XpSignatureHelpProvider> {
-
-		const signaturesFilePath = path.join(context.extensionPath, "syntaxes", "co.signature.json");
+		const locator = new FunctionsLocalePathLocator(vscode.env.language, context.extensionPath);
+		const signaturesFilePath = locator.getLocaleFilePath();
 		const signaturesFileContent = await FileSystemHelper.readContentFile(signaturesFilePath);
 
 		const parser = new FunctionNameParser();
@@ -73,13 +73,13 @@ export class XpSignatureHelpProvider implements vscode.SignatureHelpProvider {
 
 			// Получаем функцию для дополнения.
 			const textLine = document.lineAt(position.line);
-			const functionName = this._parser.parse(textLine.text, position.character);
+			const functionName = this.parser.parse(textLine.text, position.character);
 
 			if(!functionName) {
 				return this.getStub("Имя функции");
 			}
 
-			const foundSignature = this._signatures.find( s => s.name === functionName);
+			const foundSignature = this.signatures.find( s => s.name === functionName);
 			if(!foundSignature) {
 				return this.getStub(functionName);
 			}

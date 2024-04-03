@@ -1,12 +1,7 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
-import * as classTransformer from 'class-transformer';
 
-import { FileSystemHelper } from '../helpers/fileSystemHelper';
 import { Configuration } from '../models/configuration';
-import { CompleteSignature } from './signature/completeSignature';
 import { TaxonomyHelper } from '../helpers/taxonomyHelper';
-import { DialogHelper } from '../helpers/dialogHelper';
 import { Log } from '../extension';
 
 /**

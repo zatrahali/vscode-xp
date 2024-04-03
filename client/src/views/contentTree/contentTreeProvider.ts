@@ -682,18 +682,13 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 		return vscode.commands.executeCommand(ContentTreeProvider.onRuleClickCommand, item);
 	}
 
-
-
 	private _gitAPI : API;
 
 	public static readonly PACKAGES_DIRNAME = "packages";
-	public static readonly CONTRACTS_UNPACKED_DIRNAME = "contracts";
-	public static readonly TAXONOMY_DIRNAME = "taxonomy";
 	public static readonly ROOT_USERS_CONTENT_UNPACKED_DIRNAME = "objects";
 	public static readonly MACRO_DIRNAME = "common";
 	
 	public static readonly KnowledgebaseTreeId = 'KnowledgebaseTree';
-
 	
 	public static readonly onRuleClickCommand = 'KnowledgebaseTree.onElementSelectionChange';
 	public static readonly onTableClickCommand = 'xp.contentTree.onTableSelectionChange';

@@ -1,17 +1,19 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import * as classTransformer from 'class-transformer';
 
 import { Configuration } from '../../models/configuration';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
-import { CompleteSignature } from '../signature/completeSignature';
+import { CompleteSignature } from './completeSignature';
 import { RegExpHelper } from '../../helpers/regExpHelper';
+import { FunctionsLocalePathLocator } from '../../models/locator/functionsLocalePathLocator';
 
 export class XpDocumentHighlightProvider implements vscode.DocumentSemanticTokensProvider {
 
 	public static async init(config: Configuration, legend: vscode.SemanticTokensLegend) : Promise<XpDocumentHighlightProvider> {
-		// Считываем автодополнение функций.
-		const signaturesFilePath = path.join(config.getContext().extensionPath, "syntaxes", "co.signature.json");
+
+		// Считываем автодополнение функций
+		const locator = new FunctionsLocalePathLocator(vscode.env.language, config.getContext().extensionPath);
+		const signaturesFilePath = locator.getLocaleFilePath();
 
 		const signaturesFileContent = await FileSystemHelper.readContentFile(signaturesFilePath);
 		const functionSignaturesPlain = JSON.parse(signaturesFileContent);
@@ -48,7 +50,7 @@ export class XpDocumentHighlightProvider implements vscode.DocumentSemanticToken
 		return xpDocumentHighlightProvider;
 	}	
 
-	constructor(private _functionNames: string[], private _legend: vscode.SemanticTokensLegend) {
+	constructor(private functionNames: string[], private legend: vscode.SemanticTokensLegend) {
 	}
 
 	provideDocumentSemanticTokens(
@@ -56,11 +58,11 @@ export class XpDocumentHighlightProvider implements vscode.DocumentSemanticToken
 		token: vscode.CancellationToken)
 		: vscode.ProviderResult<vscode.SemanticTokens> {
 
-		const tokensBuilder = new vscode.SemanticTokensBuilder(this._legend);
+		const tokensBuilder = new vscode.SemanticTokensBuilder(this.legend);
 
 		for(let currLine = 0; currLine < document.lineCount ; currLine++) {
 			const line = document.lineAt(currLine);
-			const functionCalls = RegExpHelper.parseFunctionCalls(line.text, currLine, this._functionNames);
+			const functionCalls = RegExpHelper.parseFunctionCalls(line.text, currLine, this.functionNames);
 
 			// Проходимся по каждой строке для того чтобы получить нужные Position в документе.
 			for(const functionCallRange of functionCalls) {

@@ -83,7 +83,7 @@ export class PackKbCommand extends ViewCommand {
 				}
 
 				// Создаем contracts
-				const contractsDirPath = path.join(tmpPackageDirectoryPath, ContentTreeProvider.CONTRACTS_UNPACKED_DIRNAME);
+				const contractsDirPath = path.join(tmpPackageDirectoryPath, Configuration.CONTRACTS_DIR_NAME);
 				await fs.promises.mkdir(contractsDirPath, {recursive: true});
 				
 				// Создаем contracts\origins
@@ -91,7 +91,7 @@ export class PackKbCommand extends ViewCommand {
 				await fs.promises.mkdir(originsDirPath, {recursive: true});
 
 				// Проверяем путь к контрактам и копируем их.
-				const taxonomyPath = path.join(contractsDirPath, ContentTreeProvider.TAXONOMY_DIRNAME);
+				const taxonomyPath = path.join(contractsDirPath, Configuration.TAXONOMY_DIR_NAME);
 				await fs.promises.mkdir(taxonomyPath, {recursive: true});
 				const сontractsDirectoryPath = this.config.getTaxonomyDirPath();
 				await fse.copy(сontractsDirectoryPath, taxonomyPath);

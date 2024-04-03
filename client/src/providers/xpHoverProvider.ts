@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import * as classTransformer from 'class-transformer';
-import { CompleteSignature } from './signature/completeSignature';
+import { CompleteSignature } from './function/completeSignature';
 import { FileSystemHelper } from '../helpers/fileSystemHelper';
 import { TaxonomyHelper } from '../helpers/taxonomyHelper';
 import { Configuration } from '../models/configuration';
 import { Log } from '../extension';
 import { ParserHelper } from '../helpers/parserHelper';
+import { FunctionsLocalePathLocator } from '../models/locator/functionsLocalePathLocator';
 
 
 export class XpHoverProvider implements vscode.HoverProvider {
@@ -18,7 +18,8 @@ export class XpHoverProvider implements vscode.HoverProvider {
 
 	public static async init(config : Configuration) : Promise<XpHoverProvider> {
 
-		const signaturesFilePath = path.join(config.getContext().extensionPath, "syntaxes", "co.signature.json");
+		const locator = new FunctionsLocalePathLocator(vscode.env.language, config.getContext().extensionPath);
+		const signaturesFilePath = locator.getLocaleFilePath();
 		const signaturesFileContent = await FileSystemHelper.readContentFile(signaturesFilePath);
 
 		const signaturesPlain = JSON.parse(signaturesFileContent);

@@ -21,17 +21,17 @@ export type EncodingType = "windows-1251" | "utf-8" | "utf-16"
 export class Configuration {
 
 	private constructor(context: vscode.ExtensionContext) {
-		this._context = context;
+		this.context = context;
 
 		const contentType = this.getContentType();
 		this.setContentType(contentType);
 
 		const extensionName = Configuration.getExtensionDisplayName();
-		this._outputChannel = vscode.window.createOutputChannel(extensionName);
-		this._localizationService = new LocalizationService(vscode.env.language, context.extensionPath);
+		this.outputChannel = vscode.window.createOutputChannel(extensionName);
+		this.localizationService = new LocalizationService(vscode.env.language, context.extensionPath);
 		
-		this._diagnosticCollection = vscode.languages.createDiagnosticCollection(extensionName);
-		context.subscriptions.push(this._diagnosticCollection);
+		this.diagnosticCollection = vscode.languages.createDiagnosticCollection(extensionName);
+		context.subscriptions.push(this.diagnosticCollection);
 	}
 
 	public getRulesDirFilters() : string { return this._pathHelper.getRulesDirFilters(); }
@@ -48,11 +48,11 @@ export class Configuration {
 		else {
 			this._pathHelper = SIEMPathHelper.get(); 
 		}
-		this._context.workspaceState.update("ContentType", contentType);
+		this.context.workspaceState.update("ContentType", contentType);
 	}
 
     public getMessage(messageKey: string, ...args: (string | number | boolean | undefined | null)[]): string {
-        return this._localizationService.getMessage(messageKey, ...args);
+        return this.localizationService.getMessage(messageKey, ...args);
     }
 
 	public getKbFullPath() : string {
@@ -89,9 +89,9 @@ export class Configuration {
 	 * @param diagnostics 
 	 */
 	public resetDiagnostics(diagnostics: FileDiagnostics[]) : void {
-		this._diagnosticCollection.clear();
+		this.diagnosticCollection.clear();
 		for (const diagnostic of diagnostics) {
-			this._diagnosticCollection.set(diagnostic.uri, diagnostic.diagnostics);
+			this.diagnosticCollection.set(diagnostic.uri, diagnostic.diagnostics);
 		}
 	}
 
@@ -100,27 +100,27 @@ export class Configuration {
 	 * @returns 
 	 */
 	public getDiagnosticCollection() : vscode.DiagnosticCollection {
-		return this._diagnosticCollection;
+		return this.diagnosticCollection;
 	}
 
 	public getOutputChannel() : vscode.OutputChannel {
-		return this._outputChannel;
+		return this.outputChannel;
 	}
 
 	public getExtensionMode() : vscode.ExtensionMode {
-		return this._context.extensionMode;
+		return this.context.extensionMode;
 	}
 
 	public getContext() : vscode.ExtensionContext {
-		return this._context;
+		return this.context;
 	}
 
 	public getExtensionUri() : vscode.Uri {
-		return this._context.extensionUri;
+		return this.context.extensionUri;
 	}
 
 	public getExtensionPath() : string {
-		return this._context.extensionPath;
+		return this.context.extensionPath;
 	}
 
 	public static getExtensionDisplayName() : string {
@@ -172,7 +172,7 @@ export class Configuration {
 	}
 
 	public getContentType(): ContentType {
-		const contentTypeString = this._context.workspaceState.get<string>("ContentType");
+		const contentTypeString = this.context.workspaceState.get<string>("ContentType");
 		const contentType : ContentType = ContentType[contentTypeString];
 		return contentType;
 	}
@@ -521,7 +521,7 @@ export class Configuration {
 	 * @returns путь к папке с директориями контрактов.
 	 */
 	private getContractsDirectory(): string {
-		return path.join(this.getKbtBaseDirectory(), "knowledgebase", "contracts");
+		return path.join(this.getKbtBaseDirectory(), "knowledgebase", Configuration.CONTRACTS_DIR_NAME);
 	}
 
 	/**
@@ -530,7 +530,7 @@ export class Configuration {
 	 */
 	public getTaxonomyFullPath() : string {
 		const taxonomyFileName = "taxonomy.json";
-		const fullPath = path.join(this.getContractsDirectory(), "taxonomy", taxonomyFileName);
+		const fullPath = path.join(this.getContractsDirectory(), Configuration.TAXONOMY_DIR_NAME, taxonomyFileName);
 		this.checkKbtToolPath(taxonomyFileName, fullPath);
 		
 		return fullPath;
@@ -541,9 +541,8 @@ export class Configuration {
 	 * @returns путь к директории с таксономией.
 	 */
 	public getTaxonomyDirPath() : string {
-		const taxonomyDirName = "taxonomy";
-		const fullPath = path.join(this.getContractsDirectory(), taxonomyDirName);
-		this.checkKbtToolPath(taxonomyDirName, fullPath);
+		const fullPath = path.join(this.getContractsDirectory(), Configuration.TAXONOMY_DIR_NAME);
+		this.checkKbtToolPath(Configuration.TAXONOMY_DIR_NAME, fullPath);
 		
 		return fullPath;
 	}
@@ -706,10 +705,10 @@ export class Configuration {
 	private static _instance : Configuration;
 
 	private _pathHelper: PathLocator;
-	private _outputChannel : vscode.OutputChannel;
-	private _context: vscode.ExtensionContext;
-	private _diagnosticCollection: vscode.DiagnosticCollection;
-	private _localizationService: LocalizationService;
+	private outputChannel : vscode.OutputChannel;
+	private context: vscode.ExtensionContext;
+	private diagnosticCollection: vscode.DiagnosticCollection;
+	private localizationService: LocalizationService;
 	
 	private CONFIGURATION_PREFIX = "xpConfig";
 	private BUILD_TOOLS_DIR_NAME = "build-tools";
@@ -719,5 +718,7 @@ export class Configuration {
 
 	private OUTPUT_DIR_SHOW_SETTING_COMMAND = `(command:workbench.action.openSettings?["${this.CONFIGURATION_PREFIX}.outputDirectoryPath"])`
 
+	public static readonly TAXONOMY_DIR_NAME = "taxonomy";
+	public static readonly CONTRACTS_DIR_NAME = "contracts";
 	public static readonly SIEMJ_CONFIG_FILENAME = "siemj.conf";	
 }

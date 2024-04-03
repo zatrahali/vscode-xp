@@ -4,10 +4,11 @@ import { Configuration } from '../models/configuration';
 import { TaxonomyFieldDetails } from '../providers/taxonomyFieldDetails';
 import { FileSystemHelper } from './fileSystemHelper';
 import { YamlHelper } from './yamlHelper';
+import { TaxonomyLocalePathLocator } from '../models/locator/taxonomyLocalePathLocator';
 
 export class TaxonomyHelper {
 
-	public static async getTaxonomySignaturesPlain(configuration: Configuration) {
+	public static async getTaxonomySignaturesPlain(configuration: Configuration) : Promise<any> {
 		// Считываем поля таксономии.
 		const taxonomyFilePath = configuration.getTaxonomyFullPath();
 		const taxonomyFileContent = await FileSystemHelper.readContentFile(taxonomyFilePath);
@@ -19,7 +20,8 @@ export class TaxonomyHelper {
 		const taxonomySignaturesPlain = await TaxonomyHelper.getTaxonomySignaturesPlain(configuration);
 
 		// Считываем русскую локализацию для полей таксономии.
-		const taxonomyRuLocalizationFilePath = configuration.getTaxonomyRuLocalizationFullPath();
+		const lfpl = new TaxonomyLocalePathLocator(vscode.env.language, configuration.getTaxonomyDirPath());
+		const taxonomyRuLocalizationFilePath = lfpl.getLocaleFilePath();
 		const taxonomyRuLocalizationFileContent = await FileSystemHelper.readContentFile(taxonomyRuLocalizationFilePath);
 		const ruLocalizationPlain = YamlHelper.parse(taxonomyRuLocalizationFileContent);
 

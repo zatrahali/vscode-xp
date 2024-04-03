@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { FunctionNameParser } from '../../providers/signature/functionNameParser';
+import { FunctionNameParser } from '../../providers/function/functionNameParser';
 
 suite('Парсинг имен функций', () => {
 
