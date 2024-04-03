@@ -58,7 +58,7 @@
     "NameReserved": "Это название зарезервировано и не может быть использовано",
     "AlreadyExists": "Такое название уже используется",
 
-    "View.CorrelateLogFiles": "Корреляция из файлов",
+    "View.CorrelateLogFiles": "Корреляция событий из файлов",
     "View.CorrelateLogFiles.AddEventFiles": "Добавить файлы с событиями",
     "View.CorrelateLogFiles.CorrelateEvents": "Запустить корреляцию",
     "View.CorrelateLogFiles.CorrelationEvents": "Корреляционные события",
@@ -67,8 +67,8 @@
     "View.Localization.Description": "Описание правила",
     "View.Localization.CheckLocalizations": "Проверить локализацию",
     "View.Localization.LocalizationExamples": "Результат проверки",
-    "View.Localization.LocalizationСriteria": "Условия для локализации",
-    "View.Localization.Сriteria": "Условие",
+    "View.Localization.LocalizationCriteria": "Условия для локализации",
+    "View.Localization.Criteria": "Условие",
 
     "View.TableList.CreateTitle": "Создать табличный список",
     "View.TableList.OpenTitle": "{0}",

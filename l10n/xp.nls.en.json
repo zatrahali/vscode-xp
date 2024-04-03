@@ -58,7 +58,7 @@
     "NameReserved": "This name is reserved and cannot be used",
     "AlreadyExists": "This name already exists",
 
-    "View.CorrelateLogFiles": "Correlation from files",
+    "View.CorrelateLogFiles": "Correlation of events from files",
     "View.CorrelateLogFiles.AddEventFiles": "Add event files",
     "View.CorrelateLogFiles.CorrelateEvents": "Run correlation",
     "View.CorrelateLogFiles.CorrelationEvents": "Correlation events",
@@ -67,8 +67,8 @@
     "View.Localization.Description": "Description of the rule",
     "View.Localization.CheckLocalizations": "Result of checking",
     "View.Localization.LocalizationExamples": "Localization examples",
-    "View.Localization.LocalizationСriteria": "Conditions for localization",
-    "View.Localization.Сriteria": "Condition",
+    "View.Localization.LocalizationCriteria": "Conditions for localization",
+    "View.Localization.Criteria": "Condition",
 
     "View.TableList.CreateTitle": "Create a table list",
     "View.TableList.OpenTitle": "{0}",

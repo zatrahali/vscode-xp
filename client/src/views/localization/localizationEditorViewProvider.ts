@@ -178,8 +178,8 @@ export class LocalizationEditorViewProvider {
 			"Locale": {
 				"CheckLocalizations" : this.config.getMessage("View.Localization.CheckLocalizations"),
 				"Description" : this.config.getMessage("View.Localization.Description"),
-				"LocalizationСriteria" : this.config.getMessage("View.Localization.LocalizationСriteria"),
-				"Сriteria" : this.config.getMessage("View.Localization.Сriteria"),
+				"LocalizationCriteria" : this.config.getMessage("View.Localization.LocalizationCriteria"),
+				"Criteria" : this.config.getMessage("View.Localization.Criteria"),
 				"LocalizationExamples" : this.config.getMessage("View.Localization.LocalizationExamples"),
 				"Save" : this.config.getMessage("Save")
 			}
