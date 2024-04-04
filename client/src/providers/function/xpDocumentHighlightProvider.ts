@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 import * as classTransformer from 'class-transformer';
 
 import { Configuration } from '../../models/configuration';
@@ -6,6 +7,7 @@ import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { CompleteSignature } from './completeSignature';
 import { RegExpHelper } from '../../helpers/regExpHelper';
 import { FunctionsLocalePathLocator } from '../../models/locator/functionsLocalePathLocator';
+import { Log } from '../../extension';
 
 export class XpDocumentHighlightProvider implements vscode.DocumentSemanticTokensProvider {
 
@@ -14,6 +16,10 @@ export class XpDocumentHighlightProvider implements vscode.DocumentSemanticToken
 		// Считываем автодополнение функций
 		const locator = new FunctionsLocalePathLocator(vscode.env.language, config.getContext().extensionPath);
 		const signaturesFilePath = locator.getLocaleFilePath();
+		if(!fs.existsSync(signaturesFilePath)) {
+			Log.warn(`Function description file at path ${signaturesFilePath} not found`);
+			return;
+		}
 
 		const signaturesFileContent = await FileSystemHelper.readContentFile(signaturesFilePath);
 		const functionSignaturesPlain = JSON.parse(signaturesFileContent);

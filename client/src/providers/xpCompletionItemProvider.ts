@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 import * as classTransformer from 'class-transformer';
 
 import { FileSystemHelper } from '../helpers/fileSystemHelper';
@@ -29,6 +30,12 @@ export class XpCompletionItemProvider implements vscode.CompletionItemProvider {
 		// Считываем автодополнение функций.
 		const locator = new FunctionsLocalePathLocator(vscode.env.language, configuration.getContext().extensionPath);
 		const signaturesFilePath = locator.getLocaleFilePath();
+
+		if(!fs.existsSync(signaturesFilePath)) {
+			Log.warn(`Function description file at path ${signaturesFilePath} not found`);
+			return;
+		}
+
 		try {
 			const signaturesFileContent = await FileSystemHelper.readContentFile(signaturesFilePath);
 			const functionSignaturesPlain = JSON.parse(signaturesFileContent);

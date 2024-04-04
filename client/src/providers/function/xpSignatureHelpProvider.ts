@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 import * as classTransformer from 'class-transformer';
 
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
@@ -15,6 +16,12 @@ export class XpSignatureHelpProvider implements vscode.SignatureHelpProvider {
 	public static async init(context : vscode.ExtensionContext) : Promise<XpSignatureHelpProvider> {
 		const locator = new FunctionsLocalePathLocator(vscode.env.language, context.extensionPath);
 		const signaturesFilePath = locator.getLocaleFilePath();
+		
+		if(!fs.existsSync(signaturesFilePath)) {
+			Log.warn(`Function description file at path ${signaturesFilePath} not found`);
+			return;
+		}
+
 		const signaturesFileContent = await FileSystemHelper.readContentFile(signaturesFilePath);
 
 		const parser = new FunctionNameParser();

@@ -1,12 +1,10 @@
-import * as path from "path";
 import * as fs from "fs";
 import locale, { ILocale } from "locale-codes";
 
 export abstract class BaseLocaleFileLocator {
-	private defaultLanguageTag = 'ru';
 	public readonly locale: ILocale;
 
-    constructor(currentLanguageTag: string) {
+    constructor(currentLanguageTag: string, private defaultLanguageTag = 'en') {
 		this.locale = locale.getByTag(currentLanguageTag);
 	}
 

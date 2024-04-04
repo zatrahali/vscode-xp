@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 import * as classTransformer from 'class-transformer';
+
 import { CompleteSignature } from './function/completeSignature';
 import { FileSystemHelper } from '../helpers/fileSystemHelper';
 import { TaxonomyHelper } from '../helpers/taxonomyHelper';
@@ -20,6 +22,12 @@ export class XpHoverProvider implements vscode.HoverProvider {
 
 		const locator = new FunctionsLocalePathLocator(vscode.env.language, config.getContext().extensionPath);
 		const signaturesFilePath = locator.getLocaleFilePath();
+
+		if(!fs.existsSync(signaturesFilePath)) {
+			Log.warn(`Function description file at path ${signaturesFilePath} not found`);
+			return;
+		}
+
 		const signaturesFileContent = await FileSystemHelper.readContentFile(signaturesFilePath);
 
 		const signaturesPlain = JSON.parse(signaturesFileContent);
