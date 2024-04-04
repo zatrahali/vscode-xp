@@ -65,8 +65,8 @@
 
     "View.Localization.Title": "Localization {0}",
     "View.Localization.Description": "Description of the rule",
-    "View.Localization.CheckLocalizations": "Result of checking",
-    "View.Localization.LocalizationExamples": "Localization examples",
+    "View.Localization.CheckLocalizations": "Check localization",
+    "View.Localization.LocalizationExamples": "Result of checking",
     "View.Localization.LocalizationCriteria": "Conditions for localization",
     "View.Localization.Criteria": "Condition",
 

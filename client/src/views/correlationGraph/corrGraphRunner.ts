@@ -49,8 +49,7 @@ export class CorrGraphRunner {
 		await fs.promises.mkdir(randTmpDir, {recursive: true});
 
 		// Сохраняем конфигурационный файл для siemj.
-		const siemjConfigPath = path.join(randTmpDir, "siemj.conf");
-		const siemjExePath = this._config.getSiemjPath();
+		const siemjConfigPath = path.join(randTmpDir, Configuration.SIEMJ_CONFIG_FILENAME);
 		await FileSystemHelper.writeContentFile(siemjConfigPath, siemjConfContent);
 
 		// Без удаления базы возникали странные ошибки filler-а, но это не точно.
