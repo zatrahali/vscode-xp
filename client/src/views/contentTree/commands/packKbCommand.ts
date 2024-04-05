@@ -30,7 +30,7 @@ export class PackKbCommand extends ViewCommand {
 		// Проверка наличия утилиты сборки kb-файлов.
 		const knowledgeBasePackagerCli = this.config.getKbPackFullPath();
 		if(!fs.existsSync(knowledgeBasePackagerCli)) {
-			DialogHelper.showError(`Путь к утилите сборки kb-файла задан не верно. Проверьте корректность [пути к KBT](command:workbench.action.openSettings?["xpConfig.kbtBaseDirectory"]) или загрузите актуальную версию [отсюда](https://github.com/vxcontrol/xp-kbt/releases)`);
+			DialogHelper.showError(`Путь к утилите сборки kb-файла задан не верно. Проверьте корректность [пути к KBT](command:workbench.action.openSettings?["xpConfig.kbtBaseDirectory"]) или загрузите актуальную версию [отсюда](https://github.com/vxcontrol/xp-kbt/releases), распакуйте и задайте путь к директории [в настройках](command:workbench.action.openSettings?["xpConfig.kbtBaseDirectory"])`);
 			return;
 		}
 

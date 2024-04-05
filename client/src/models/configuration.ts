@@ -714,7 +714,7 @@ export class Configuration {
 	private BUILD_TOOLS_DIR_NAME = "build-tools";
 
 	private KBT_BASE_DIR_SHOW_SETTING_COMMAND = `(command:workbench.action.openSettings?["${this.CONFIGURATION_PREFIX}.kbtBaseDirectory"])`;
-	private KBT_CONFIG_INFO = `Загрузите актуальную версию [отсюда](https://github.com/vxcontrol/xp-kbt/releases), распакуйте архив и укажите [путь в настройках]${this.KBT_BASE_DIR_SHOW_SETTING_COMMAND}`;
+	private KBT_CONFIG_INFO = `Загрузите актуальную версию [отсюда](https://github.com/vxcontrol/xp-kbt/releases), распакуйте архив и укажите путь к основной директории [в настройках]${this.KBT_BASE_DIR_SHOW_SETTING_COMMAND}`;
 
 	private OUTPUT_DIR_SHOW_SETTING_COMMAND = `(command:workbench.action.openSettings?["${this.CONFIGURATION_PREFIX}.outputDirectoryPath"])`
 

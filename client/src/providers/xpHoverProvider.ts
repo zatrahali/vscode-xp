@@ -14,8 +14,8 @@ import { FunctionsLocalePathLocator } from '../models/locator/functionsLocalePat
 export class XpHoverProvider implements vscode.HoverProvider {
 
 	constructor(
-		private _signatures: CompleteSignature[],
-		private _taxonomySignatures: vscode.CompletionItem[]) {
+		private signatures: CompleteSignature[],
+		private taxonomySignatures: vscode.CompletionItem[]) {
 	}
 
 	public static async init(config : Configuration) : Promise<XpHoverProvider> {
@@ -92,9 +92,9 @@ export class XpHoverProvider implements vscode.HoverProvider {
 		const selectedToken = ParserHelper.parseTokenWithInsidePosition(line, position);
 
 		// Если выделенный токен это функция или таксономическое поле
-		const foundFuncSignature = this._signatures.find((s) => s.name === selectedToken);
+		const foundFuncSignatures = this.signatures.filter((s) => s.name === selectedToken);
 
-		const foundTaxonomyField = this._taxonomySignatures.find(t => {
+		const foundTaxonomyField = this.taxonomySignatures.find(t => {
 			// Таксономическое поле текущего событие
 			return t.label === selectedToken ||
 			// Таксономическое поле формируемого события
@@ -104,8 +104,8 @@ export class XpHoverProvider implements vscode.HoverProvider {
 			);
 		});
 
-		if(foundFuncSignature) {
-			return this.getFuncHover(foundFuncSignature);
+		if(foundFuncSignatures.length >= 1) {
+			return this.getFuncHover(foundFuncSignatures[0]);
 		}
 
 		if(foundTaxonomyField) {
@@ -121,6 +121,7 @@ export class XpHoverProvider implements vscode.HoverProvider {
 	private getFuncHover(sign : CompleteSignature): vscode.Hover {
 		// Прототип, описание, параметры и примеры.
 		const contents: any [] = [];
+		
 		// TODO: нужна отдельная грамматика для подсветки прототипа функции, штатная не справляется.
 		contents.push({ language: "xp", value: sign.signature });
 		contents.push(sign.description);

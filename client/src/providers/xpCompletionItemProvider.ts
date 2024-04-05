@@ -15,7 +15,7 @@ import { FunctionsLocalePathLocator } from '../models/locator/functionsLocalePat
  */
 export class XpCompletionItemProvider implements vscode.CompletionItemProvider {
 
-	constructor(private _completionItems: vscode.CompletionItem[]) {
+	constructor(private completionItems: vscode.CompletionItem[]) {
 	}
 
 	/**
@@ -44,7 +44,11 @@ export class XpCompletionItemProvider implements vscode.CompletionItemProvider {
 				const functionsSignatures =
 					Array.from(functionSignaturesPlain)
 						.map(s => classTransformer.plainToInstance(CompleteSignature, s))
-						.map(s => new vscode.CompletionItem(s.name, vscode.CompletionItemKind.Function));
+						.map(s => {
+							const ci = new vscode.CompletionItem(s.name, vscode.CompletionItemKind.Function);
+							ci.documentation = new vscode.MarkdownString(s.description);
+							return ci;
+						});
 
 				autocompleteSignatures = autocompleteSignatures.concat(functionsSignatures);
 			} else {
@@ -147,11 +151,11 @@ export class XpCompletionItemProvider implements vscode.CompletionItemProvider {
 		// Выделяем токен.
 		const parseResult = /\b([a-z0-9.]+)$/g.exec(prevText);
 		if(!parseResult || parseResult.length != 2) {
-			return this._completionItems;
+			return this.completionItems;
 		}
 
 		const unendedToken = parseResult[1];
-		const filteredItems = this._completionItems.filter(ci => ci.label.toString().startsWith(unendedToken));
+		const filteredItems = this.completionItems.filter(ci => ci.label.toString().startsWith(unendedToken));
 
 		// Вставлять будем только окончание, вместо полного item-а.
 		// const wordRange = document.getWordRangeAtPosition(position);
