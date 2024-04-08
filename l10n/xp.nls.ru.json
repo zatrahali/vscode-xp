@@ -12,8 +12,11 @@
     "View.ObjectTree.Message.TheKnowledgeBaseIsNotInitialized": "База знаний не найдена. Создать стандартные папки для продукта {0}?",
     "View.ObjectTree.Message.Create": "Создать",
     "View.ObjectTree.Message.Cancel": "Отмена",
+
     "View.ObjectTree.Message.SelectTargetProduct" : "Выберите продукт",
     "View.ObjectTree.Message.CurrentTargetProduct" : "{0}",
+    "View.ObjectTree.Message.CurrentProductHoverMessage" : "Продукт, выбранный для eXtraction & Processing",
+
     "View.ObjectTree.Message.TheCurrentKbFormatEDRDoesNotMatchTargetSIEM": "Формат базы знаний (EDR) не соответствует выбранному продукту (SIEM). Неправильная настройка не позволит экспортировать пакеты в файлы .kb. Выбрать EDR?",
     "View.ObjectTree.Message.TheCurrentKbFormatSIEMDoesNotMatchTargetEDR": "Формат базы знаний (SIEM) не соответствует выбранному продукту (EDR). Неправильная настройка не позволит экспортировать пакеты в файлы .kb. Выбрать SIEM?",
 

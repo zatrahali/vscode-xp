@@ -59,6 +59,8 @@ export class SetContentTypeCommand {
 		config.setContentType(contentType);
 
 		item.text = config.getMessage("View.ObjectTree.Message.CurrentTargetProduct", contentType);
+		// Подсказка при наведении.
+		item.tooltip = config.getMessage("View.ObjectTree.Message.CurrentProductHoverMessage");
 		item.show();
 	}
 }
