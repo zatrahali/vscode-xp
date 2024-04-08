@@ -326,7 +326,7 @@ export class LocalizationEditorViewProvider {
 	
 					// Если пользователь закрыл диалог, завершаем работу.
 					if(!result) {
-						throw new OperationCanceledException();
+						throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 					}
 				}
 			}

@@ -1,10 +1,9 @@
 {
 	"xp.commonCommandCategory": "VSCode-XP",
 	
-	"xp.commonCommands.showOutputChannel": "Показать вывод расширения",
+	"xp.commonCommands.showOutputChannel": "Показать выходные данные",
 
-	"xp.commonCommands.showExtensionSettings" : "Показать настройки расширения", 
-
+	"xp.commonCommands.showExtensionSettings" : "Настройки расширения",
 
 	"xp.views.knowledgebaseTree.title": "Дерево объектов",
 	"xp.views.knowledgebaseTree.refreshContentTreeCommand": "Обновить",

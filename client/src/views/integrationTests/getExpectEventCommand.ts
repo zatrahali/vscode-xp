@@ -41,13 +41,13 @@ export class GetExpectedEventCommand  {
 			);
 		}
 
-		DialogHelper.showInfo(this.params.config.getMessage("View.IntegrationTests.ExpectedEventWasSuccessfullyUpdated"));
+		DialogHelper.showInfo(this.params.config.getMessage("View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated"));
 		return true;
 	}
 
 	private async generateTestCode(): Promise<string> {
 		if(this.params.test.getStatus() === TestStatus.Failed) {
-			throw new XpException(this.params.config.getMessage("View.IntegrationTests.UnableGetExpectedEvent"));
+			throw new XpException(this.params.config.getMessage("View.IntegrationTests.Message.UnableGetExpectedEvent"));
 		}
 
 		// Если правило содержит сабрули, то мы сейчас не сможем просто получить ожидаемое событие.

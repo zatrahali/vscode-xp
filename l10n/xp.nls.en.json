@@ -33,11 +33,14 @@
     "View.IntegrationTests.NormalizeAndEnrich" : "Normalize and enrich",
     "View.IntegrationTests.NormalizedEvents" : "Normalized events",
     "View.IntegrationTests.ConditionForPassingTheTest" : "Test code",
+
     "View.IntegrationTests.GetExpectedEvent" : "Replace the expected event with the actual one",
+    "View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated": "The expected event in the test code was successfully updated. Adjust if necessary and save the test",
+    "View.IntegrationTests.Message.UnableGetExpectedEvent": "Unable to get expected event for test that failed",
+    
     "View.IntegrationTests.CompareYourResults": "Compare the actual event and the expected one",
     "View.IntegrationTests.ClearExpectedEvent": "Clear expected event", 
-    "View.IntegrationTests.ExpectedEventWasSuccessfullyUpdated": "The expected event in the test code was successfully updated. Adjust if necessary and save the test",
-    "View.IntegrationTests.UnableGetExpectedEvent": "Unable to get expected event for test that failed",
+
 
     "View.Metainfo": "Metadata {0}",
     "View.Metainfo.Id" : "ID",
