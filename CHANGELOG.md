@@ -1,8 +1,9 @@
 # Change Log
 
-## 3.13.X (Pre-Release)
+## 3.13.20 (Pre-Release)
 
-- улучшена русская и английская локализации (special thanks @feelstacy, @eugzolotukhin).
+- улучшена русская и английская локализации (special thanks @feelstacy, @eugzolotukhin);
+- добавлен вывод информации о текущей ОС при инициализации расширения (special thanks @dushnyaga).
 
 ## 3.13.19 (Pre-Release)
 

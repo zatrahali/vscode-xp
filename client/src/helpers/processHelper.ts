@@ -1,10 +1,8 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import * as child_process from 'child_process';
 import * as iconv from 'iconv-lite';
 
 import { EncodingType } from '../models/configuration';
-import { XpException } from '../models/xpException';
 import { Log } from '../extension';
 
 export interface ExecutionProcessOptions {
@@ -63,6 +61,7 @@ export class ProcessHelper {
 
 		return new Promise(function(resolve, reject) {
 			let child : child_process.ChildProcessWithoutNullStreams;
+		
 			// Вывод выполняемой команды для локализации ошибки.
 			Log.info(`${command} ${params.join(' ')}`);
 

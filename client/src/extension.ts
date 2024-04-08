@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import * as os from 'os';
 
 import { workspace, ExtensionContext } from 'vscode';
 
@@ -53,7 +54,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
 			Log.setLogLevel(LogLevel.Info);
 		}
 		
-		Log.info(`Начата активация расширения '${Configuration.getExtensionDisplayName()}'`);
+		Log.info(`Extension activation has started '${Configuration.getExtensionDisplayName()}'`);
+
+		// Информация по ОС
+		Log.info(`OS Platform: ${os.platform()}`);
+		Log.info(`OS Type: ${os.type()}`);
+		Log.info(`OS Release: ${os.release()}`);
+
 		config.checkUserSetting();
 
 		await OriginsManager.init(config);
@@ -175,10 +182,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
 		if (fs.existsSync(tmpDirectory)) {
 			try {
 				await FileSystemHelper.deleteAllSubDirectoriesAndFiles(tmpDirectory);
-				Log.info(`Директория временных файлов '${tmpDirectory}' была успешно очищена`);
+				Log.info(`The temporary files directory '${tmpDirectory}' was successfully cleared`);
 			}
 			catch (error) {
-				Log.warn('Ошибка очистки файлов из временной директории', error);
+				Log.warn(`Error clearing files from temporary directory '${tmpDirectory}'`, error);
 			}
 		}
 
@@ -188,17 +195,17 @@ export async function activate(context: ExtensionContext): Promise<void> {
 		if(fs.existsSync(outputDirectoryPath)) {
 			try {
 				await FileSystemHelper.deleteAllSubDirectoriesAndFiles(outputDirectoryPath);
-				Log.info(`Директория выходных файлов '${outputDirectoryPath}' была успешно очищена`);
+				Log.info(`The output directory '${outputDirectoryPath}' was successfully cleared`);
 			}
 			catch (error) {
-				Log.warn('Ошибка очистки файлов из выходной директории', error);
+				Log.warn(`Error clearing files from output directory '${outputDirectoryPath}'`, error);
 			}
 		}
 
-		Log.info(`Расширение '${Configuration.getExtensionDisplayName()}' активировано`);
+		Log.info(`Extension '${Configuration.getExtensionDisplayName()}' is activated`);
 	}
 	catch (error) {
-		ExceptionHelper.show(error, `Расширение '${Configuration.getExtensionDisplayName()}' не удалось активировать`);
+		ExceptionHelper.show(error, `Extension '${Configuration.getExtensionDisplayName()}' failed to activate`);
 	}
 }
 
