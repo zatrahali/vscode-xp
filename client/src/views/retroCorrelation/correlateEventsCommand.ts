@@ -62,7 +62,7 @@ export class CorrelateEventsCommand extends WebViewCommand {
                             this.RECREATE_NEW);
                 
                         if(!userDecision) {
-                            throw new OperationCanceledException("Операция отменена");
+                            throw new OperationCanceledException(config.getMessage("OperationWasAbortedByUser"));
                         }
                         
                         switch(userDecision) {
@@ -99,7 +99,7 @@ export class CorrelateEventsCommand extends WebViewCommand {
                     }
 
                     if(cancellationToken.isCancellationRequested) {
-                        throw new OperationCanceledException();
+                        throw new OperationCanceledException(config.getMessage("OperationWasAbortedByUser"));
                     }
 
                     progress.report({

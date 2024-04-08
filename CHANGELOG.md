@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.13.X (Pre-Release)
+
+- улучшена русская и английская локализации (special thanks @feelstacy, @eugzolotukhin).
+
 ## 3.13.19 (Pre-Release)
 
 - добавлено описание функций в автодополнение;

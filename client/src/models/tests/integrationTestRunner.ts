@@ -32,14 +32,14 @@ export class IntegrationTestRunnerOptions {
 export class IntegrationTestRunner {
 
 	constructor(
-		private _config: Configuration,
+		private config: Configuration,
 		private _outputParser: SiemJOutputParser) {
 	}
 
 	public async run(rule : RuleBaseItem, options?: IntegrationTestRunnerOptions) : Promise<SiemjExecutionResult> {
 
 		// Проверяем наличие нужных утилит.
-		this._config.getSiemkbTestsPath();
+		this.config.getSiemkbTestsPath();
 
 		const integrationTests = rule.getIntegrationTests();
 		integrationTests.forEach(it => it.setStatus(TestStatus.Unknown));
@@ -65,16 +65,16 @@ export class IntegrationTestRunner {
 			throw new XpException("Для запуска тестов нужно добавить сырые события и условия выполнения теста");
 		}
 
-		await SiemjConfigHelper.clearArtifacts(this._config);
+		await SiemjConfigHelper.clearArtifacts(this.config);
 
-		const rootPath = rule.getContentRootPath(this._config);
+		const rootPath = rule.getContentRootPath(this.config);
 		const rootFolder = path.basename(rootPath);
-		const outputDirPath = this._config.getOutputDirectoryPath(rootFolder);
+		const outputDirPath = this.config.getOutputDirectoryPath(rootFolder);
 		if(!fs.existsSync(outputDirPath)) {
 			await fs.promises.mkdir(outputDirPath, {recursive: true});
 		}
 
-		const configBuilder = new SiemjConfBuilder(this._config, rootPath);
+		const configBuilder = new SiemjConfBuilder(this.config, rootPath);
 
 		const gitApi = await VsCodeApiHelper.getGitExtension();
 		if(!gitApi) {
@@ -106,7 +106,7 @@ export class IntegrationTestRunner {
 				break;
 			}
 			case CompilationType.CurrentPackage: {
-				configBuilder.addCorrelationsGraphBuilding(true, rule.getPackagePath(this._config));
+				configBuilder.addCorrelationsGraphBuilding(true, rule.getPackagePath(this.config));
 				break;
 			}
 			case CompilationType.AllPackages: {
@@ -124,7 +124,7 @@ export class IntegrationTestRunner {
 			}
 			case CompilationType.DontCompile: {
 				// Если мы не собираем граф корреляции, то нужно создать пустой json-файл, чтобы siemj не ругался.
-				const corrGraphFilePath = this._config.getCorrelationsGraphFilePath(rootFolder);
+				const corrGraphFilePath = this.config.getCorrelationsGraphFilePath(rootFolder);
 				await FileSystemHelper.writeContentFile(corrGraphFilePath, "{}");
 				break;
 			}
@@ -141,12 +141,12 @@ export class IntegrationTestRunner {
 			throw new XpException("Не удалось сгенерировать файл siemj.conf для заданного правила и тестов");
 		}
 
-		const siemjManager = new SiemjManager(this._config, options.cancellationToken);
+		const siemjManager = new SiemjManager(this.config, options.cancellationToken);
 		const siemjExecutionResult = await siemjManager.executeSiemjConfigForRule(rule, siemjConfContent);
 		const executedTests = rule.getIntegrationTests();
 
 		if(siemjExecutionResult.isInterrupted) {
-			throw new OperationCanceledException(`Запуск интеграционных тестов правила ${rule.getName()} был отменён`);
+			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 		}
 
 		const siemjResult = await this._outputParser.parse(siemjExecutionResult.output);
@@ -157,7 +157,7 @@ export class IntegrationTestRunner {
 
 			// Убираем ошибки по текущему правилу.
 			const ruleFileUri = vscode.Uri.file(rule.getRuleFilePath());
-			this._config.getDiagnosticCollection().set(ruleFileUri, []);
+			this.config.getDiagnosticCollection().set(ruleFileUri, []);
 		} else {
 			// Есть ошибки, все неуспешные тесты не прошли.
 			executedTests

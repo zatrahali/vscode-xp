@@ -14,7 +14,7 @@ import { Log } from '../extension';
 
 
 export class RunIntegrationTestDialog {
-	constructor(private _config : Configuration, private _tmpFilesPath?: string) {}
+	constructor(private config : Configuration, private _tmpFilesPath?: string) {}
 
 	public async getIntegrationTestRunOptions(rule: RuleBaseItem) : Promise<IntegrationTestRunnerOptions> {
 		try {
@@ -81,17 +81,17 @@ export class RunIntegrationTestDialog {
 			this.ALL_PACKAGES);
 
 		if(!result) {
-			throw new OperationCanceledException();
+			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 		}
 		
 		switch(result) {
 			case this.CURRENT_PACKAGE: {
-				testRunnerOptions.dependentCorrelations.push(rule.getPackagePath(this._config));
+				testRunnerOptions.dependentCorrelations.push(rule.getPackagePath(this.config));
 				break;
 			}
 
 			case this.ALL_PACKAGES: {
-				const contentRootPath = this._config.getRootByPath(rule.getDirectoryPath());
+				const contentRootPath = this.config.getRootByPath(rule.getDirectoryPath());
 				testRunnerOptions.dependentCorrelations.push(contentRootPath);
 				break;
 			}
@@ -109,14 +109,14 @@ export class RunIntegrationTestDialog {
 		}
 
 		// Ищем сабрули во текущем для правиле пакете
-		const currentPackagePath = rule.getPackagePath(this._config);
+		const currentPackagePath = rule.getPackagePath(this.config);
 		let subRulePaths = FileSystemHelper.getRecursiveDirPathByName(currentPackagePath, uniqueParsedSubRuleNames);
 		if(uniqueParsedSubRuleNames.length !== subRulePaths.length) {
 			const subRulesNotFound = uniqueParsedSubRuleNames.filter(x => !subRulePaths.includes(x));
 			Log.debug(`Не удалось найти вспомогательные правила ${subRulesNotFound.join(", ")} в пакете ${currentPackagePath}`);
 
 			// Ищем сабрули во всех пакетах
-			const contentRootPath = this._config.getRootByPath(rule.getDirectoryPath());
+			const contentRootPath = this.config.getRootByPath(rule.getDirectoryPath());
 			subRulePaths = FileSystemHelper.getRecursiveDirPathByName(contentRootPath, uniqueParsedSubRuleNames);
 
 			if(uniqueParsedSubRuleNames.length !== subRulePaths.length) {
@@ -189,7 +189,7 @@ export class RunIntegrationTestDialog {
 			this.DONT_COMPILE_CORRELATIONS);
 
 		if(!result) {
-			throw new OperationCanceledException("Операция отменена");
+			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 		}
 
 		return result;
