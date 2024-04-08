@@ -81,7 +81,7 @@ export class RunIntegrationTestDialog {
 			this.ALL_PACKAGES);
 
 		if(!result) {
-			throw new OperationCanceledException("Операция отменена");
+			throw new OperationCanceledException();
 		}
 		
 		switch(result) {
@@ -103,21 +103,26 @@ export class RunIntegrationTestDialog {
 	private async getRecursiveSubRulePaths(rule : Correlation): Promise<string[]> {
 		const ruleCode = await rule.getRuleCode();
 		const subRuleNames = TestHelper.parseSubRuleNamesFromKnownOperation(ruleCode).map(srn => srn.toLocaleLowerCase());
-		const uniqueSubRuleNames = [...new Set(subRuleNames)];
+		const uniqueParsedSubRuleNames = [...new Set(subRuleNames)];
+		if(uniqueParsedSubRuleNames.length === 0) {
+			return [];
+		}
 
 		// Ищем сабрули во текущем для правиле пакете
 		const currentPackagePath = rule.getPackagePath(this._config);
-		let subRulePaths = FileSystemHelper.getRecursiveDirPathByName(currentPackagePath, uniqueSubRuleNames);
-		if(uniqueSubRuleNames.length !== subRulePaths.length) {
-			const subRulesNotFound = uniqueSubRuleNames.filter(x => !subRulePaths.includes(x));
-			Log.info(`Не удалось найти подправила ${subRulesNotFound.join(", ")} в текущем пакете`);
+		let subRulePaths = FileSystemHelper.getRecursiveDirPathByName(currentPackagePath, uniqueParsedSubRuleNames);
+		if(uniqueParsedSubRuleNames.length !== subRulePaths.length) {
+			const subRulesNotFound = uniqueParsedSubRuleNames.filter(x => !subRulePaths.includes(x));
+			Log.debug(`Не удалось найти вспомогательные правила ${subRulesNotFound.join(", ")} в пакете ${currentPackagePath}`);
 
 			// Ищем сабрули во всех пакетах
 			const contentRootPath = this._config.getRootByPath(rule.getDirectoryPath());
-			subRulePaths = FileSystemHelper.getRecursiveDirPathByName(contentRootPath, uniqueSubRuleNames);
+			subRulePaths = FileSystemHelper.getRecursiveDirPathByName(contentRootPath, uniqueParsedSubRuleNames);
 
-			if(uniqueSubRuleNames.length !== subRulePaths.length) {
-				throw new XpException("Не удалось найти некоторые подправила в дереве контента");
+			if(uniqueParsedSubRuleNames.length !== subRulePaths.length) {
+				const foundedSubruleNamesSet = new Set(subRulePaths.map(p => path.basename(p).toLocaleLowerCase()));
+				const ruleNamesNotFound = [...uniqueParsedSubRuleNames].filter(x => !foundedSubruleNamesSet.has(x));
+				throw new XpException(`Не удалось найти вспомогательные правила: ${ruleNamesNotFound.join(", ")}`);
 			}
 		}
 		
@@ -189,7 +194,7 @@ export class RunIntegrationTestDialog {
 
 		return result;
 	}
-
+	
 	public ALL_PACKAGES = "Все пакеты";
 	public CURRENT_PACKAGE = "Текущий пакет";
 	public DONT_COMPILE_CORRELATIONS = "Не компилировать";

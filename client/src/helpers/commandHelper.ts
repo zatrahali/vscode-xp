@@ -21,7 +21,7 @@ export class CommandHelper {
 			await command.execute();
 		}
 		catch (error) {
-			ExceptionHelper.show(error, defaultError ?? `Ошибка выполнения команды '${command}'`);
+			ExceptionHelper.show(error, defaultError ?? `Ошибка выполнения команды`);
 		}
 		finally {
 			ExtensionState.get().stopExecutionState();

@@ -775,9 +775,7 @@ export class TestHelper {
 		return rule;
 	}
 
-
-
-	public static escapeRawEvent(normalizedEvent: string) {
+	public static escapeRawEvent(normalizedEvent: string): string {
 		return normalizedEvent
 			.replace(/\\n/g, "\\n")
 			.replace(/\\'/g, "\\'")
@@ -793,5 +791,5 @@ export class TestHelper {
 	private static LOWER_CORRELATION_NAME_COMPARE_REGEX = /lower\s*\(\s*correlation_name\s*\)\s*==\s*"(\w+)"/gm;
 
 	private static INLIST_LOWER_CORRELATION_NAME_REGEX = /in_list\s*\(\s*(\[[\w\W]+\])\s*,\s*lower\s*\(\s*correlation_name\s*\)/gm;
-	private static INLIST_CORRELATION_NAME_REGEX = /in_list\s*\(\s*(\[[\w\W]+\])\s*,\s*correlation_name\s*\)/gm;
+	private static INLIST_CORRELATION_NAME_REGEX = /in_list\s*\(\s*(\[[^)]+\])\s*,\s*correlation_name\s*\)/gm;
 }

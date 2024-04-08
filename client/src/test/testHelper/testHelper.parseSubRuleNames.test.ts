@@ -5,6 +5,45 @@ import { TestHelper } from '../../helpers/testHelper';
 
 suite('TestHelper.parseSubRuleNames', async () => {
 
+    test('Последовательный in_list в разных event', async () => {
+
+//         const ruleCode =
+// `event Event1:
+// key:
+//     event_src.host
+// filter {
+//     in_list(["RuleName1", "RuleName2"], correlation_name)
+// }
+
+// event Event2:
+// key:
+//     event_src.host
+// filter {
+//     in_list(["RuleName3", "RuleName4"], correlation_name)
+// }
+// `;
+
+        const ruleCode =
+`event Event1:
+key:
+    event_src.host
+filter {
+    in_list(["RuleName1", "RuleName2"], correlation_name)
+    and filter::CheckWL_Tasks("CurrentRuleName", lower(join([subject.account.name, object.name], "|")))
+}
+
+event Event2:
+key:
+    event_src.host
+filter {
+    in_list(["RuleName3", "RuleName4"], correlation_name)
+}
+`;
+        const subRuleNames = TestHelper.parseSubRuleNamesFromKnownOperation(ruleCode);
+
+        assert.deepStrictEqual(subRuleNames, ["RuleName1", "RuleName2", "RuleName3", "RuleName4"]);
+    });
+
     test('Есть комменты для сабрулей', async () => {
 
         const ruleCode =
@@ -31,7 +70,7 @@ key:
 filter {
     lower(correlation_name) == "execute_encoded_powershell"
     and object == "process"
-    and filter::CheckWL_Process_Creation("ESC_Cobalt_Strike_Powershell_Payload_Delivery", lower(alert.key))
+    and filter::CheckWL_Process_Creation("Cobalt_Strike", lower(alert.key))
 }`;
 
         const subRuleNames = TestHelper.parseSubRuleNamesFromKnownOperation(ruleCode);
