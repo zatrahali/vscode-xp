@@ -4,6 +4,7 @@ import { DialogHelper } from '../../helpers/dialogHelper';
 import { Command, CommandParams } from '../../models/command/command';
 import { SiemjManager } from '../../models/siemj/siemjManager';
 import { IntegrationTest } from '../../models/tests/integrationTest';
+import { ExceptionHelper } from '../../helpers/exceptionHelper';
 
 export interface NormalizeRawEventsParams extends CommandParams {
 	isEnrichmentRequired: boolean;
@@ -20,11 +21,11 @@ export class NormalizeRawEventsCommand extends Command {
 
 		await vscode.window.withProgress({
 			location: vscode.ProgressLocation.Notification,
-			cancellable: false
-		}, async (progress) => {
+			cancellable: true
+		}, async (progress, cancellationToken: vscode.CancellationToken) => {
 
 			try {
-				const siemjManager = new SiemjManager(this.params.config);
+				const siemjManager = new SiemjManager(this.params.config, cancellationToken);
 				let normEvents: string;
 				if (this.params.isEnrichmentRequired) {
 					progress.report({message: `Нормализация и обогащение сырых событий для теста №${this.params.test.getNumber()}`});
@@ -37,7 +38,7 @@ export class NormalizeRawEventsCommand extends Command {
 				this.params.test.setNormalizedEvents(normEvents);
 			}
 			catch (error) {
-				DialogHelper.showError("Не удалось нормализовать событие. Возможны следующие варианты: исходное событие некорректного формата, в текущей базе знаний нет соответствующей нормализации", error);
+				ExceptionHelper.show(error, "Не удалось нормализовать событие. Возможны следующие варианты: необходимо [перекомпилировать нормализации](command:xp.contentTree.buildNormalizations), исходное событие некорректного формата, в текущей базе знаний нет соответствующей нормализации");
 				return;
 			}
 

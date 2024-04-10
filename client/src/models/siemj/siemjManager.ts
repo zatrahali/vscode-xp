@@ -15,6 +15,7 @@ import { DialogHelper } from '../../helpers/dialogHelper';
 import { LocalizationExample } from '../content/localization';
 import { TestHelper } from '../../helpers/testHelper';
 import { RegExpHelper } from '../../helpers/regExpHelper';
+import { OperationCanceledException } from '../operationCanceledException';
 
 export class SiemjManager {
 
@@ -173,6 +174,11 @@ export class SiemjManager {
 				cancellationToken: this._token
 			}
 		);
+
+		if(result.isInterrupted) {
+			throw new OperationCanceledException();
+		}
+		
 		return result;
 	}
 

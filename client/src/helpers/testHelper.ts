@@ -124,77 +124,15 @@ export class TestHelper {
 		return testCode;
 	}
 
-	public static cleanRetroCorrelations(testCode: string): string {
-		if (!testCode) { 
+	public static cleanTestCodeJsonl(jsonl: string[]): string [] {
+		if (!jsonl) { 
 			throw new ArgumentException("Не задан обязательных параметр", "testCode");
 		}
 
-		const regexPatterns = [
-			/\s*"generator.version"(\s*):(\s*)"(.*?",)/g,
-
-			/\s*"incident.name"(\s*):(\s*)".*?",/g,	// в середине json-а
-			/,\s*"incident.name"(\s*):(\s*)".*?"/g,	// в конце json-а
-
-			/\s*"siem_id"(\s*):(\s*)".*?",/g,	// в середине json-а
-			/,\s*"siem_id"(\s*):(\s*)".*?"/g,	// в конце json-а
-
-			/\s*"labels"(\s*):(\s*)".*?",/g,	// в середине json-а
-			/,\s*"labels"(\s*):(\s*)".*?"/g,	// в конце json-а
-
-			/\s*"_subjects"(\s*):(\s*)\[[\s\S]*?\],/g,
-			/,\s*"_subjects"(\s*):(\s*)\[[\s\S]*?\]/g,
-
-			/\s*"_objects"(\s*):(\s*)\[[\s\S]*?\],/g,
-			/,\s*"_objects"(\s*):(\s*)\[[\s\S]*?\]/g,
-		];
-
-		for (const regexPattern of regexPatterns) {
-			testCode = testCode.replace(regexPattern, "");
-		}
-
-		return testCode;
-	}
-
-	/**
-	 * Убирает из корреляционных событий технические поля
-	 * @param testCode код теста
-	 * @returns код теста, очищенный от тегов
-	 */
-	public static cleanCorrelationEvents(testCode: string): string {
-		if (!testCode) { 
-			throw new ArgumentException("Не задан обязательных параметр", "testCode");
-		}
-
-		const regexPatterns = [
-			/\s*"_rule"(\s*):(\s*)".*?",/g,	// в середине json-а
-			/,\s*"_rule"(\s*):(\s*)".*?"/g,	// в конце json-а
-
-			/\s*"generator.version"(\s*):(\s*)"(.*?",)/g,
-
-			/\s*"siem_id"(\s*):(\s*)".*?",/g,
-			/,\s*"siem_id"(\s*):(\s*)".*?"/g,
-
-			/\s*"uuid"(\s*):(\s*)".*?",/g,	// в середине json-а
-			/,\s*"uuid"(\s*):(\s*)".*?"/g,	// в конце json-а
-			
-			/\s*"_subjects"(\s*):(\s*)\[[\s\S]*?\],/g,
-			/,\s*"_subjects"(\s*):(\s*)\[[\s\S]*?\]/g,
-
-			/\s*"_objects"(\s*):(\s*)\[[\s\S]*?\],/g,
-			/,\s*"_objects"(\s*):(\s*)\[[\s\S]*?\]/g,
-
-			/\s*"subevents"(\s*):(\s*)\[[\s\S]*?\],/g,
-			/,\s*"subevents"(\s*):(\s*)\[[\s\S]*?\]/g,
-
-			/\s*"subevents.time"(\s*):(\s*)\[[\s\S]*?\],/g,
-			/,\s*"subevents.time"(\s*):(\s*)\[[\s\S]*?\]/g
-		];
-
-		for (const regexPattern of regexPatterns) {
-			testCode = testCode.replace(regexPattern, "");
-		}
-
-		return testCode;
+		return jsonl.map(j => TestHelper.removeFieldsFromJsonl(
+			j,
+			"generator.version", "uuid", "time", "incident.name", "siem_id", "labels", "_subjects", "subevents", "subevents.time")
+		);
 	}
 
 	/**
@@ -306,38 +244,26 @@ export class TestHelper {
 		return undefined;
 	}
 
-	public static cleanModularTestResult(testCode: string) : string {
-        if (!testCode) { return ""; }
-		const regexPatterns = [
-			/\s*"generator.version"(\s*):(\s*)"(.*?",)/g,
-			
-			/\s*"uuid"(\s*):(\s*)".*?",/g,	// в середине json-а
-			/,\s*"uuid"(\s*):(\s*)".*?"/g,	// в конце json-а
+	public static cleanModularTestResult(formattedTestCode: string) : string {
+        if (!formattedTestCode) { return ""; }
 
-			/\s*"siem_id"(\s*):(\s*)".*?",/g,	// в середине json-а
-			/,\s*"siem_id"(\s*):(\s*)".*?"/g,	// в конце json-а
+		let object = JSON.parse(formattedTestCode);
+		object = TestHelper.removeKeys(object, [
+				"generator.version", 
+				"uuid", 
+				"siem_id",
+				"labels",
 
-			/\s*"labels"(\s*):(\s*)".*?",/g,	// в середине json-а
-			/,\s*"labels"(\s*):(\s*)".*?"/g,	// в конце json-а
-
-			/\s*"_subjects"(\s*):(\s*)\[[\s\S]*?\],/g,
-			/,\s*"_subjects"(\s*):(\s*)\[[\s\S]*?\]/g,
-
-			/\s*"_objects"(\s*):(\s*)\[[\s\S]*?\],/g,
-			/,\s*"_objects"(\s*):(\s*)\[[\s\S]*?\]/g,
-			
-			/\s*"subevents"(\s*):(\s*)\[[\s\S]*?\],/g,
-			/,\s*"subevents"(\s*):(\s*)\[[\s\S]*?\]/g,
-
-			/\s*"subevents.time"(\s*):(\s*)\[[\s\S]*?\],/g,
-			/,\s*"subevents.time"(\s*):(\s*)\[[\s\S]*?\]/g
-		];
-		
-		for (const regexPattern of regexPatterns) {
-			testCode = testCode.replace(regexPattern, "");
-		}
-
-		return testCode;
+				"_rule",
+				"_subjects",
+				"_objects",
+				
+				"subevents", 
+				"subevents.time"
+			]
+		);
+		object = JsHelper.sortObjectKeys(object);
+		return JsHelper.formatJsonObject(object);
 	}
 
 	/**
@@ -385,17 +311,22 @@ export class TestHelper {
 	 * @returns строка с сырыми событиями, в которых json-события сжаты
 	 */
 	public static compressJsonRawEvents(rawEvents: string): string {
+		return this.compressFormattedJsons(rawEvents, /^{$[\s\S]+?^}/gm);
+	}
 
-		if (!rawEvents) {
+	public static compressTestCode(rawEvents: string): string {
+		return this.compressFormattedJsons(rawEvents, /{$[\s\S]+?^}/gm);
+	}
+
+	public static compressFormattedJsons(input: string, regEx: RegExp): string {
+
+		if (!input) {
 			throw new Error("Переданный список событий пуст");
 		}
 
-		// TODO: надо поддержать упаковку любых json-ов
-		const compressedNormalizedEventReg = /^{$[\s\S]+?^}/gm;
-
 		let comNormEventResult: RegExpExecArray | null;
-		let compressedRawEvents = rawEvents;
-		while ((comNormEventResult = compressedNormalizedEventReg.exec(rawEvents))) {
+		let compressedJson = input;
+		while ((comNormEventResult = regEx.exec(input))) {
 			if (comNormEventResult.length != 1) {
 				continue;
 			}
@@ -405,14 +336,17 @@ export class TestHelper {
 				const jsonObject = JSON.parse(jsonRawEvent);
 				const compressedEventString = JSON.stringify(jsonObject);
 
-				compressedRawEvents = compressedRawEvents.replace(jsonRawEvent, compressedEventString);
+				compressedJson = compressedJson.replace(
+					jsonRawEvent, 
+					function() { return compressedEventString;}
+				);
 			}
 			catch (error) {
-				throw new XpException("Не удалось распарсить сырое JSON-событие", error);
+				throw new XpException("Не удалось распарсить JSON. Проверьте корректность сохраняемых данных", error);
 			}
 		}
 
-		return compressedRawEvents.trim();
+		return compressedJson.trim();
 	}
 
 	public static removeFieldsFromJsonl(jsonlStr: string, ...fields: string[]): string {
@@ -437,54 +371,19 @@ export class TestHelper {
 
 		}
 		catch (error) {
-			throw new XpException("Ошибка очистки JSON от полей", error);
+			throw new XpException(`Ошибка очистки JSON от полей: ${fields.join(", ")}`, error);
 		}
+
 		return jsonlCleaned;
 	}
 
-	public static isDefaultLocalization(localization: string) {
+	public static isDefaultLocalization(localization: string) : boolean {
 		// account start process success на узле wks01.testlab.esc
 		const defaultLocRegExp = /^\w+ \w+ \w+ \w+ (на узле|on host) [\w.]+$/g;
 		return defaultLocRegExp.test(localization);
 	}
 
-
-	public static compressTestCode(testCode: string) {
-		const compressedNormalizedEventReg = /{\s*[\s\S]*\s*}\s*$/gm;
-
-		let formattedTestCode = testCode;
-		let comNormEventResult: RegExpExecArray | null;
-		while ((comNormEventResult = compressedNormalizedEventReg.exec(testCode))) {
-			if (comNormEventResult.length != 1) {
-				continue;
-			}
-
-			const formattedEvent = comNormEventResult[0];
-			let compressedEvent = formattedEvent
-				.replace(/^[ \t]+/gm, "")
-				.replace(/":\s+/gm, "\": ")
-				.replace(/,\s*\r\n/gm, ", ")
-				.replace(/,\s*\n/gm, ", ");
-
-			compressedEvent = compressedEvent
-				.replace(/{\s*\r\n/gm, "{")
-				.replace(/\r\n\s*}/gm, "}")
-				.replace(/{\s*\n/gm, "{")
-				.replace(/\n\s*}/gm, "}");
-
-			compressedEvent = compressedEvent
-				.replace(/\[\s*\r\n/gm, "[")
-				.replace(/\r\n\s*\]/gm, "]")
-				.replace(/\[\s*\n/gm, "[")
-				.replace(/\n\s*\]/gm, "]");
-
-			formattedTestCode = formattedTestCode.replace(formattedEvent, compressedEvent);
-		}
-
-		return formattedTestCode;
-	}
-
-	public static formatTestCodeAndEvents(testCode: string) {
+	public static formatTestCodeAndEvents(testCode: string) : string {
 		const compressedNormalizedEventReg = /({\S.+})\s*$/gm;
 
 		let formattedTestCode = testCode;
@@ -507,8 +406,11 @@ export class TestHelper {
 					},
 					{}
 				);
-				const formattedEvent = JSON.stringify(orderedCompressEventJson, null, 4);
-				formattedTestCode = formattedTestCode.replace(compressedEvent, formattedEvent);
+				const formattedEvent = JsHelper.formatJsonObject(orderedCompressEventJson);
+				formattedTestCode = formattedTestCode.replace(
+					compressedEvent,
+					function() {return formattedEvent;}
+				);
 			}
 			catch (error) {
 				// Если не удалось отформатировать, пропускаем и пишем в лог.
@@ -540,7 +442,9 @@ export class TestHelper {
 				const compressEventJson = JSON.parse(escapedCompressedEvent);
 				const orderedCompressEventJson = JsHelper.sortObjectKeys(compressEventJson);
 				const formattedEvent = JSON.stringify(orderedCompressEventJson);
-				formattedTestCode = formattedTestCode.replace(compressedEvent, formattedEvent);
+				formattedTestCode = formattedTestCode.replace(
+					compressedEvent,
+					function() {return formattedEvent;});
 			}
 			catch (error) {
 				// Если не удалось отформатировать, пропускаем и пишем в лог.

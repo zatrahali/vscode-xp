@@ -158,17 +158,18 @@ export class CorrelateEventsCommand extends WebViewCommand {
                         return;
                     }
 
-                    // Отдаем события во front-end.
-                    const formattedEvents = TestHelper.formatTestCodeAndEvents(correlatedEventsString);
-                    const cleanedEvents = TestHelper.cleanRetroCorrelations(formattedEvents);
+                    // Очищаем от лишних полей и форматируем для вывода на FE.
+                    const cleanedEvents = TestHelper.removeFieldsFromJsonl(
+                        correlatedEventsString,
+                        "generator.version", "incident.name", "siem_id", "labels", "_subjects", "_objects");
+                    const formattedEvents = TestHelper.formatTestCodeAndEvents(cleanedEvents);
 					
                     controller.postMessage({
                         command : "correlatedEvents",
-                        events : cleanedEvents            
+                        events : formattedEvents            
                     });
 
-   
-                    DialogHelper.showInfo(`Корреляция заняла ${DateHelper.formatDuration(startCorrelation, endCorrelation)} минут, сработало ${correlationNames.length} корреляций(ия)`);
+                    DialogHelper.showInfo(`Корреляция заняла ${DateHelper.formatDuration(startCorrelation, endCorrelation)} минут, сработало корреляций: ${correlationNames.length}`);
                 }
                 catch(error) {
                     ExceptionHelper.show(error, "Ошибка корреляции событий");

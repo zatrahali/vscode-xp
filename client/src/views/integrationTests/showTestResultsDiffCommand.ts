@@ -88,34 +88,29 @@ export class ShowTestResultsDiffCommand extends Command {
 
 		// Отбираем ожидаемое событие по имени правила
 		// const actualFilteredEvents = TestHelper.filterCorrelationEvents(actualEvents, ruleName);
-		const actualFilteredEvents = actualEvents;
+		let actualFilteredEvents = actualEvents;
 
 		// Если мы не получили сработки нашей корреляции, тогда покажем те события, который отработали.
 		let formattedActualEvent = "";
 		if(actualFilteredEvents.length !== 0) {
 			// Исключаем поля, которых нет в ожидаемом, чтобы сравнение было репрезентативным.
-			let actualOutputEventsString = "";
 			if(expectedKeys.length !== 0) {
-				actualOutputEventsString = actualFilteredEvents
+				actualFilteredEvents = actualFilteredEvents
 					.map(arl => JSON.parse(arl))
+					.sort( (a, b) => {
+						if(a?.correlation_type === "subrule" && b?.correlation_type !== "subrule") {
+							return 1;
+						}
+						return -1;
+					})
 					.map(aro => TestHelper.removeAnotherObjectKeys(aro, expectedKeys))
-					.map(aro => JSON.stringify(aro))
-					.join(os.EOL);
-			} else {
-				// Так как в правилах expect not нет ожидаемых событий, ничего не фильтруем.
-				actualOutputEventsString = actualFilteredEvents.join(os.EOL);
-			}
+					.map(aro => JSON.stringify(aro));
+			} 
+		} 
 
-			// Помимо форматирование их требуется почистить от технических полей.
-			formattedActualEvent = TestHelper.formatTestCodeAndEvents(actualOutputEventsString);
-			formattedActualEvent = TestHelper.cleanTestCode(formattedActualEvent);
-		} else {
-			// Из отработавших правил не исключаем никаких полей, чтобы было видно полный результат.
-			// Помимо форматирование их требуется почистить от технических полей.
-			const actualOutputEventsString = actualEvents.join(os.EOL);
-			formattedActualEvent = TestHelper.formatTestCodeAndEvents(actualOutputEventsString);
-			formattedActualEvent = TestHelper.cleanTestCode(formattedActualEvent);
-		}
+		// Помимо форматирование их требуется почистить от технических полей.
+		const testEvents = TestHelper.cleanTestCodeJsonl(actualFilteredEvents).join(os.EOL);
+		formattedActualEvent = TestHelper.formatTestCodeAndEvents(testEvents);
 
 		// Записываем очищенное фактическое значение файл для последующего сравнения
 		const actualEventTestFilePath = path.join(this.params.tmpDirPath, `actualEvents${this.params.testNumber}.json`);

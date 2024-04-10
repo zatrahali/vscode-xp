@@ -46,10 +46,6 @@ export class GetExpectedEventCommand  {
 	}
 
 	private async generateTestCode(): Promise<string> {
-		if(this.params.test.getStatus() === TestStatus.Failed) {
-			throw new XpException(this.params.config.getMessage("View.IntegrationTests.Message.UnableGetExpectedEvent"));
-		}
-
 		// Если правило содержит сабрули, то мы сейчас не сможем просто получить ожидаемое событие.
 		const ruleCode = await this.params.rule.getRuleCode();
 
@@ -142,7 +138,7 @@ export class GetExpectedEventCommand  {
 			try {
 				let testObject = JSON.parse(testOutput);
 				testObject = TestHelper.removeKeys(testObject, ["time"]);
-				testOutput = JSON.stringify(testObject, null, 4);
+				testOutput = JsHelper.formatJsonObject(testObject);
 			}
 			catch(error) {
 				throw new XpException("Полученные от теста данные не являются событием формата json. Возможно, интеграционный тест не проходит", error);

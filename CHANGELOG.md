@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.13.21 (Pre-Release)
+
+- исправлены ошибки форматирования и сжатия JSON-ов в необработанных событиях и коде тестов (special thanks @paran0id_34);
+- улучшено сравнение ожидаемого и фактического события в интеграционных тестах (special thanks @aw350m3);
+- реализована фича [#139](https://github.com/Security-Experts-Community/vscode-xp/issues/139) - возможность преждевременной остановки действия _Нормализовать_ и _Нормализовать и обогатить_  в интеграционных тестах (special thanks @g4n8g).
+
 ## 3.13.20 (Pre-Release)
 
 - улучшена русская и английская локализации (special thanks @feelstacy, @eugzolotukhin);

@@ -15,6 +15,7 @@ import { ContentTreeProvider } from '../contentTreeProvider';
 import { OriginsManager } from '../../../models/content/originsManager';
 import { ViewCommand } from './viewCommand';
 import { Log } from '../../../extension';
+import { JsHelper } from '../../../helpers/jsHelper';
 
 
 export class PackKbCommand extends ViewCommand {
@@ -98,7 +99,7 @@ export class PackKbCommand extends ViewCommand {
 
 				// Копируем origins из настроек
 				const originObject = await OriginsManager.getCurrentOrigin(this.config);
-				const originString = JSON.stringify(originObject, null, 4);
+				const originString = JsHelper.formatJsonObject(originObject);
 				const originsDstDirPath = path.join(originsDirPath, PackKbCommand.ORIGIN_FILENAME);
 				await fs.promises.writeFile(originsDstDirPath, originString);
 

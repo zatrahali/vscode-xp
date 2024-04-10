@@ -34,7 +34,7 @@ export class JsHelper {
 		return JSON.stringify(object, null, 4);
 	}
 
-	public static sortObjectKeys(object: any) {
+	public static sortObjectKeys(object: any) : any {
 		if (typeof object != "object") { return object; }
 		if (object instanceof Array) {
 			return object.map((obj) => { return this.sortObjectKeys(obj); });

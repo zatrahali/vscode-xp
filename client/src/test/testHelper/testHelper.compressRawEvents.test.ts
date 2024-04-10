@@ -151,9 +151,9 @@ suite('TestHelper.compressRawEvents', async () => {
 	}
 }`;
 
-		const formatedTestCode = TestHelper.compressJsonRawEvents(rawEventsFromSIEM);
+		const formattedTestCode = TestHelper.compressJsonRawEvents(rawEventsFromSIEM);
 
-		const lines = formatedTestCode.split("\n");
+		const lines = formattedTestCode.split("\n");
 		assert.strictEqual(lines.length, 2);
 	});
 });

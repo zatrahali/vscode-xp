@@ -22,6 +22,7 @@ import { RunIntegrationTestsCommand } from './runIntegrationTestsCommand';
 import { NormalizeRawEventsCommand } from './normalizeRawEventsCommand';
 import { GetExpectedEventCommand } from './getExpectEventCommand';
 import { StringHelper } from '../../helpers/stringHelper';
+import { SaveAllCommand } from './saveAllCommand';
 
 export class IntegrationTestEditorViewProvider {
 
@@ -239,7 +240,7 @@ export class IntegrationTestEditorViewProvider {
 			return false;
 		}
 
-		if(it.getStatus() === TestStatus.Success) {
+		if(it.getStatus() === TestStatus.Success || it.getStatus() === TestStatus.Failed) {
 			return true;
 		}
 
@@ -302,19 +303,26 @@ export class IntegrationTestEditorViewProvider {
 			}
 
 			case 'saveAllTests': {
-				try {
-					// В данном руле сохраняются в памяти нормализованные события.
-					this.rule = await this.saveAllTests(message);
-					DialogHelper.showInfo(`Все тесты сохранены`);
+				if (!message?.activeTestNumber) {
+					DialogHelper.showError('Номер теста не передан в запросе на back-end');
+					return;
+				}
 
-					// Добавляем в DOM новый тест.
-					const activeTestNumber = this.getSelectedTestNumber(message);
-					this.updateView(activeTestNumber);
+				const activeTestNumber = parseInt(message?.activeTestNumber);
+				if (!activeTestNumber) {
+					throw new XpException(`Переданное значение ${message?.activeTestNumber} не является номером интеграционного теста`);
 				}
-				catch (error) {
-					ExceptionHelper.show(error, `Не удалось сохранить тест`);
-				}
-				return;
+
+				const command = new SaveAllCommand( {
+						config : this.config,
+						rule: this.rule,
+						tmpDirPath: this.testsTmpFilesPath,
+						testNumber: activeTestNumber,
+						tests: message.tests}
+				);
+				await command.execute();
+				this.updateView(activeTestNumber);
+				break;
 			}
 
 			case 'addEnvelope': {
@@ -341,9 +349,9 @@ export class IntegrationTestEditorViewProvider {
 				return;
 			}
 
-			case 'cleanTestCode': {
-				return this.cleanTestCode(message);
-			}
+			// case 'cleanTestCode': {
+			// 	return this.cleanTestCode(message);
+			// }
 
 			case "ShowTestResultsDiffCommand": {
 				if (!message?.selectedTestNumber) {
@@ -455,13 +463,13 @@ export class IntegrationTestEditorViewProvider {
 	private async saveTestFromUI(message: any) : Promise<IntegrationTest> {
 		let rawEvents = message?.rawEvents;
 		if (!rawEvents) {
-			// DialogHelper.showInfo("Не заданы сырые события для нормализации. Задайте события и повторите");
-			throw new XpException("Не заданы сырые события для нормализации. Задайте события и повторите");
+			DialogHelper.showInfo("Не заданы сырые события для нормализации. Задайте события и повторите");
+			return;
 		}
 
 		if (!message?.test) {
-			// DialogHelper.showInfo("Сохраните тест перед запуском нормализации сырых событий и повторите действие");
-			throw new XpException("Сохраните тест перед запуском нормализации сырых событий и повторите действие");
+			DialogHelper.showInfo("Сохраните тест перед запуском нормализации сырых событий и повторите действие");
+			return;
 		}
 
 		const currTest = IntegrationTest.convertFromObject(message.test);

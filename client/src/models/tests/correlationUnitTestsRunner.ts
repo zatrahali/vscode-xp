@@ -101,6 +101,12 @@ export class CorrelationUnitTestsRunner implements UnitTestRunner {
 		// Получаем путь к правилу для которого запускали тест
 		const ruleFileUri = vscode.Uri.file(ruleFilePath);
 
+		// Если ничего не ожидали (expect not) и ничего не получили, то всё хорошо.
+		if(output.output.includes(this.EMPTY_EXPECTED_RESULT)) {
+			test.setStatus(TestStatus.Success);
+			return test;
+		}
+
 		if(output.output.includes(this.SUCCESS_TEST_SUBSTRING)) {
 			// Обновление статуса теста.
 			test.setStatus(TestStatus.Success);
@@ -145,4 +151,6 @@ export class CorrelationUnitTestsRunner implements UnitTestRunner {
 	}
 
 	private readonly SUCCESS_TEST_SUBSTRING = "SUCCESS!";
+
+	private readonly EMPTY_EXPECTED_RESULT = "You wanted nothing and you've got nothing!";
 }

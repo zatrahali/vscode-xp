@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as os from 'os';
 import * as fs from 'fs';
 
 import { MustacheFormatter } from '../mustacheFormatter';
@@ -152,32 +153,32 @@ export class RunningCorrelationGraphProvider {
                         return;
                     }
 
+                    // Очищаем от лишних полей и форматируем для вывода на FE.
+                    const cleanedEvents = TestHelper.removeFieldsFromJsonl(
+                        correlatedEventsString,
+                       "_rule", "generator.version", "siem_id", "uuid", "_subjects", "_objects", "subevents", "subevents.time");
+                    const formattedEvents = TestHelper.formatTestCodeAndEvents(cleanedEvents);
+
                     DialogHelper.showInfo(`Количество сработавших корреляций: ${correlationNames.length}`);
-
-                    const formattedEvents = TestHelper.formatTestCodeAndEvents(correlatedEventsString);
-                    // TODO: корректно парсить json и очищать его от ненужных полей.
-                    const cleanedEvents = TestHelper.cleanCorrelationEvents(formattedEvents);
-
                     // Отдаем события во front-end.
                     this._view.webview.postMessage( {
                         command : "correlatedEvents",
-                        events : cleanedEvents            
+                        events : formattedEvents            
                     });
                 }
                 catch(error) {
                     ExceptionHelper.show(error);
-                    this._config.getOutputChannel().show();
                 }
             });
         });
 	}
 
-	public async addEnvelope(rawEventsString: string, mimeType: EventMimeType) {
+	public async addEnvelope(rawEventsString: string, mimeType: EventMimeType): Promise<void> {
 		
 		let envelopedRawEventsString : string;
 		try {
             const rawEvents = rawEventsString.split(RunningCorrelationGraphProvider.TEXTAREA_END_OF_LINE);
-            const envelopedEvents = await Enveloper.addEnvelope(rawEventsString, mimeType);
+            const envelopedEvents = Enveloper.addEnvelope(rawEventsString, mimeType);
 			envelopedRawEventsString = envelopedEvents.join(RunningCorrelationGraphProvider.TEXTAREA_END_OF_LINE);
 		}
 		catch(error) {
