@@ -2,7 +2,7 @@
 
 [![Documentation Status](https://readthedocs.org/projects/vscode-xp/badge/?version=latest)](https://vscode-xp.readthedocs.io/ru/latest/?badge=latest ) [![Telegram chat](https://img.shields.io/static/v1?label=chat&message=Telegram&color=blue&logo=telegram)](https://t.me/s3curity_experts_community/75) [![Telegram chat](https://img.shields.io/matrix/vscode-xp:matrix.org?color=g&label=matrix&logo=matrix&logoColor=green)](https://matrix.to/#/#vscode-xp: matrix.org)
 
-The [eXtraction and Processing (XP)] language(https://help.ptsecurity.com/projects/maxpatrol10/26.2/ru-RU/help/1566293515) is used to create detection rules based on the analysis of events from endpoints. In the XP language, you can develop rules for event normalization, correlation, and enrichment.
+The [eXtraction and Processing (XP)](https://help.ptsecurity.com/projects/maxpatrol10/26.2/ru-RU/help/1566293515) language is used to create detection rules based on the analysis of events from endpoints. In the XP language, you can develop rules for event normalization, correlation, and enrichment.
 
 This extension was developed by [Dmitry Fedosov](https://github.com/DmitryOffsec) and [contributors](https://github.com/Security-Experts-Community/vscode-xp/graphs/contributors), it allows you to develop and test rules in VSCode and VSCodium, and publish them in the format required for your product.
 
@@ -55,7 +55,7 @@ git clone https://github.com/Security-Experts-Community/vscode-xp
 
 4. In the project root, run the `npm install` command.
 
-###Repositories
+### Repositories
 
 Main on GitHub: [https://github.com/Security-Experts-Community/vscode-xp](https://github.com/Security-Experts-Community/vscode-xp)
 
