@@ -56,7 +56,7 @@
     "View.Metainfo.DataSources": "Источники и события",
     "View.Metainfo.MITRE": "Тактики и техники MITRE ATT&CK",
 
-    "MacroName": "Название макроса",
+    "MacrosName": "Название макроса",
 
     "EmptyName": "Название не может быть пустым",
     "NameContainsInvalidCharacters": "Название содержит недопустимые символы. Используйте только строчные латинские буквы, цифры и символ подчеркивания",

@@ -18,8 +18,8 @@ export class CreateMacroCommand extends ViewCommand {
 		const userInput = await vscode.window.showInputBox(
 			{
 				ignoreFocusOut: true,
-				placeHolder: this.config.getMessage("MacroName"),
-				prompt: this.config.getMessage("MacroName"),
+				placeHolder: this.config.getMessage("MacrosName"),
+				prompt: this.config.getMessage("MacrosName"),
 				validateInput: (v) => {
 					return NameValidator.validate(v, this.parentItem, this.config);
 				}

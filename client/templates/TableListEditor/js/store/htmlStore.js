@@ -39,7 +39,7 @@ export const jqDropdownRulesTleRows = `
 			<span class="span_input-required">*</span>
 		</label>
 		<vscode-text-field id="jqRecordSizeTypicalInput" type="text" class="jqRecordSizeInput jqInput"></vscode-text-field>
-		<span class="tle__row__input__helper">Количество записей, которое нежелательно превышать.</span>
+		<span class="tle__row__input__helper">Количество записей, которое нежелательно превышать</span>
 	</div>
 	<div class="tle__row jqDropdownRulesTleRow jqDropdownRemoveBeforeInsert">
 		<label for="jqRecordSizeMaxInput">
@@ -47,7 +47,7 @@ export const jqDropdownRulesTleRows = `
 			<span class="span_input-required">*</span>
 		</label>
 		<vscode-text-field id="jqRecordSizeMaxInput" type="text" class="jqRecordSizeInput jqInput"></vscode-text-field>
-		<span class="tle__row__input__helper">При превышении этого размера табличный список будет сокращен до типичного размера. Будут удалены самые старые записи.</span>
+		<span class="tle__row__input__helper">При превышении этого размера табличный список будет сокращен до типичного размера. Будут удалены самые старые записи</span>
 	</div>
 	<div class="tle__row jqDropdownRulesTleRow jqDropdownRemoveBeforeInsert">
 		<label for="switch-group">
@@ -92,6 +92,6 @@ export const jqDropdownAssetGridTleRows = `
 			Минимальный score
 		</label>
 		<vscode-text-field id="jqScoreInput" type="text" class="jqScoreInput jqInput"></vscode-text-field>
-		<span class="tle__row__input__helper">Целое число от 0 до 100. Можно не заполнять, тогда будут импортироваться все объекты.</span>
+		<span class="tle__row__input__helper">Целое число от 0 до 100. Можно не заполнять, тогда будут импортироваться все объекты</span>
 	</div>
 `

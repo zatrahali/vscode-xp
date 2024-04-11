@@ -57,7 +57,7 @@
     "View.Metainfo.DataSources": "Sources and events",
     "View.Metainfo.MITRE": "MITRE ATT&CK Tactics and Techniques",
 
-    "MacroName": "Macro name",
+    "MacrosName": "Macro name",
 
     "EmptyName": "The name cannot be empty",
     "NameContainsInvalidCharacters": "The name contains invalid characters. Use only lowercase English letters, numbers and underscores",

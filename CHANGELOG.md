@@ -1,8 +1,11 @@
 # Change Log
 
+## 3.13.X (Pre-Release)
+
+
 ## 3.13.22 (Pre-Release)
 
-- исправлена ошибка конвертации xml-события из Windows Event Viewer в (special thanks @nevermihcdfjndsxj).
+- исправлена ошибка конвертации xml-события, скопированного из Windows Event Viewer (special thanks @nevermihcdfjndsxj).
 
 ## 3.13.21 (Pre-Release)
 
@@ -17,7 +20,7 @@
 
 ## 3.13.19 (Pre-Release)
 
-- добавлено описание функций в автодополнение;
+- добавлено описание функций в список автодополнений;
 - исправлена ошибка зацикливания поиска вспомогательных правил при запуске интеграционных тестов (special thanks @g4n8g).
 
 ## 3.13.18 (Pre-Release)

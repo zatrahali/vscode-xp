@@ -68,7 +68,7 @@ export class CorrGraphRunner {
 
 		const corrEventsFilePath = this.config.getCorrelatedEventsFilePath(rootFolder);
 		if(!fs.existsSync(corrEventsFilePath)) {
-			throw new XpException("Корреляционные события не получены");
+			throw new XpException("Корреляционные события не получены. [Смотри Output](command:xp.commonCommands.showOutputChannel)");
 		}
 		
 		const normEventsContent = await FileSystemHelper.readContentFile(corrEventsFilePath);

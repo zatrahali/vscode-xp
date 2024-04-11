@@ -9,6 +9,8 @@ import { BaseWebViewController, WebViewDescriptor, WebViewMessage } from '../bas
 import { Log } from '../../extension';
 import { CorrelateEventsCommand } from './correlateEventsCommand';
 import { AppendEventMessage, AppendEventsCommand } from './appendEventCommand';
+import { DialogHelper } from '../../helpers/dialogHelper';
+import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 
 
 export class RetroCorrelationViewController extends BaseWebViewController {
@@ -18,7 +20,7 @@ export class RetroCorrelationViewController extends BaseWebViewController {
 
     private constructor(
 		descriptor : WebViewDescriptor,
-        private readonly _formatter: MustacheFormatter
+        private readonly formatter: MustacheFormatter
     ) {
 		super(descriptor);
 	}
@@ -56,10 +58,10 @@ export class RetroCorrelationViewController extends BaseWebViewController {
     }
 
 	protected async preShow() : Promise<void> {
-		this._tmpDirPath = this._descriptor.config.getRandTmpSubDirectoryPath();
-		this._xmlEventsFilePath = path.join(this._tmpDirPath, RetroCorrelationViewController.XML_EVENTS_FILENAME);
+		this.tmpDirPath = this._descriptor.config.getRandTmpSubDirectoryPath();
+		this.xmlEventsFilePath = path.join(this.tmpDirPath, RetroCorrelationViewController.XML_EVENTS_FILENAME);
 		
-		await fs.promises.mkdir(this._tmpDirPath, {recursive : true});
+		await fs.promises.mkdir(this.tmpDirPath, {recursive : true});
 		return;
 	}
 
@@ -73,7 +75,7 @@ export class RetroCorrelationViewController extends BaseWebViewController {
 			"CorrelationEvents": this._descriptor.config.getMessage("View.CorrelateLogFiles.CorrelationEvents")
 		};
 
-		const htmlContent = this._formatter.format(templateDefaultContent);
+		const htmlContent = this.formatter.format(templateDefaultContent);
 		return htmlContent;
 	}
 
@@ -82,8 +84,8 @@ export class RetroCorrelationViewController extends BaseWebViewController {
             case "AppendEventsCommand": {
 				// TODO: подумать над улучшением представления команд.
 				message.params = {
-					tmpDirPath: this._tmpDirPath,
-					xmlEventsFilePath: this._xmlEventsFilePath,
+					tmpDirPath: this.tmpDirPath,
+					xmlEventsFilePath: this.xmlEventsFilePath,
 				};
 
 				const typedMessage = classTransformer.plainToInstance(AppendEventMessage, message);
@@ -91,11 +93,16 @@ export class RetroCorrelationViewController extends BaseWebViewController {
                 return cmd.execute(this);
 			}
 			case "CorrelateEventsCommand": {
+				const jsonFiles = await FileSystemHelper.readFilesFromDirectory(this.tmpDirPath);
+				if(jsonFiles.length === 0) {
+					DialogHelper.showInfo(`Файлы для корреляции не добавлены. Добавьте файлы с помощью кнопки 'Добавить файлы с событиями' и повторите`);
+					return;
+				}
                 const cmd = new CorrelateEventsCommand(message);
 				// TODO: подумать над улучшением представления команд.
 				message.params = {
-					tmpDirPath: this._tmpDirPath,
-					xmlEventsFilePath: this._xmlEventsFilePath,
+					tmpDirPath: this.tmpDirPath,
+					xmlEventsFilePath: this.xmlEventsFilePath,
 				};
 
                 return cmd.execute(this);
@@ -106,8 +113,8 @@ export class RetroCorrelationViewController extends BaseWebViewController {
         }
     }
 
-	private _xmlEventsFilePath: string;
-	private _tmpDirPath: string;
+	private xmlEventsFilePath: string;
+	private tmpDirPath: string;
 
 	public static XML_EVENTS_FILENAME = "events.xml";
 }
