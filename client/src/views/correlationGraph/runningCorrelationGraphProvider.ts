@@ -102,7 +102,7 @@ export class RunningCorrelationGraphProvider {
                 return vscode.window.withProgress({
                     location: vscode.ProgressLocation.Notification,
                     cancellable: false,
-                    title: `Идёт добавление конверта на сырые события`
+                    title: `Добавление конверта на необработанные события`
                 }, async (progress) => {
                     try {
                         return this.addEnvelope(rawEvents, mimeType);

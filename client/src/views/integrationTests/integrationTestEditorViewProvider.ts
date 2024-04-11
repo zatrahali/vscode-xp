@@ -333,13 +333,13 @@ export class IntegrationTestEditorViewProvider {
 				return vscode.window.withProgress({
 					location: vscode.ProgressLocation.Notification,
 					cancellable: false,
-					title: `Идёт добавление конверта на сырые события`
+					title: `Добавление конверта на необработанные события`
 				}, async (progress) => {
 					try {
 						return this.addEnvelope(rawEvents, mimeType);
 					}
 					catch (error) {
-						ExceptionHelper.show(error, "Ошибка добавления конверта на сырые события");
+						ExceptionHelper.show(error, "Ошибка добавления конверта на необработанные события");
 					}
 				});
 			}
@@ -381,40 +381,51 @@ export class IntegrationTestEditorViewProvider {
 			}
 			// Команды с запуском утилит.
 			case "NormalizeRawEventsCommand": {
-
-				if (typeof message?.isEnrichmentRequired !== "boolean" ) {
-					DialogHelper.showInfo("Не задан параметр обогащения событий");
+				try {
+					if (typeof message?.isEnrichmentRequired !== "boolean" ) {
+						DialogHelper.showInfo("Не задан параметр обогащения событий");
+						return true;
+					}
+					const isEnrichmentRequired = message?.isEnrichmentRequired as boolean;
+	
+					// Актуализируем сырые события в тесте из вьюшки.
+					const currTest = await this.saveTestFromUI(message);
+					const command = new NormalizeRawEventsCommand({
+						config: this.config,
+						isEnrichmentRequired: isEnrichmentRequired,
+						rule: this.rule,
+						test: currTest
+					});
+	
+					await command.execute();
+					this.updateView(currTest.getNumber());
 					return true;
 				}
-				const isEnrichmentRequired = message?.isEnrichmentRequired as boolean;
-
-				// Актуализируем сырые события в тесте из вьюшки.
-				const currTest = await this.saveTestFromUI(message);
-				const command = new NormalizeRawEventsCommand({
-					config: this.config,
-					isEnrichmentRequired: isEnrichmentRequired,
-					rule: this.rule,
-					test: currTest
-				});
-
-				await command.execute();
-				this.updateView(currTest.getNumber());
-				return true;
+				catch(error) {
+					ExceptionHelper.show(error, 'Ошибка нормализации событий');
+				}
+				break;
 			}
 
 			// Почему-то GetExpectedEventCommand.name при отладке равен _GetExpectedEventCommand
 			// TODO: разобраться, почему так получилось
 			case "GetExpectedEventCommand": {
-				const currTest = await this.saveTestFromUI(message);
-				const command = new GetExpectedEventCommand({
-					config: this.config,
-					rule: this.rule,
-					test: currTest,
-					tmpDirPath: this.testsTmpFilesPath
-				});
+				try {
+					const currTest = await this.saveTestFromUI(message);
+					const command = new GetExpectedEventCommand({
+						config: this.config,
+						rule: this.rule,
+						test: currTest,
+						tmpDirPath: this.testsTmpFilesPath
+					});
 
-				await command.execute(this);
-				return true;
+					await command.execute(this);
+					return true;
+				}
+				catch(error) {
+					ExceptionHelper.show(error, 'Ошибка обновления ожидаемого события');
+				}
+				break;
 			}
 
 			case "RunIntegrationTestsCommand": {
@@ -463,13 +474,11 @@ export class IntegrationTestEditorViewProvider {
 	private async saveTestFromUI(message: any) : Promise<IntegrationTest> {
 		let rawEvents = message?.rawEvents;
 		if (!rawEvents) {
-			DialogHelper.showInfo("Не заданы сырые события для нормализации. Задайте события и повторите");
-			return;
+			throw new XpException("Не заданы сырые события для нормализации. Задайте события и повторите");
 		}
 
 		if (!message?.test) {
-			DialogHelper.showInfo("Сохраните тест перед запуском нормализации сырых событий и повторите действие");
-			return;
+			throw new XpException("Сохраните тест перед запуском нормализации сырых событий и повторите действие");
 		}
 
 		const currTest = IntegrationTest.convertFromObject(message.test);

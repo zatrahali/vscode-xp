@@ -11,7 +11,7 @@ export class Enveloper {
 	/**
 	 * Оборачивает события без конверта в конверт с соответствующим mimeType и раскладывает их в одну строку.
 	 * @param rawEvents сырые события
-	 * @param mimeType тип конверта для не обертнутых событий
+	 * @param mimeType тип конверта для не обернутых событий
 	 * @returns события без конверта обёрнуты в конверт и разложены в одну строку каждое
 	 */
 	public static addEnvelope(rawEvents: string, mimeType : EventMimeType): string[] {
@@ -76,7 +76,7 @@ export class Enveloper {
 		}
 
 		// Несколько событий.
-		const isEnvelopedEvent = rawEvents.split("\n").some(
+		const isEnvelopedEvent = rawEvents.split(Enveloper.END_OF_LINE).some(
 			(rawEventLine, index) => {
 
 				if(rawEventLine === "") {
@@ -186,18 +186,32 @@ export class Enveloper {
         for (const xmlEvent of allXmlEvents) {
             // Результирующий json.
             const resultXmlRawEvent = this.convertSingleEventLogXmlRawEventToJson(xmlEvent);
-            xmlRawEventCorrected = xmlRawEventCorrected.replace(xmlEvent, resultXmlRawEvent);
+            xmlRawEventCorrected = xmlRawEventCorrected.replace(
+				xmlEvent,
+				function() { return resultXmlRawEvent;}
+			);
         }
         return xmlRawEventCorrected;
 	}
 
 	public static convertSingleEventLogXmlRawEventToJson(xmlEvent : string) : string {
-		let jsonEventString = "";
-		const jsonEventObject = xml2json_light.xml2json(xmlEvent);
-		jsonEventString = JSON.stringify(jsonEventObject);
+		// TODO: make it smarter
+		// Because of such constructions the transformation breaks down, I do a manual escape
+		// <Data Name="TargetImage"><unknown process></Data>
+		const encodedUnknownProcess = '&lt;unknown process&gt;';
+		const unknownProcess = '<unknown process>';
+
+		const escapedXml = StringHelper.safeReplace(xmlEvent, unknownProcess, encodedUnknownProcess);
+		// escapedXml = StringHelper.safeReplace(escapedXml, `<Data Name=\\"RuleName\\" />`, "");
+
+		const jsonEventObject = xml2json_light.xml2json(escapedXml);
+		let jsonEventString = JSON.stringify(jsonEventObject);
+
+		// Inverse conversion
+		jsonEventString = StringHelper.safeReplace(jsonEventString, encodedUnknownProcess, unknownProcess);
 
 		// Результирующий json.
-		const resultJsonEvent = jsonEventString.replace(/_@ttribute/gm, "text");
+		const resultJsonEvent = jsonEventString.replace(Enveloper.XML_EVENTLOG_ATTRIBUTE_REGEXP, Enveloper.X_PT_EVENTLOG_ATTRIBUTE);
 		return resultJsonEvent;
 	}
 
@@ -213,7 +227,7 @@ export class Enveloper {
 			const jsonEventString = JSON.stringify(jsonEventObject);
 
             // Убираем артефакты, добавляем конверт и добавляем в файл
-            const resultJsonRawEvent = jsonEventString.replace(/_@ttribute/gm, "text");
+            const resultJsonRawEvent = jsonEventString.replace(Enveloper.XML_EVENTLOG_ATTRIBUTE_REGEXP, Enveloper.X_PT_EVENTLOG_ATTRIBUTE);
 			const envelopedRawEvent = this.addEventsToEnvelope([resultJsonRawEvent], "application/x-pt-eventlog");
 			await fs.promises.appendFile(envelopedJsonEventsFilePath, envelopedRawEvent[0] + os.EOL);
 
@@ -241,5 +255,8 @@ export class Enveloper {
 	}
 
 	// TODO: решить вопрос с визуализацией и кроссплатформенностью.
+	public static XML_EVENTLOG_ATTRIBUTE_REGEXP = /_@ttribute/gm;
+	public static X_PT_EVENTLOG_ATTRIBUTE = "text";
+	
 	public static END_OF_LINE = "\n";
 }

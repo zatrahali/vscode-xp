@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.13.22 (Pre-Release)
+
+- исправлена ошибка конвертации xml-события из Windows Event Viewer в (special thanks @nevermihcdfjndsxj).
+
 ## 3.13.21 (Pre-Release)
 
 - исправлены ошибки форматирования и сжатия JSON-ов в необработанных событиях и коде тестов (special thanks @paran0id_34);
