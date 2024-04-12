@@ -6,7 +6,7 @@ The [eXtraction and Processing (XP)](https://help.ptsecurity.com/projects/maxpat
 
 This extension was developed by [Dmitry Fedosov](https://github.com/DmitryOffsec) and [contributors](https://github.com/Security-Experts-Community/vscode-xp/graphs/contributors), it allows you to develop and test rules in VSCode and VSCodium, and publish them in the format required for your product.
 
-Guide to working with the extension (partially outdated, updating process in progress): [https://vscode-xp.readthedocs.io/](https://vscode-xp.readthedocs.io/)
+Guide to working with the extension (partially outdated, updating process in progress): [https://vscode-xp.readthedocs.io/](https://vscode-xp.readthedocs.io/en/latest/)
 
 ## Main features
 

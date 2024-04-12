@@ -31,7 +31,7 @@ import { XPPackingTaskProvider } from './providers/xpCustomTaskProvider';
 import { ExceptionHelper } from './helpers/exceptionHelper';
 import { FileSystemHelper } from './helpers/fileSystemHelper';
 import { XpEnumValuesCompletionItemProvider } from './providers/xpEnumValuesCompletionItemProvider';
-import { LogLevel, Logger } from './logger';
+import { Logger } from './logger';
 import { RetroCorrelationViewController } from './views/retroCorrelation/retroCorrelationViewProvider';
 import { XpHoverProvider } from './providers/xpHoverProvider';
 import { OriginsManager } from './models/content/originsManager';
@@ -47,13 +47,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 	try {
 		// Инициализация реестр глобальных параметров.
 		const config = await Configuration.init(context);
-		Log = new Logger(config);
-		if(config.getExtensionMode() === vscode.ExtensionMode.Development) {
-			Log.setLogLevel(LogLevel.Debug);
-		} else {
-			Log.setLogLevel(LogLevel.Info);
-		}
-		
+		Log = Logger.init(config);
 		Log.info(`Extension activation has started '${Configuration.getExtensionDisplayName()}'`);
 
 		// Информация по ОС

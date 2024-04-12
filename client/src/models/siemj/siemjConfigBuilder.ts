@@ -5,6 +5,7 @@ import { Configuration } from '../configuration';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { Log } from '../../extension';
 import { XpException } from '../xpException';
+import { EventMimeType } from '../../helpers/testHelper';
 
 export class LocalizationsBuildingOptions {
 	rulesSrcPath?: string;
@@ -262,21 +263,37 @@ out=${output}`;
 		this._scenarios.push("make-loca");
 	}
 
-	public addEventsNormalization(rawEventsFilePath : string) : void {
+	public addEventsNormalization(options: {rawEventsFilePath : string, mime?: EventMimeType}) : void {
 
 		const formulas = path.join('${output_folder}', this._config.getNormalizationsGraphFileName());
 		const not_norm_events = path.join('${output_folder}', this._config.getNotNormalizedEventsFileName());
 		const output = path.join('${output_folder}', this._config.getNormalizedEventsFileName());
-		const eventNormalizationSection = 
+
+		let eventNormalizationSection: string;
+		if(options.mime) {
+			eventNormalizationSection = 
 `
 [run-normalize]
 type=NORMALIZE
 formulas=${formulas}
-in=${rawEventsFilePath}
+in=${options.rawEventsFilePath}
+raw_without_envelope=yes
+mime=${options.mime}
+print_statistics=yes
+not_norm_events=${not_norm_events}
+out=${output}`;
+		} else {
+			eventNormalizationSection = 
+`
+[run-normalize]
+type=NORMALIZE
+formulas=${formulas}
+in=${options.rawEventsFilePath}
 raw_without_envelope=no
 print_statistics=yes
 not_norm_events=${not_norm_events}
 out=${output}`;
+		}
 
 		this._siemjConfigSection += eventNormalizationSection;
 		this._scenarios.push("run-normalize");

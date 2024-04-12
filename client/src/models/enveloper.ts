@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as xml2json_light from 'xml2json-light';
 import * as fs from 'fs';
 import * as os from 'os';
+import * as readline from 'readline';
 
 import { EventMimeType, TestHelper } from '../helpers/testHelper';
 import { XpException } from './xpException';
@@ -239,18 +240,20 @@ export class Enveloper {
 
 	public static async streamEnvelopeJsonlEvents(jsonlFilePath : string, envelopedJsonEventsFilePath: string, encoding: BufferEncoding) : Promise<number> {
 
-		const jsonEventsContent = (await fs.promises.readFile(jsonlFilePath, encoding)).toString();
-        
+		const fileStream = fs.createReadStream(jsonlFilePath);
+		const rl = readline.createInterface({
+			input: fileStream,
+			crlfDelay: Infinity,
+		});
+
 		let eventsCounter = 0;
-        const jsonEvents = jsonEventsContent.split(os.EOL);
-        for (const jsonEvent of jsonEvents) {
-            
+		for await (const jsonEvent of rl) {
 			const envelopedRawEvent = this.addEventsToEnvelope([jsonEvent], "application/x-pt-eventlog");
 			await fs.promises.appendFile(envelopedJsonEventsFilePath, envelopedRawEvent[0] + os.EOL, encoding);
 
 			eventsCounter++;
-        }
-
+		}
+		
 		return eventsCounter;
 	}
 

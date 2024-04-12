@@ -6,6 +6,7 @@ export enum LogLevel {
 	Warn = 2,
 	Info = 3,
 	Debug = 4,
+	Trace = 5
 }
 
 export abstract class ILogger {
@@ -134,6 +135,17 @@ export class Logger extends ILogger {
 		} else {
 			return num.toString();
 		}
+	}
+
+	public static init(config: Configuration) : Logger {
+		const log  = new Logger(config);
+		// if(config.getExtensionMode() === vscode.ExtensionMode.Development) {
+		// 	log.setLogLevel(LogLevel.Debug);
+		// 	return log;
+		// }
+
+		log.setLogLevel(config.getLogLevel());
+		return log;
 	}
 
 	private _level: LogLevel;

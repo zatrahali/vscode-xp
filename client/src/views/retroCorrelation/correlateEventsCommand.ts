@@ -94,7 +94,7 @@ export class CorrelateEventsCommand extends WebViewCommand {
     
                         // Фиксируем сколько времени ушло на корреляцию.
                         const endEnveloping = moment();
-                        Log.info(`Преобразования из xml в json и добавление конверта заняло ${DateHelper.formatDuration(startEnveloping, endEnveloping)}`);
+                        Log.info(`Добавление конверта заняло ${DateHelper.formatDuration(startEnveloping, endEnveloping)}`);
                         Log.info(`Всего подготовлено ${envelopedEventsCounter} событий для корреляции`);
                     }
 

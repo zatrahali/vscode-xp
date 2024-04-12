@@ -5,7 +5,7 @@
   "author": "Dmitry Fedosov (@DmitryOffsec)",
   "icon": "resources/xp.png",
   "license": "MIT",
-  "version": "3.13.22",
+  "version": "3.13.23",
   "repository": {
     "type": "git",
     "url": "https://github.com/Security-Experts-Community/vscode-xp"
@@ -711,40 +711,40 @@
         "xpConfig.kbtBaseDirectory": {
           "scope": "window",
           "type": "string",
-          "markdownDescription": "Путь к директории c KBT"
+          "markdownDescription": "%xp.xpConfig.kbtBaseDirectoryDescription%"
         },
         "xpConfig.outputDirectoryPath": {
           "scope": "window",
           "type": "string",
-          "markdownDescription": "Путь к выходной директории"
+          "markdownDescription": "%xp.xpConfig.outputDirectoryPathDescription%"
         },
         "xpConfig.correlatorTimeout": {
           "scope": "window",
           "type": "integer",
-          "description": "Таймаут работы коррелятора в секундах",
+          "description": "%xp.xpConfig.correlatorTimeoutDescription%",
           "default": 180
         },
         "xpConfig.origin": {
           "type": "object",
           "order": 2,
-          "description": "Информация о поставщике. Используется при упаковке контента в KB-файл ",
+          "description": "%xp.xpConfig.originDescription%",
           "properties": {
             "contentPrefix": {
               "scope": "window",
               "type": "string",
-              "description": "Префикс ObjectId, а также системный префикс для задания поставщика контента. Например, пользовательские правила с возможностью редактирования имеют префикс LOC, системные PT. Если префикс не задан, ObjectId не генерируется для создаваемых правил."
+              "description": "%xp.xpConfig.origin.contentPrefixDescription%"
             },
             "ru": {
               "type": "string",
-              "description": "Отображаемое имя (RU)"
+              "description": "%xp.xpConfig.origin.ruDescription%"
             },
             "en": {
               "type": "string",
-              "description": "Display Name (EN)"
+              "description": "%xp.xpConfig.origin.enDescription%"
             },
             "id": {
               "type": "string",
-              "description": "Уникальный идентификатор поставщика"
+              "description": "%xp.xpConfig.origin.idDescription%"
             }
           },
           "additionalProperties": false,
@@ -754,6 +754,19 @@
             "contentPrefix" : "SEC",
             "id" : ""
           }
+        },
+        "xpConfig.logLevel": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "Error",
+            "Warn",
+            "Info",
+            "Debug",
+            "Trace"
+          ],
+          "default": "Info",
+          "description": "%xp.xpConfig.logLevelDescription%"
         },
         "languageServer.maxNumberOfProblems": {
           "scope": "resource",

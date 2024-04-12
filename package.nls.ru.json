@@ -45,6 +45,18 @@
 	"xp.views.modularTestsListView.runAll": "Запустить все",
 	"xp.views.modularTestsListView.create": "Создать",
 	"xp.views.modularTestsListView.remove": "Удалить",
-	"xp.views.modularTestsListView.refresh": "Обновить"
+	"xp.views.modularTestsListView.refresh": "Обновить",
+
+	"xp.xpConfig.kbtBaseDirectoryDescription": "Путь к директории c [Knowledge Base Toolkit](https://github.com/vxcontrol/xp-kbt/releases)",
+	"xpConfig.outputDirectoryPathDescription": "Путь к выходной директории, в которую компилируются все артефакты контента: графы, табличные списки, базы данных табличных список и другие. Данная директория очищает при запуске расширения",
+	"xp.xpConfig.correlatorTimeoutDescription": "Таймаут работы коррелятора в секундах",
+
+	"xp.xpConfig.originDescription": "Информация о поставщике. Используется при упаковке контента в KB-файл",
+	"xp.xpConfig.origin.contentPrefixDescription": "Префикс ObjectId, а также системный префикс для задания поставщика контента. Например, пользовательские правила с возможностью редактирования имеют префикс LOC, системные PT. Если префикс не задан, ObjectId не генерируется для создаваемых правил",
+	"xp.xpConfig.origin.ruDescription": "Отображаемое имя (RU)",
+	"xp.xpConfig.origin.enDescription": "Display Name (EN)",
+	"xp.xpConfig.origin.idDescription": "The supplier's unique identifier, which is a GUID (globally unique identifier)",
+
+	"xp.xpConfig.logLevelDescription": "Уровень получаемой информации об ошибках. По умолчанию Info"
 }
 

@@ -65,7 +65,7 @@ export class CorrGraphRunner {
 			force: this._options.forceLocalizationsBuilding
 		});
 
-		configBuilder.addEventsNormalization(rawEventsFilePath);
+		configBuilder.addEventsNormalization({rawEventsFilePath: rawEventsFilePath});
 		configBuilder.addEventsEnrichment();
 		configBuilder.addCorrelateEnrichedEvents();
 		configBuilder.addLocalizationForCorrelatedEvents();

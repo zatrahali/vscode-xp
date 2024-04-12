@@ -74,7 +74,7 @@ export class SiemjManager {
 		const configBuilder = new SiemjConfBuilder(this.config, contentRootPath);
 		configBuilder.addNormalizationsGraphBuilding(false);
 		configBuilder.addTablesSchemaBuilding();
-		configBuilder.addEventsNormalization(rawEventsFilePath);
+		configBuilder.addEventsNormalization({rawEventsFilePath: rawEventsFilePath});
 		const siemjConfContent = configBuilder.build();
 
 		const siemjExecutionResult = await this.executeSiemjConfigForRule(rule, siemjConfContent);
@@ -120,7 +120,7 @@ export class SiemjManager {
 		configBuilder.addTablesSchemaBuilding();
 		configBuilder.addTablesDbBuilding();
 		configBuilder.addEnrichmentsGraphBuilding();
-		configBuilder.addEventsNormalization(rawEventsFilePath);
+		configBuilder.addEventsNormalization({rawEventsFilePath: rawEventsFilePath});
 		configBuilder.addEventsEnrichment();
 		const siemjConfContent = configBuilder.build();
 

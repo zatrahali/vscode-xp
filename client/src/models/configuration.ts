@@ -15,6 +15,7 @@ import { FileDiagnostics } from './siemj/siemJOutputParser';
 import { LocalizationService } from '../l10n/localizationService';
 import { Origin } from './content/originsManager';
 import { DialogHelper } from '../helpers/dialogHelper';
+import { LogLevel } from '../logger';
 
 export type EncodingType = "windows-1251" | "utf-8" | "utf-16"
 
@@ -605,6 +606,33 @@ export class Configuration {
 		const configuration = this.getConfiguration();
 		const correlatorTimeout = configuration.get<number>("correlatorTimeout");
 		return correlatorTimeout;
+	}
+
+	public getLogLevel() : LogLevel {
+		const configuration = this.getConfiguration();
+		const logLevel = configuration.get<string>("logLevel");
+		switch(logLevel) {
+			case LogLevel[LogLevel.Error]: {
+				return LogLevel.Error;
+			}
+			case LogLevel[LogLevel.Warn]: {
+				return LogLevel.Warn;
+			}
+			case LogLevel[LogLevel.Info]: {
+				return LogLevel.Info;
+			}
+			case LogLevel[LogLevel.Debug]: {
+				return LogLevel.Debug;
+			}
+			case LogLevel[LogLevel.Trace]: {
+				return LogLevel.Trace;
+			}
+			default: {
+				// По умолчанию
+				return LogLevel.Info;
+			}
+			
+		}
 	}
 
 	public getBaseOutputDirectoryPath() : string {

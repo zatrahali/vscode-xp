@@ -38,7 +38,7 @@ export class CorrGraphRunner {
 		configBuilder.addCorrelationsGraphBuilding();
 		configBuilder.addEnrichmentsGraphBuilding();
 
-		configBuilder.addEventsNormalization(rawEventsFilePath);
+		configBuilder.addEventsNormalization({rawEventsFilePath: rawEventsFilePath});
 		configBuilder.addEventsEnrichment();
 		configBuilder.addCorrelateEnrichedEvents();
 		
