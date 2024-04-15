@@ -216,10 +216,10 @@ export class LocalizationEditorViewProvider {
 							"По имеющимся событиям не отработала ни одна локализация. Проверьте, что интеграционные тесты проходят, корректны критерии локализации. После исправлений повторите.");
 					}
 
-					const verifiedLocalization = locExamples.some(le => TestHelper.isDefaultLocalization(le.ruText));
-					if(verifiedLocalization) {
+					const isDefaultLocalization = locExamples.some(le => TestHelper.isDefaultLocalization(le.ruText));
+					if(isDefaultLocalization) {
 						DialogHelper.showError("Обнаружена локализация по умолчанию. Исправьте/добавьте нужные критерии локализаций и повторите");
-						this._rule.setStatus(ContentItemStatus.Unverified, "Локализации не прошли проверку");
+						this._rule.setStatus(ContentItemStatus.Unverified, "Локализация не прошла проверку, обнаружен пример локализации по умолчанию");
 					} else {
 						this._rule.setStatus(ContentItemStatus.Verified, "Интеграционные тесты и локализации прошли проверку");
 					}
