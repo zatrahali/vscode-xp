@@ -319,11 +319,6 @@ export class TestHelper {
 	}
 
 	public static compressFormattedJsons(input: string, regEx: RegExp): string {
-
-		if (!input) {
-			throw new Error("Переданный список событий пуст");
-		}
-
 		let comNormEventResult: RegExpExecArray | null;
 		let compressedJson = input;
 		while ((comNormEventResult = regEx.exec(input))) {
