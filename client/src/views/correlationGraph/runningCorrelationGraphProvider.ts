@@ -1,11 +1,9 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as os from 'os';
 import * as fs from 'fs';
 
 import { MustacheFormatter } from '../mustacheFormatter';
 import { DialogHelper } from '../../helpers/dialogHelper';
-import { RuleBaseItem } from '../../models/content/ruleBaseItem';
 import { Configuration } from '../../models/configuration';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { RegExpHelper } from '../../helpers/regExpHelper';
@@ -22,7 +20,7 @@ export class RunningCorrelationGraphProvider {
     private static showView = 'KnowledgebaseTree.runningCorrelationGraph';
 
     private constructor(
-        private readonly _config: Configuration,
+        private readonly config: Configuration,
         private readonly _formatter: MustacheFormatter
     ) {}
 
@@ -40,7 +38,7 @@ export class RunningCorrelationGraphProvider {
         config.getContext().subscriptions.push(
             vscode.commands.registerCommand(
                 RunningCorrelationGraphProvider.showView,
-                async (selectedItem: RuleBaseItem) => {
+                async () => {
                     return createCorrelationViewProvider.showView();
                 }
             )
@@ -50,33 +48,40 @@ export class RunningCorrelationGraphProvider {
     private showView() {
 
         // Создать и показать панель.
-        this._view = vscode.window.createWebviewPanel(
+        this.view = vscode.window.createWebviewPanel(
             RunningCorrelationGraphProvider.viewId,
-            'Корреляция событий',
+            this.config.getMessage("View.CorrelateEvents.Title"),
             vscode.ViewColumn.One,
             {
                 retainContextWhenHidden : true,
                 enableFindWidget : true
             });
 
-        this._view.webview.options = {
+        this.view.webview.options = {
             enableScripts: true
         };
 
-        this._view.webview.onDidReceiveMessage(
+        this.view.webview.onDidReceiveMessage(
             this.receiveMessageFromWebView,
             this
         );
 
-        const resourcesUri = this._config.getExtensionUri();
-		const extensionBaseUri = this._view.webview.asWebviewUri(resourcesUri);
+        const resourcesUri = this.config.getExtensionUri();
+		const extensionBaseUri = this.view.webview.asWebviewUri(resourcesUri);
         try {
             const templateDefaultContent = {
-                "ExtensionBaseUri" : extensionBaseUri
+                "ExtensionBaseUri" : extensionBaseUri,
+                "Locale" : {
+                    "RawEventsLabel": this.config.getMessage("View.CorrelateEvents.RawEventsLabel"),
+                    "CorrelateEventsLabel": this.config.getMessage("View.CorrelateEvents.CorrelateEventsLabel"),
+                    "CorrelateEventsButton": this.config.getMessage("View.CorrelateEvents.CorrelateEventsButton"),
+                    "WordWrapCheckBox": this.config.getMessage("View.CorrelateEvents.WordWrapCheckBox"),
+                    "WrapRawEventsInAnEnvelope" : this.config.getMessage('View.IntegrationTests.WrapRawEventsInAnEnvelope'),
+                }
             };
 
             const htmlContent = this._formatter.format(templateDefaultContent);
-            this._view.webview.html = htmlContent;
+            this.view.webview.html = htmlContent;
         }
         catch (error) {
             DialogHelper.showError("Не удалось отобразить шаблон правила корреляции", error);
@@ -120,7 +125,7 @@ export class RunningCorrelationGraphProvider {
         Log.info("Запущена корреляция событий");
 
         // Прогоняем событие по графам для каждой из корневых директорий текущего режима
-        const rootPaths = this._config.getContentRoots();
+        const rootPaths = this.config.getContentRoots();
         rootPaths.forEach(rootPath => {
             vscode.window.withProgress({
                 location: vscode.ProgressLocation.Notification,
@@ -131,14 +136,14 @@ export class RunningCorrelationGraphProvider {
                     const rootFolder = path.basename(rootPath);
 
                      // Создаем временную директорию.
-                    const tmpDirectoryPath = this._config.getRandTmpSubDirectoryPath(rootFolder);
+                    const tmpDirectoryPath = this.config.getRandTmpSubDirectoryPath(rootFolder);
                     await fs.promises.mkdir(tmpDirectoryPath, {recursive : true});
 
                     // Сохраняет сырые события в конверте на диск.
                     const rawEventsFilePath = path.join(tmpDirectoryPath, RunningCorrelationGraphProvider.RAW_EVENTS_FILENAME);
                     await FileSystemHelper.writeContentFile(rawEventsFilePath, rawEvents);
 
-                    const runner = new CorrGraphRunner(this._config);
+                    const runner = new CorrGraphRunner(this.config);
                     const correlatedEventsString = await runner.run(rootPath, rawEventsFilePath);
 
                     if(!correlatedEventsString) {
@@ -161,7 +166,7 @@ export class RunningCorrelationGraphProvider {
 
                     DialogHelper.showInfo(`Количество сработавших корреляций: ${correlationNames.length}`);
                     // Отдаем события во front-end.
-                    this._view.webview.postMessage( {
+                    this.view.webview.postMessage( {
                         command : "correlatedEvents",
                         events : formattedEvents            
                     });
@@ -186,7 +191,7 @@ export class RunningCorrelationGraphProvider {
 			return;
 		}
 
-		this._view.webview.postMessage({
+		this.view.webview.postMessage({
 			'command': 'updateRawEvents',
 			'rawEvents': envelopedRawEventsString
 		});
@@ -196,5 +201,5 @@ export class RunningCorrelationGraphProvider {
     public static TEXTAREA_END_OF_LINE = "\n";
     public static RAW_EVENTS_FILENAME = "raw_events.json"
     
-    private _view: vscode.WebviewPanel;
+    private view: vscode.WebviewPanel;
 }

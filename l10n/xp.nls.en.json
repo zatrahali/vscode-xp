@@ -31,7 +31,7 @@
     "View.IntegrationTests.RunAllTests" : "Run all tests",
     "View.IntegrationTests.RawEvents" : "Raw events",
     "View.IntegrationTests.WordWrap" : "Word wrap",
-    "View.IntegrationTests.WrapRawEventsInAnEnvelope" : "Wrap raw events in an envelope",
+    "View.IntegrationTests.WrapRawEventsInAnEnvelope" : "Wrap in an envelope",
     "View.IntegrationTests.Normalize" : "Normalize",
     "View.IntegrationTests.NormalizeAndEnrich" : "Normalize and enrich",
     "View.IntegrationTests.NormalizedEvents" : "Normalized events",
@@ -64,10 +64,17 @@
     "NameReserved": "This name is reserved and cannot be used",
     "AlreadyExists": "This name already exists",
 
-    "View.CorrelateLogFiles": "Correlation of events from files",
+    "View.CorrelateLogFiles.Title": "Correlation of events from files",
     "View.CorrelateLogFiles.AddEventFiles": "Add event files",
     "View.CorrelateLogFiles.CorrelateEvents": "Run correlation",
     "View.CorrelateLogFiles.CorrelationEvents": "Correlation events",
+
+    "View.CorrelateEvents.Title": "Event correlation",
+    "View.CorrelateEvents.RawEventsLabel": "Raw events",
+    "View.CorrelateEvents.CorrelateEventsLabel": "Correlation events",
+    "View.CorrelateEvents.CorrelateEventsButton": "Correlate events",
+    "View.CorrelateEvents.WordWrapCheckBox": "Wrap according to words",
+    "View.CorrelateEvents.WrapRawEventsInAnEnvelope" : "Wrap in an envelope",
 
     "View.Localization.Title": "Localization {0}",
     "View.Localization.Description": "Description of the rule",

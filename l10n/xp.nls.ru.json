@@ -63,10 +63,17 @@
     "NameReserved": "Это название зарезервировано и не может быть использовано",
     "AlreadyExists": "Такое название уже используется",
 
-    "View.CorrelateLogFiles": "Корреляция событий из файлов",
+    "View.CorrelateLogFiles.Title": "Корреляция событий из файлов",
     "View.CorrelateLogFiles.AddEventFiles": "Добавить файлы с событиями",
     "View.CorrelateLogFiles.CorrelateEvents": "Запустить корреляцию",
     "View.CorrelateLogFiles.CorrelationEvents": "Корреляционные события",
+
+    "View.CorrelateEvents.Title": "Корреляция событий",
+    "View.CorrelateEvents.RawEventsLabel": "Необработанные события",
+    "View.CorrelateEvents.CorrelateEventsLabel": "Корреляционные события",
+    "View.CorrelateEvents.CorrelateEventsButton": "Коррелировать события",
+    "View.CorrelateEvents.WordWrapCheckBox": "Переносить по словам",
+    "View.CorrelateEvents.WrapRawEventsInAnEnvelope" : "Обернуть в конверт",
 
     "View.Localization.Title": "Локализация {0}",
     "View.Localization.Description": "Описание правила",

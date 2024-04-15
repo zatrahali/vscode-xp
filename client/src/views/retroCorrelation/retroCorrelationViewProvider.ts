@@ -36,7 +36,7 @@ export class RetroCorrelationViewController extends BaseWebViewController {
 				config : config,
 				templatePath: createCorrelationTemplateFilePath,
 				viewId: RetroCorrelationViewController.viewId,
-				viewTitle: config.getMessage("View.CorrelateLogFiles"),
+				viewTitle: config.getMessage("View.CorrelateLogFiles.Title"),
 				webViewOptions: {
 					retainContextWhenHidden: true,
 					enableCommandUris : true,
