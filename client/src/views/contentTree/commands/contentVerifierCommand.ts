@@ -153,7 +153,7 @@ export class ContentVerifierCommand extends ViewCommand {
 
 			const verifiedLocalization = locExamples.some(le => TestHelper.isDefaultLocalization(le.ruText));
 			if(verifiedLocalization) {
-				rule.setStatus(ContentItemStatus.Unverified, "Локализации не прошли проверку");
+				rule.setStatus(ContentItemStatus.Unverified, "Локализация не прошла проверку, обнаружен пример локализации по умолчанию");
 			} else {
 				rule.setStatus(ContentItemStatus.Verified, "Интеграционные тесты и локализации прошли проверку");
 			}
