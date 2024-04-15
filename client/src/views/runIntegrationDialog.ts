@@ -62,7 +62,7 @@ export class RunIntegrationTestDialog {
 			const subRulePaths = await this.getRecursiveSubRulePaths(rule);
 			const uniqueSubRulePaths = [...new Set(subRulePaths)];
 	
-			Log.info(`Из правила ${rule.getName()} получены следующие подправила (subrules): `, uniqueSubRulePaths.map(sp => path.basename(sp)));
+			Log.info(`Из правила ${rule.getName()} получены следующие вспомогательные правила (subrule): `, uniqueSubRulePaths.map(sp => path.basename(sp)));
 	
 			testRunnerOptions.correlationCompilation = CompilationType.Auto;
 			// Не забываем путь к самой корреляции.
@@ -76,7 +76,7 @@ export class RunIntegrationTestDialog {
 
 		// Если сабрули, для которых пути не найдены.
 		const result = await DialogHelper.showInfo(
-			`Пути к некоторым подправилам (subrules) обнаружить не удалось, возможно ошибка в правила. Хотите скомпилировать корреляции из текущего пакета или их всех пакетов?`,
+			`Пути к некоторым [вспомогательным правилам (subrule)](https://help.ptsecurity.com/ru-RU/projects/siem/8.1/help/1492811787) обнаружить не удалось, возможно ошибка в правила. Хотите скомпилировать корреляции из текущего пакета или их всех пакетов?`,
 			this.CURRENT_PACKAGE,
 			this.ALL_PACKAGES);
 

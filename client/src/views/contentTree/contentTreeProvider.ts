@@ -318,8 +318,8 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 					}
 
 					const unpackKbFilePath = fileInfos.fsPath; 
-					const packCommand = new PackKbCommand(config, selectedPackage, unpackKbFilePath);
-					await packCommand.execute();
+					const command = new PackKbCommand(config, selectedPackage, unpackKbFilePath);
+					await command.execute();
 				}
 			)
 		);

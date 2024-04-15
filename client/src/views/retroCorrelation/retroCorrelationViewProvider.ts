@@ -57,12 +57,12 @@ export class RetroCorrelationViewController extends BaseWebViewController {
         );
     }
 
-	protected async preShow() : Promise<void> {
+	protected async preShow() : Promise<boolean> {
 		this.tmpDirPath = this._descriptor.config.getRandTmpSubDirectoryPath();
 		this.xmlEventsFilePath = path.join(this.tmpDirPath, RetroCorrelationViewController.XML_EVENTS_FILENAME);
 		
 		await fs.promises.mkdir(this.tmpDirPath, {recursive : true});
-		return;
+		return true;
 	}
 
 	protected getHtml(): string {

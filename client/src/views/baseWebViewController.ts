@@ -70,10 +70,13 @@ export abstract class BaseWebViewController {
 	/**
 	 * Выполняется перед отображением вьюшки.
 	 */
-	protected abstract preShow() : Promise<void>;
+	protected abstract preShow() : Promise<boolean>;
 
 	public async show() : Promise<void> {
-		await this.preShow();
+		const result = await this.preShow();
+		if(!result) {
+			return;
+		}
 		await this.showDefault();
 		return;
 	}

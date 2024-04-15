@@ -24,6 +24,11 @@ export class PackKbCommand extends ViewCommand {
 	}
 
 	public async execute() : Promise<void> {
+		if(!this.config.isKbOpened()) {
+			DialogHelper.showWarning(this.config.getMessage("View.ObjectTree.Message.NeedToOpenKnowledgeBase"));
+			return;
+		}
+		
 		if(fs.existsSync(this.unpackKbFilePath)) {
 			await fs.promises.unlink(this.unpackKbFilePath);
 		}

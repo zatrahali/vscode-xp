@@ -34,9 +34,8 @@ export class UnpackKbCommand extends ViewCommand {
 			return;
 		}
 
-		const config = Configuration.get();
-		if(!config.isKbOpened()) {
-			DialogHelper.showInfo("Для распаковки пакетов нужно открыть базу знаний");
+		if(!this.config.isKbOpened()) {
+			DialogHelper.showWarning(this.config.getMessage("View.ObjectTree.Message.NeedToOpenKnowledgeBase"));
 			return;
 		}
 

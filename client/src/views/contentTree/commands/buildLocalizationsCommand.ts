@@ -22,6 +22,12 @@ export class BuildLocalizationsCommand extends ViewCommand {
 
 	public async execute() : Promise<void> {
 		Log.info(this.config.getMessage("View.ObjectTree.Progress.BuildAllLocalizations"));
+		
+		if(!this.config.isKbOpened()) {
+			DialogHelper.showWarning(this.config.getMessage("View.ObjectTree.Message.NeedToOpenKnowledgeBase"));
+			return;
+		}
+
 		return vscode.window.withProgress({
 			location: vscode.ProgressLocation.Notification,
 			cancellable: true,

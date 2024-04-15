@@ -140,7 +140,7 @@ export class CorrelateEventsCommand extends WebViewCommand {
                         correlatedEventsString = filteredCorrelatedEvents.map(fce => JSON.stringify(fce)).join(os.EOL);
                     }
                     catch(error) {
-                        DialogHelper.showError("Не удалось исключить подправила (subrules) из корреляционных событий", error);
+                        DialogHelper.showError("Не удалось исключить [вспомогательные правила (subrule)](https://help.ptsecurity.com/ru-RU/projects/siem/8.1/help/1492811787) из корреляционных событий", error);
                     }
 
                     // Фиксируем сколько времени ушло на корреляцию.

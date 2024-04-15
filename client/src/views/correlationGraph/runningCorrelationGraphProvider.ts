@@ -46,6 +46,10 @@ export class RunningCorrelationGraphProvider {
     }
 
     private showView() {
+        if(!this.config.isKbOpened()) {
+			DialogHelper.showWarning(this.config.getMessage("View.ObjectTree.Message.NeedToOpenKnowledgeBase"));
+			return;
+		}
 
         // Создать и показать панель.
         this.view = vscode.window.createWebviewPanel(
