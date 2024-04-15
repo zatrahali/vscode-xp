@@ -23,56 +23,62 @@ export class RunIntegrationTestsCommand extends Command {
 			cancellable: true,
 		}, async (progress, cancellationToken: vscode.CancellationToken) => {
 
-			Log.info(`Запущены интеграционные тесты для правила ${this.params.rule.getName()}`);
-
 			const tests = this.params.rule.getIntegrationTests();
+			const ruleName = this.params.rule.getName();
+			const config = this.params.config;
 			if (tests.length == 0) {
-				DialogHelper.showInfo(`Тесты для правила '${this.params.rule.getName()}' не найдены. Добавьте хотя бы один тест и повторите`);
+				DialogHelper.showInfo(config.getMessage("View.IntegrationTests.Message.NoTestsFound", ruleName));
 				return false;
 			}
 
 			// Уточняем информацию для пользователей если в правиле обнаружено использование сабрулей.
 			const ruleCode = await this.params.rule.getRuleCode();
 			if (TestHelper.isRuleCodeContainsSubrules(ruleCode)) {
-				progress.report({
-					message: `Интеграционные тесты для правила ${this.params.rule.getName()} с вспомогательными правилами (subrules)`
-				});
+				const progressMessage = config.getMessage("View.IntegrationTests.Progress.RunAllTests", ruleName);
+				Log.info(progressMessage);
+				progress.report({message: progressMessage});
 			} else {
-				progress.report({
-					message: `Интеграционные тесты для правила ${this.params.rule.getName()}`
-				});
+				const progressMessage = config.getMessage("View.IntegrationTests.Progress.RunAllTestsWithSubrules", ruleName);
+				Log.info(progressMessage);
+				progress.report({message: progressMessage});
 			}
 
-			const ritd = new RunIntegrationTestDialog(this.params.config, this.params.tmpDirPath);
+			const ritd = new RunIntegrationTestDialog(config, this.params.tmpDirPath);
 			const testRunnerOptions = await ritd.getIntegrationTestRunOptions(this.params.rule);
 			testRunnerOptions.cancellationToken = cancellationToken;
 
 			const outputParser = new SiemJOutputParser();
-			const testRunner = new IntegrationTestRunner(this.params.config, outputParser);
+			const testRunner = new IntegrationTestRunner(config, outputParser);
 			const siemjResult = await testRunner.run(this.params.rule, testRunnerOptions);
 
-			this.params.config.resetDiagnostics(siemjResult.fileDiagnostics);
+			config.resetDiagnostics(siemjResult.fileDiagnostics);
 
 			const executedIntegrationTests = this.params.rule.getIntegrationTests();
 			if(executedIntegrationTests.every(it => it.getStatus() === TestStatus.Success)) {
 				// Задаём и обновляем статус элемента дерева
-				this.params.rule.setStatus(ContentItemStatus.Verified, "Интеграционные тесты пройдены");
+				this.params.rule.setStatus(
+					ContentItemStatus.Verified,
+					config.getMessage("View.ObjectTree.ItemStatus.TestsPassed")
+				);
 
-				DialogHelper.showInfo(`Интеграционные тесты правила '${this.params.rule.getName()}' прошли успешно`);
+				DialogHelper.showInfo(config.getMessage("View.IntegrationTests.Message.TestsPassed", ruleName));
 				await ContentTreeProvider.refresh(this.params.rule);
 				return true;
 			} 
 
 			if(executedIntegrationTests.some(it => it.getStatus() === TestStatus.Success)) {
-				this.params.rule.setStatus(ContentItemStatus.Unverified, "Интеграционные тесты не пройдены");
+				this.params.rule.setStatus(
+					ContentItemStatus.Unverified,
+					config.getMessage("View.ObjectTree.ItemStatus.TestsFailed")
+				);
 
-				DialogHelper.showInfo(`Не все тесты правила '${this.params.rule.getName()}' прошли успешно`);
+				DialogHelper.showInfo(config.getMessage("View.IntegrationTests.Message.NotAllTestsWereSuccessful", ruleName));
 				await ContentTreeProvider.refresh(this.params.rule);
 				return true;
 			} 
 
 			this.params.rule.setStatus(ContentItemStatus.Default);
-			DialogHelper.showError(`Все тесты не были пройдены. Возможно наличие синтаксических ошибок в коде правила или его зависимостях. [Смотри Output](command:xp.commonCommands.showOutputChannel)`);
+			DialogHelper.showError(config.getMessage("View.IntegrationTests.Message.AllTestsFailed", ruleName));
 			ContentTreeProvider.refresh(this.params.rule);
 			return true;
 		});

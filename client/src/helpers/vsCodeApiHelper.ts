@@ -20,6 +20,10 @@ export class VsCodeApiHelper {
 		);
 	}
 
+	public static showProblemsWindow() : Thenable<unknown>  {
+		return vscode.commands.executeCommand('workbench.action.showErrorsWarnings');
+	}
+
 	public static openExtensionSettings(settingsPrefix: string) : Thenable<unknown> {
 		return vscode.commands.executeCommand('workbench.action.openSettings',
 			settingsPrefix

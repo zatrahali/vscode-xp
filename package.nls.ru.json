@@ -8,7 +8,7 @@
 	"xp.views.knowledgebaseTree.title": "Дерево объектов",
 	"xp.views.knowledgebaseTree.refreshContentTreeCommand": "Обновить",
 	"xp.views.knowledgebaseTree.openKnowledgebaseCommand": "Открыть базу знаний",
-	"xp.views.knowledgebaseTree.correlateEventsCommand": "Корреляция событий",
+	"xp.views.knowledgebaseTree.correlateEventsCommand": "Коррелировать событий",
 
 	"xp.views.knowledgebaseTree.createPackageCommand": "Создать пакет экспертизы",
 	"xp.views.knowledgebaseTree.createCorrelationCommand": "Создать правило корреляции",

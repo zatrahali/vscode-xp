@@ -25,6 +25,9 @@
     "View.ObjectTree.Progress.BuildAllNormalizations": "Compilation of all normalizations",
     "View.ObjectTree.Progress.BuildAllWlds": "Compiling all wld files",
 
+    "View.ObjectTree.ItemStatus.TestsPassed": "Integration tests passed",
+    "View.ObjectTree.ItemStatus.TestsFailed": "Integration tests failed",
+
     "View.IntegrationTests.Title": "{0} tests",
     "View.IntegrationTests.Test": "Test", 
     "View.IntegrationTests.SaveAll" : "Save all",
@@ -36,15 +39,24 @@
     "View.IntegrationTests.NormalizeAndEnrich" : "Normalize and enrich",
     "View.IntegrationTests.NormalizedEvents" : "Normalized events",
     "View.IntegrationTests.ConditionForPassingTheTest" : "Test code",
-
     "View.IntegrationTests.GetExpectedEvent" : "Replace the expected event with the actual one",
-    "View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated": "The expected event in the test code was successfully updated. Adjust if necessary and save the test",
-    "View.IntegrationTests.Message.UnableGetExpectedEvent": "Unable to get expected event for test that failed",
-    
     "View.IntegrationTests.CompareYourResults": "Compare the actual event and the expected one",
     "View.IntegrationTests.ClearExpectedEvent": "Clear expected event", 
 
+    "View.IntegrationTests.Progress.RunAllTests": "Integration tests for rule {0}",
+    "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Integration tests for rule {0} with subrules",
 
+    "View.IntegrationTests.Message.NoTestsFound": "No tests found for rule {0}. Add at least one test and repeat",
+    "View.IntegrationTests.Message.TestsPassed": "Integration tests for rule {0} passed successfully",
+    "View.IntegrationTests.Message.NotAllTestsWereSuccessful": "Not all tests of rule {0} were successful",
+    "View.IntegrationTests.Message.AllTestsFailed": "All tests for rule {0} failed. There may be [errors in the rule code](command:workbench.action.showErrorsWarnings) or its dependencies. If not, then [see output](command:xp.commonCommands.showOutputChannel)",
+
+    "View.IntegrationTests.Message.TestsSavedSuccessfully": "All tests saved",
+    "View.IntegrationTests.Message.FailedToSaveTests": "Failed to save tests",
+
+    "View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated": "The expected event in the test code was successfully updated. Adjust if necessary and save the test",
+    "View.IntegrationTests.Message.UnableGetExpectedEvent": "Unable to get expected event for test that failed",
+    
     "View.Metainfo": "Metadata {0}",
     "View.Metainfo.Id" : "ID",
     "View.Metainfo.KnowledgeHolders" : "Authors",

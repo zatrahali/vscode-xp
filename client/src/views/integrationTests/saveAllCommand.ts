@@ -18,14 +18,15 @@ export class SaveAllCommand extends Command {
 	}
 
 	public async execute(): Promise<boolean> {
+		const config = this.params.config;
 		try {
 			// В данном руле сохраняются в памяти нормализованные события.
 			this.params.rule = await this.saveAllTests(this.params.rule);
-			DialogHelper.showInfo(`Все тесты сохранены`);
+			DialogHelper.showInfo(config.getMessage("View.IntegrationTests.Message.TestsSavedSuccessfully"));
 			return true;
 		}
 		catch (error) {
-			ExceptionHelper.show(error, `Не удалось сохранить тест`);
+			ExceptionHelper.show(error, config.getMessage("View.IntegrationTests.Message.FailedToSaveTests"));
 			return false;
 		}
 	}

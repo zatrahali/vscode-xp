@@ -24,6 +24,9 @@
     "View.ObjectTree.Progress.BuildAllLocalizations": "Компиляция всех правил локализации",
     "View.ObjectTree.Progress.BuildAllNormalizations": "Компиляция всех правил нормализации",
     "View.ObjectTree.Progress.BuildAllWlds": "Компиляция всех файлов .wld",
+
+    "View.ObjectTree.ItemStatus.TestsPassed": "Интеграционные тесты пройдены",
+    "View.ObjectTree.ItemStatus.TestsFailed": "Интеграционные тесты не пройдены",
     
     "View.IntegrationTests.Title": "Тесты для {0}",
     "View.IntegrationTests.Test": "Тест", 
@@ -36,13 +39,23 @@
     "View.IntegrationTests.NormalizeAndEnrich" : "Нормализовать и обогатить",
     "View.IntegrationTests.NormalizedEvents" : "Нормализованные события",
     "View.IntegrationTests.ConditionForPassingTheTest" : "Код теста",
-
     "View.IntegrationTests.GetExpectedEvent" : "Заменить ожидаемое событие фактическим",
-    "View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated": "Ожидаемое событие в коде теста обновлено. Скорректируйте если необходимо и сохраните тест",
-    "View.IntegrationTests.Message.UnableGetExpectedEvent": "Невозможно получить ожидаемое событие для теста, который завершился неуспешно",
-
     "View.IntegrationTests.CompareYourResults": "Сравнить фактическое событие с ожидаемым",
     "View.IntegrationTests.ClearExpectedEvent": "Очистить ожидаемое событие",
+
+    "View.IntegrationTests.Progress.RunAllTests": "Интеграционные тесты для правила {0}",
+    "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Интеграционные тесты для правила {0} с вспомогательными правилами (subrules)",
+
+    "View.IntegrationTests.Message.NoTestsFound": "Тесты для правила {0} не найдены. Добавьте хотя бы один тест и повторите",
+    "View.IntegrationTests.Message.TestsPassed": "Интеграционные тесты правила {0} прошли успешно",
+    "View.IntegrationTests.Message.NotAllTestsWereSuccessful": "Не все тесты правила {0} прошли успешно",
+    "View.IntegrationTests.Message.AllTestsFailed": "Все тесты правила {0} не прошли. Возможно наличие [ошибок в коде правила](command:workbench.action.showErrorsWarnings) или его зависимостях. Если нет, то [смотри выходные данные](command:xp.commonCommands.showOutputChannel)",
+    
+    "View.IntegrationTests.Message.TestsSavedSuccessfully": "Все тесты сохранены",
+    "View.IntegrationTests.Message.FailedToSaveTests": "Не удалось сохранить тесты",
+
+    "View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated": "Ожидаемое событие в коде теста обновлено. Скорректируйте если необходимо и сохраните тест",
+    "View.IntegrationTests.Message.UnableGetExpectedEvent": "Невозможно получить ожидаемое событие для теста, который завершился неуспешно",
 
     "View.Metainfo": "Метаданные {0}",
     "View.Metainfo.Id" : "Идентификатор",
