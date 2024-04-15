@@ -1,23 +1,15 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import * as path from 'path';
 
 import { DialogHelper } from '../../helpers/dialogHelper';
-import { MustacheFormatter } from '../mustacheFormatter';
-import { Localization, LocalizationExample } from '../../models/content/localization';
-import { ContentItemStatus, RuleBaseItem } from '../../models/content/ruleBaseItem';
+import { LocalizationExample } from '../../models/content/localization';
+import { RuleBaseItem } from '../../models/content/ruleBaseItem';
 import { Configuration } from '../../models/configuration';
-import { StringHelper } from '../../helpers/stringHelper';
 import { XpException } from '../../models/xpException';
 import { SiemjManager } from '../../models/siemj/siemjManager';
-import { ExceptionHelper } from '../../helpers/exceptionHelper';
 import { SiemJOutputParser} from '../../models/siemj/siemJOutputParser';
 import { IntegrationTestRunner } from '../../models/tests/integrationTestRunner';
 import { RunIntegrationTestDialog } from '../runIntegrationDialog';
-import { FileSystemHelper } from '../../helpers/fileSystemHelper';
-import { Log } from '../../extension';
-import { TestHelper } from '../../helpers/testHelper';
-import { ContentTreeProvider } from '../contentTree/contentTreeProvider';
 import { OperationCanceledException } from '../../models/operationCanceledException';
 
 export class LocalizationExamplesGenerator {

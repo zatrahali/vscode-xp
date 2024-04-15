@@ -4,6 +4,12 @@ import { TestHelper } from '../../helpers/testHelper';
 
 suite('TestHelper.isDefaultLocalization', async () => {
 
+	test('object включает подчеркивание', async () => {
+		const compressedTestCode = `account modify ds_object success на узле dc3-w16.testlab.org`;
+		const result = TestHelper.isDefaultLocalization(compressedTestCode);
+		assert.ok(result);
+	});
+
 	test('Локализация по умолчанию', async () => {
 		const compressedTestCode = `account start process success на узле wks01.testlab.esc`;
 		const result = TestHelper.isDefaultLocalization(compressedTestCode);
