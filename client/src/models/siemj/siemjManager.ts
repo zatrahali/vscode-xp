@@ -176,7 +176,7 @@ export class SiemjManager {
 		);
 
 		if(result.isInterrupted) {
-			throw new OperationCanceledException();
+			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 		}
 		
 		return result;

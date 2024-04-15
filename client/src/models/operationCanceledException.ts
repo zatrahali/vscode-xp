@@ -1,9 +1,9 @@
 import { XpException } from './xpException';
 
 export class OperationCanceledException extends XpException {
-	public constructor(message?: string, inner?: Error) {
+	public constructor(message: string, inner?: Error) {
 		if(!message) {
-			super("Операция отменена", inner);
+			super(message, inner);
 		} else {
 			super(message, inner);
 		}
