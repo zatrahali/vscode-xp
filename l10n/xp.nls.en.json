@@ -47,10 +47,10 @@
     "View.IntegrationTests.Progress.RunAllTests": "Integration tests for rule {0}",
     "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Integration tests for rule {0} with subrules",
 
-    "View.IntegrationTests.Message.NoTestsFound": "No tests found for rule {0}. Add at least one test and repeat",
+    "View.IntegrationTests.Message.NoTestsFound": "No tests found for rule {0}. Add at least one test and try again",
     "View.IntegrationTests.Message.TestsPassed": "Integration tests for rule {0} passed successfully",
-    "View.IntegrationTests.Message.NotAllTestsWereSuccessful": "Not all tests of rule {0} were successful",
-    "View.IntegrationTests.Message.AllTestsFailed": "All tests for rule {0} failed. There may be [errors in the rule code](command:workbench.action.showErrorsWarnings) or its dependencies. If not, then [see output](command:xp.commonCommands.showOutputChannel)",
+    "View.IntegrationTests.Message.NotAllTestsWereSuccessful": "Some tests for rule {0} failed",
+    "View.IntegrationTests.Message.AllTestsFailed": "No tests passed for rule {0}. [Fix errors in the code of the rule](command:workbench.action.showErrorsWarnings) and its auxiliary rules. If there are no errors, check [output](command:xp.commonCommands.showOutputChannel)",
 
     "View.IntegrationTests.Message.TestsSavedSuccessfully": "All tests saved",
     "View.IntegrationTests.Message.FailedToSaveTests": "Failed to save tests",
@@ -85,7 +85,7 @@
     "View.CorrelateEvents.Title": "Event correlation",
     "View.CorrelateEvents.RawEventsLabel": "Raw events",
     "View.CorrelateEvents.CorrelateEventsLabel": "Correlation events",
-    "View.CorrelateEvents.CorrelateEventsButton": "Correlate events",
+    "View.CorrelateEvents.CorrelateEventsButton": "Run correlation",
     "View.CorrelateEvents.WordWrapCheckBox": "Wrap according to words",
     "View.CorrelateEvents.WrapRawEventsInAnEnvelope" : "Wrap in an envelope",
 

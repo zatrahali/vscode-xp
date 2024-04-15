@@ -74,6 +74,17 @@ export class ContentVerifierCommand extends ViewCommand {
 		// TODO: Удалить временную директорию this._integrationTestTmpFilesPath
 	}
 
+	// private async buildAllArtifacts(rules: RuleBaseItem[], options: {progress: any, cancellationToken: vscode.CancellationToken}) : Promise<void> {
+	// 	// Подбираем настройки сборки графа корреляции
+	// 	for(const rule of rules) {
+	// 		if(rule instanceof Correlation) {
+	// 			// options.progress.report({ message: `Получение зависимостей правила ${rule.getName()} для корректной сборки графа корреляций` });
+	// 			const ritd = new RunIntegrationTestDialog(this.config);
+	// 			const runOptions = await ritd.getIntegrationTestRunOptions(rule);
+	// 		}
+	// 	}
+	// }
+
 	private async testRule(rule: RuleBaseItem, progress: any, cancellationToken: vscode.CancellationToken) {
 
 		// В отдельную директорию положим все временные файлы, чтобы не путаться.

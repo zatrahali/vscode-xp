@@ -44,13 +44,13 @@
     "View.IntegrationTests.CompareYourResults": "Сравнить фактическое событие с ожидаемым",
     "View.IntegrationTests.ClearExpectedEvent": "Очистить ожидаемое событие",
 
-    "View.IntegrationTests.Progress.RunAllTests": "Интеграционные тесты для правила {0}",
-    "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Интеграционные тесты для правила {0} с вспомогательными правилами (subrules)",
+    "View.IntegrationTests.Progress.RunAllTests": "Выполняются интеграционные тесты для правила {0}",
+    "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Выполняются интеграционные тесты для правила {0} со вспомогательными правилами (correlation_type = 'subrule')",
 
-    "View.IntegrationTests.Message.NoTestsFound": "Тесты для правила {0} не найдены. Добавьте хотя бы один тест и повторите",
-    "View.IntegrationTests.Message.TestsPassed": "Интеграционные тесты правила {0} прошли успешно",
-    "View.IntegrationTests.Message.NotAllTestsWereSuccessful": "Не все тесты правила {0} прошли успешно",
-    "View.IntegrationTests.Message.AllTestsFailed": "Все тесты правила {0} не прошли. Возможно наличие [ошибок в коде правила](command:workbench.action.showErrorsWarnings) или его зависимостях. Если нет, то [смотри выходные данные](command:xp.commonCommands.showOutputChannel)",
+    "View.IntegrationTests.Message.NoTestsFound": "Тесты для правила {0} не найдены. Добавьте хотя бы один тест и повторите попытку",
+    "View.IntegrationTests.Message.TestsPassed": "Интеграционные тесты для правила {0} пройдены успешно",
+    "View.IntegrationTests.Message.NotAllTestsWereSuccessful": "Некоторые тесты для правила {0} не пройдены",
+    "View.IntegrationTests.Message.AllTestsFailed": "Ни один тест для правила {0} не пройден. [Исправьте ошибки в коде правила](command:workbench.action.showErrorsWarnings) и его вспомогательных правил. Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
     
     "View.IntegrationTests.Message.TestsSavedSuccessfully": "Все тесты сохранены",
     "View.IntegrationTests.Message.FailedToSaveTests": "Не удалось сохранить тесты",
@@ -85,7 +85,7 @@
     "View.CorrelateEvents.Title": "Корреляция событий",
     "View.CorrelateEvents.RawEventsLabel": "Необработанные события",
     "View.CorrelateEvents.CorrelateEventsLabel": "Корреляционные события",
-    "View.CorrelateEvents.CorrelateEventsButton": "Коррелировать события",
+    "View.CorrelateEvents.CorrelateEventsButton": "Запустить корреляцию",
     "View.CorrelateEvents.WordWrapCheckBox": "Переносить по словам",
     "View.CorrelateEvents.WrapRawEventsInAnEnvelope" : "Обернуть в конверт",
 

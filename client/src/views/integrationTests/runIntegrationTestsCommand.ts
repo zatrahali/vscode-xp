@@ -72,7 +72,7 @@ export class RunIntegrationTestsCommand extends Command {
 					config.getMessage("View.ObjectTree.ItemStatus.TestsFailed")
 				);
 
-				DialogHelper.showInfo(config.getMessage("View.IntegrationTests.Message.NotAllTestsWereSuccessful", ruleName));
+				DialogHelper.showWarning(config.getMessage("View.IntegrationTests.Message.NotAllTestsWereSuccessful", ruleName));
 				await ContentTreeProvider.refresh(this.params.rule);
 				return true;
 			} 
