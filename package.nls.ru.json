@@ -31,12 +31,12 @@
 	"xp.views.knowledgebaseTree.buildAllGraphsCommand": "Компилировать все правила и списки",
 	"xp.views.knowledgebaseTree.buildAllLocalizationsCommand": "Компилировать все правила локализации",
 	"xp.views.knowledgebaseTree.buildAllNormalizationsCommand": "Компилировать все правила нормализации",
-	"xp.views.knowledgebaseTree.buildAllWldsCommand": "Компилировать все файлы .wld",
+	"xp.views.knowledgebaseTree.buildAllWldsCommand": "Компилировать все WLD-файлы",
 	
 	"xp.views.knowledgebaseTree.showRetroCorrelationCommand": "Коррелировать события из файлов",
 
-	"xp.views.knowledgebaseTree.importKbFileCommand": "Импортировать из файла .kb",
-	"xp.views.knowledgebaseTree.exportKbFileCommand": "Экспортировать в файл .kb",
+	"xp.views.knowledgebaseTree.importKbFileCommand": "Импортировать из KB-файла",
+	"xp.views.knowledgebaseTree.exportKbFileCommand": "Экспортировать в KB-файл",
 
 	"xp.views.knowledgebaseTree.defaultContent": "Это расширение помогает разрабатывать правила для обработки событий на языке eXtraction and Processing (XP).\nЧтобы начать, [откройте базу знаний](command:xp.contentTree.openKnowledgebaseCommand) или создайте новую.\nПриятной работы!",
 
@@ -55,7 +55,7 @@
 	"xp.xpConfig.origin.contentPrefixDescription": "Префикс ObjectId, а также системный префикс для задания поставщика контента. Например, пользовательские правила с возможностью редактирования имеют префикс LOC, системные PT. Если префикс не задан, ObjectId не генерируется для создаваемых правил",
 	"xp.xpConfig.origin.ruDescription": "Отображаемое имя (RU)",
 	"xp.xpConfig.origin.enDescription": "Display Name (EN)",
-	"xp.xpConfig.origin.idDescription": "The supplier's unique identifier, which is a GUID (globally unique identifier)",
+	"xp.xpConfig.origin.idDescription": "Уникальный идентификатор поставщика, который представляет собой GUID (глобальный уникальный идентификатор).",
 
 	"xp.xpConfig.logLevelDescription": "Уровень получаемой информации об ошибках. По умолчанию Info"
 }

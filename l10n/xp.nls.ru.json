@@ -24,7 +24,7 @@
     "View.ObjectTree.Progress.BuildAllGraphs": "Компиляция всех правил и списков",
     "View.ObjectTree.Progress.BuildAllLocalizations": "Компиляция всех правил локализации",
     "View.ObjectTree.Progress.BuildAllNormalizations": "Компиляция всех правил нормализации",
-    "View.ObjectTree.Progress.BuildAllWlds": "Компиляция всех файлов .wld",
+    "View.ObjectTree.Progress.BuildAllWlds": "Компиляция всех WLD-файлов",
 
     "View.ObjectTree.ItemStatus.TestsPassed": "Интеграционные тесты пройдены",
     "View.ObjectTree.ItemStatus.TestsFailed": "Интеграционные тесты не пройдены",
