@@ -72,7 +72,7 @@ export abstract class ContentTreeBaseItem extends vscode.TreeItem {
 	 * Задает имя метки, которая отображается в дереве.
 	 * @param newName новое имя метки.
 	 */
-	public setName(newName:string) : void {
+	public setName(newName :string) : void {
 		this.label = newName;
 		this._name = newName;
 	}
@@ -81,7 +81,7 @@ export abstract class ContentTreeBaseItem extends vscode.TreeItem {
 	 * Получает имя метки, которая отображается в дереве.
 	 * @returns  имя метки, которая отображается в дереве.
 	 */
-	public getName() :string {
+	public getName() : string {
 		return this._name;
 	}
 

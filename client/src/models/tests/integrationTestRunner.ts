@@ -13,6 +13,7 @@ import { SiemjManager } from '../siemj/siemjManager';
 import { OperationCanceledException } from '../operationCanceledException';
 import { VsCodeApiHelper } from '../../helpers/vsCodeApiHelper';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
+import { KbHelper } from '../../helpers/kbHelper';
 
 export enum CompilationType {
 	DontCompile = 'DontCompile',
@@ -27,16 +28,179 @@ export class IntegrationTestRunnerOptions {
 	dependentCorrelations : string[] = [];
 	correlationCompilation : CompilationType = CompilationType.Auto;
 	cancellationToken?: vscode.CancellationToken;
+	public union(right: IntegrationTestRunnerOptions) : IntegrationTestRunnerOptions {
+		for(const rdc of right.dependentCorrelations) {
+			if(!this.dependentCorrelations.includes(rdc)) {
+				this.dependentCorrelations.push(rdc);
+			}
+		}
+		
+		return this;
+	}
 }
 
 export class IntegrationTestRunner {
 
+	private options: IntegrationTestRunnerOptions;
+
 	constructor(
 		private config: Configuration,
-		private _outputParser: SiemJOutputParser) {
+		private outputParser: SiemJOutputParser) {
+	}
+	
+	public async compileArtifacts(options: IntegrationTestRunnerOptions) : Promise<SiemjExecutionResult> {
+
+		this.options = options;
+		// Проверяем наличие нужных утилит.
+		this.config.getSiemkbTestsPath();
+
+		await SiemjConfigHelper.clearArtifacts(this.config);
+
+		const contentRoot = this.config.getContentRoots()[0];
+		const rootFolder = path.basename(contentRoot);
+		const outputDirPath = this.config.getOutputDirectoryPath(rootFolder);
+		if(!fs.existsSync(outputDirPath)) {
+			await fs.promises.mkdir(outputDirPath, {recursive: true});
+		}
+
+		const configBuilder = new SiemjConfBuilder(this.config, contentRoot);
+		const gitApi = await VsCodeApiHelper.getGitExtension();
+		if(!gitApi) {
+			// Нет git-а - пересобираем все нормализации.
+			configBuilder.addNormalizationsGraphBuilding(true);
+		} else {
+			// Есть хоть одна измененная нормализация, пересобираем все.
+			if(VsCodeApiHelper.isWorkDirectoryUsingGit(gitApi, contentRoot)) {
+				const changePaths = VsCodeApiHelper.gitWorkingTreeChanges(gitApi, contentRoot);
+				const isNormalizationsChanged = changePaths.some(cp => cp.endsWith(".xp"));
+				if(isNormalizationsChanged) {
+					configBuilder.addNormalizationsGraphBuilding(true);
+				} else {
+					configBuilder.addNormalizationsGraphBuilding(false);
+				}
+			} else {
+				configBuilder.addNormalizationsGraphBuilding(true);
+			}
+		}
+
+		configBuilder.addTablesSchemaBuilding();
+		configBuilder.addTablesDbBuilding();
+		configBuilder.addEnrichmentsGraphBuilding();
+
+		// Параметры сборки графа корреляций в зависимости от опций.
+		switch (this.options.correlationCompilation) {
+			case CompilationType.Auto: {
+				const dependentCorrelations = this.options.dependentCorrelations;
+				if(dependentCorrelations.length === 0) {
+					throw new XpException("Опции запуска интеграционных тестов неконсистентны");
+				}
+
+				configBuilder.addCorrelationsGraphBuilding(true, this.options.dependentCorrelations);
+				break;
+			}
+			default: {
+				throw new XpException("Опции запуска интеграционных тестов неконсистентны");
+			}
+		}
+
+		const siemjManager = new SiemjManager(this.config, this.options.cancellationToken);
+		const siemjConfContent = configBuilder.build();
+		const siemjExecutionResult = await siemjManager.executeSiemjConfig(contentRoot, siemjConfContent);
+		if(siemjExecutionResult.isInterrupted) {
+			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
+		}
+
+		const siemjResult = await this.outputParser.parse(siemjExecutionResult.output);
+		return siemjResult;
 	}
 
-	public async run(rule : RuleBaseItem, options?: IntegrationTestRunnerOptions) : Promise<SiemjExecutionResult> {
+	public async run(rule : RuleBaseItem) : Promise<SiemjExecutionResult> {
+
+		// Проверяем наличие нужных утилит.
+		this.config.getSiemkbTestsPath();
+
+		const integrationTests = rule.getIntegrationTests();
+		integrationTests.forEach(it => it.setStatus(TestStatus.Unknown));
+
+		if(integrationTests.length == 0) {
+			throw new XpException(`У правила ${rule.getName} не найдено интеграционных тестов`);
+		}
+
+		// Хотя бы у одного теста есть сырые события и код теста.
+		const atLeastOneTestIsValid = integrationTests.some(it => {
+			if(!it.getRawEvents()) {
+				return false;
+			}
+
+			if(!it.getTestCode()) {
+				return false;
+			}
+
+			return true;
+		});
+
+		if(!atLeastOneTestIsValid) {
+			throw new XpException("Для запуска тестов нужно добавить сырые события и условия выполнения теста");
+		}
+
+		const rootPath = this.config.getContentRoots()[0];
+		const rootFolder = path.basename(rootPath);
+		const outputDirPath = this.config.getOutputDirectoryPath(rootFolder);
+		if(!fs.existsSync(outputDirPath)) {
+			await fs.promises.mkdir(outputDirPath, {recursive: true});
+		}
+
+		const configBuilder = new SiemjConfBuilder(this.config, rootPath);
+		const testTmpDirectory = path.join(this.options.tmpFilesPath, rule.getName());
+		configBuilder.addTestsRun(rule.getDirectoryPath(), testTmpDirectory);
+
+		const siemjConfContent = configBuilder.build();
+		if(!siemjConfContent) {
+			throw new XpException("Не удалось сгенерировать файл siemj.conf для заданного правила и тестов");
+		}
+
+		const siemjManager = new SiemjManager(this.config, this.options.cancellationToken);
+		const siemjExecutionResult = await siemjManager.executeSiemjConfigForRule(rule, siemjConfContent);
+
+		if(siemjExecutionResult.isInterrupted) {
+			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
+		}
+
+		const siemjResult = await this.outputParser.parse(siemjExecutionResult.output);
+		
+		const executedTests = rule.getIntegrationTests();
+		// Все тесты прошли, статусы не проверяем, все тесты зеленые.
+		if(siemjResult.testsStatus) {
+			executedTests.forEach(it => it.setStatus(TestStatus.Success));
+
+			// Убираем ошибки по текущему правилу.
+			const ruleFileUri = vscode.Uri.file(rule.getRuleFilePath());
+			this.config.getDiagnosticCollection().set(ruleFileUri, []);
+		} else {
+			// Есть ошибки, все неуспешные тесты не прошли.
+			executedTests
+				.filter(it => it.getStatus() === TestStatus.Success)
+				.forEach(it => it.setStatus(TestStatus.Failed));
+		}
+
+		// Если были не прошедшие тесты, выводим статус.
+		// Непрошедшие тесты могу отсутствовать, если до тестов дело не дошло.
+		if(siemjResult.failedTestNumbers.length > 0) {
+			for(const failedTestNumber of siemjResult.failedTestNumbers) {
+				executedTests[failedTestNumber - 1].setStatus(TestStatus.Failed);
+			}
+	
+			executedTests.forEach( (it) => {
+				if(it.getStatus() == TestStatus.Unknown) {
+					it.setStatus(TestStatus.Success);
+				}
+			});
+		}
+
+		return siemjResult;
+	}
+
+	public async runOnce(rule : RuleBaseItem, options?: IntegrationTestRunnerOptions) : Promise<SiemjExecutionResult> {
 
 		// Проверяем наличие нужных утилит.
 		this.config.getSiemkbTestsPath();
@@ -149,7 +313,7 @@ export class IntegrationTestRunner {
 			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 		}
 
-		const siemjResult = await this._outputParser.parse(siemjExecutionResult.output);
+		const siemjResult = await this.outputParser.parse(siemjExecutionResult.output);
 		
 		// Все тесты прошли, статусы не проверяем, все тесты зеленые.
 		if(siemjResult.testsStatus) {

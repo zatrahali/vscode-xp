@@ -49,7 +49,7 @@ export class RunIntegrationTestsCommand extends Command {
 
 			const outputParser = new SiemJOutputParser();
 			const testRunner = new IntegrationTestRunner(config, outputParser);
-			const siemjResult = await testRunner.run(this.params.rule, testRunnerOptions);
+			const siemjResult = await testRunner.runOnce(this.params.rule, testRunnerOptions);
 
 			config.resetDiagnostics(siemjResult.fileDiagnostics);
 

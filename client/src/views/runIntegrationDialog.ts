@@ -46,23 +46,24 @@ export class RunIntegrationTestDialog {
 			const uniqueSubRuleNames = [...new Set(subRuleNames)];
 
 			// У правила нет типичных сабрулей корреляций, собираем только его.
-			if(uniqueSubRuleNames.length == 0) {
-				// Если есть еще другие операции с полем correlation_name, тогда собираем текущий пакет.
-				// Если нет, тогда только правило.
-				if(TestHelper.isCorrelationNameUsedInFilter(ruleCode)) {
-					testRunnerOptions.correlationCompilation = CompilationType.CurrentPackage;	
-				}
-				else {
-					testRunnerOptions.correlationCompilation = CompilationType.CurrentRule;
-				}
+			// if(uniqueSubRuleNames.length == 0) {
+			// 	// Если есть еще другие операции с полем correlation_name, тогда собираем текущий пакет.
+			// 	// Если нет, тогда только правило.
+			// 	if(TestHelper.isCorrelationNameUsedInFilter(ruleCode)) {
+			// 		testRunnerOptions.correlationCompilation = CompilationType.CurrentPackage;	
+			// 	}
+			// 	else {
+			// 		testRunnerOptions.correlationCompilation = CompilationType.CurrentRule;
+			// 	}
 				
-				return testRunnerOptions;
-			}
+			// 	return testRunnerOptions;
+			// }
 
 			const subRulePaths = await this.getRecursiveSubRulePaths(rule);
 			const uniqueSubRulePaths = [...new Set(subRulePaths)];
-	
-			Log.info(`Из правила ${rule.getName()} получены следующие вспомогательные правила (subrule): `, uniqueSubRulePaths.map(sp => path.basename(sp)));
+			if(uniqueSubRuleNames.length !== 0) {
+				Log.info(`Из правила ${rule.getName()} получены следующие вспомогательные правила (subrule):`, uniqueSubRulePaths.map(sp => path.basename(sp)));
+			}
 	
 			testRunnerOptions.correlationCompilation = CompilationType.Auto;
 			// Не забываем путь к самой корреляции.

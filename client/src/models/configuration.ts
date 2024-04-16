@@ -52,6 +52,14 @@ export class Configuration {
 		this.context.workspaceState.update("ContentType", contentType);
 	}
 
+	public getFirstWorkspaceFolder() : string {
+		if(vscode.workspace.workspaceFolders.length === 0) {
+			throw new XpException("Рабочая директория не найдена");
+		}
+
+		return vscode.workspace.workspaceFolders[0].uri.fsPath;
+	}
+
     public getMessage(messageKey: string, ...args: (string | number | boolean | undefined | null)[]): string {
         return this.localizationService.getMessage(messageKey, ...args);
     }

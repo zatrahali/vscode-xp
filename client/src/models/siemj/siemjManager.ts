@@ -19,7 +19,7 @@ import { OperationCanceledException } from '../operationCanceledException';
 
 export class SiemjManager {
 
-	constructor(private config : Configuration, private _token?: vscode.CancellationToken) {}
+	constructor(private config : Configuration, private token?: vscode.CancellationToken) {}
 
 	public async buildSchema(rule: RuleBaseItem) : Promise<string> {
 
@@ -152,10 +152,10 @@ export class SiemjManager {
 
 		// Создаем пустую схему и дефолты для того, чтобы работали все утилиты.	
 		if (!FileSystemHelper.checkIfFilesIsExisting(contentRootPath, /\.tl$/)) {
-			const corrDefaultsPath = path.join(outputFolderPath, "correlation_defaults.json");
+			const corrDefaultsPath = path.join(outputFolderPath, this.config.getCorrelationDefaultsFileName());
 			await FileSystemHelper.writeContentFile(corrDefaultsPath,  "{}");
 
-			const schemaPath = path.join(outputFolderPath, "schema.json");
+			const schemaPath = path.join(outputFolderPath, this.config.getSchemaFileName());
 			await FileSystemHelper.writeContentFile(schemaPath,  "{}");
 		}	
 		
@@ -171,7 +171,7 @@ export class SiemjManager {
 			{	
 				encoding: this.config.getSiemjOutputEncoding(),
 				outputChannel: this.config.getOutputChannel(),
-				cancellationToken: this._token
+				cancellationToken: this.token
 			}
 		);
 
@@ -190,10 +190,10 @@ export class SiemjManager {
 
 		// Создаем пустую схему и дефолты для того, чтобы работали все утилиты.	
 		if (!FileSystemHelper.checkIfFilesIsExisting(contentRootPath, /\.tl$/)) {
-			const corrDefaultsPath = path.join(outputFolderPath, "correlation_defaults.json");
+			const corrDefaultsPath = path.join(outputFolderPath, this.config.getCorrelationDefaultsFileName());
 			await FileSystemHelper.writeContentFile(corrDefaultsPath,  "{}");
 
-			const schemaPath = path.join(outputFolderPath, "schema.json");
+			const schemaPath = path.join(outputFolderPath, this.config.getSchemaFileName());
 			await FileSystemHelper.writeContentFile(schemaPath,  "{}");
 		}	
 		
@@ -209,7 +209,7 @@ export class SiemjManager {
 			{	
 				encoding: this.config.getSiemjOutputEncoding(),
 				outputChannel: this.config.getOutputChannel(),
-				cancellationToken: this._token
+				cancellationToken: this.token
 			}
 		);
 		return result;

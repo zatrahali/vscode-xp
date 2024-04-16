@@ -340,7 +340,7 @@ export class LocalizationEditorViewProvider {
 				progress.report({ message: `Получение корреляционных событий на основе интеграционных тестов правила` });
 				const outputParser = new SiemJOutputParser();
 				const testRunner = new IntegrationTestRunner(this.config, outputParser);
-				const siemjResult = await testRunner.run(this._rule, options);
+				const siemjResult = await testRunner.runOnce(this._rule, options);
 
 				if (!siemjResult.testsStatus) {
 					throw new XpException("Не все интеграционные тесты прошли. Для получения тестовых локализации необходимо чтобы успешно проходили все интеграционные тесты");

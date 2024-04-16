@@ -51,7 +51,7 @@ export class LocalizationExamplesGenerator {
 				progress.report({ message: `Получение корреляционных событий на основе интеграционных тестов правила` });
 				const outputParser = new SiemJOutputParser();
 				const testRunner = new IntegrationTestRunner(this.config, outputParser);
-				const siemjResult = await testRunner.run(rule, options);
+				const siemjResult = await testRunner.runOnce(rule, options);
 
 				if (!siemjResult.testsStatus) {
 					throw new XpException("Не все интеграционные тесты прошли. Для получения тестовых локализации необходимо чтобы успешно проходили все интеграционные тесты");
@@ -75,7 +75,7 @@ export class LocalizationExamplesGenerator {
 		progress.report({ message: `Получение корреляционных событий на основе интеграционных тестов правила` });
 		const outputParser = new SiemJOutputParser();
 		const testRunner = new IntegrationTestRunner(this.config, outputParser);
-		const siemjResult = await testRunner.run(rule, options);
+		const siemjResult = await testRunner.runOnce(rule, options);
 
 		if (!siemjResult.testsStatus) {
 			throw new XpException("Не все интеграционные тесты прошли. Для получения тестовых локализации необходимо чтобы успешно проходили все интеграционные тесты");

@@ -3,6 +3,7 @@ import * as fs  from 'fs';
 
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { TestHelper } from '../../helpers/testHelper';
+import { Log } from '../../extension';
 
 export class FileDiagnostics {
 	public uri : vscode.Uri;
@@ -70,6 +71,10 @@ export class SiemJOutputParser {
 		while ((m = pattern.exec(siemjOutput))) {
 
 			if(m.length != 5) {
+				continue;
+			}
+
+			if(!m?.[1] || !m?.[2] || !m?.[3] || !m?.[4]) {
 				continue;
 			}
 
