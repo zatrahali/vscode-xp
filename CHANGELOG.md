@@ -8,7 +8,7 @@
 
 - реализована фича [#139](https://github.com/Security-Experts-Community/vscode-xp/issues/139) - возможность преждевременной остановки действий _Нормализовать_ и _Нормализовать и обогатить_  в интеграционных тестах (special thanks @g4n8g), а также возможность прерывать компиляцию локализаций, нормализаций и WLD-файлов;
 - улучшены шаблоны правил корреляций (special thanks @g4n8g);
-- добавлены (Industrial Control System (ICS))[https://attack.mitre.org/matrices/ics/] тактики в редактор метаинформации (special thanks @g4n8g);
+- добавлены [Industrial Control System (ICS)](https://attack.mitre.org/matrices/ics/) тактики в редактор метаинформации (special thanks @g4n8g);
 - реализована фича [#179](https://github.com/Security-Experts-Community/vscode-xp/issues/179) - возможность задать поставщика при упаковке контента в KB-файл;
 - добавлена фича [#181](https://github.com/Security-Experts-Community/vscode-xp/issues/181) - редактирование заполнения табличного списка типа _Справочник_ значениями по умолчанию (special thanks @aw350m3);
 - увеличен максимальный объём EVTX-файлов, которые можно использовать для корреляции;
