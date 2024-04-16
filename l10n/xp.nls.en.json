@@ -83,7 +83,7 @@
     "View.CorrelateLogFiles.CorrelationEvents": "Correlation events",
 
     "View.CorrelateEvents.Title": "Event correlation",
-    "View.CorrelateEvents.RawEventsLabel": "Raw events",
+    "View.CorrelateEvents.RawEventsLabel": "Envelope events (raw or normalized events) in JSON Lines format",
     "View.CorrelateEvents.CorrelateEventsLabel": "Correlation events",
     "View.CorrelateEvents.CorrelateEventsButton": "Run correlation",
     "View.CorrelateEvents.WordWrapCheckBox": "Wrap according to words",

@@ -83,7 +83,7 @@
     "View.CorrelateLogFiles.CorrelationEvents": "Корреляционные события",
 
     "View.CorrelateEvents.Title": "Корреляция событий",
-    "View.CorrelateEvents.RawEventsLabel": "Необработанные события",
+    "View.CorrelateEvents.RawEventsLabel": "События в конверте (необработанные или нормализованные события) в формате JSON Lines",
     "View.CorrelateEvents.CorrelateEventsLabel": "Корреляционные события",
     "View.CorrelateEvents.CorrelateEventsButton": "Запустить корреляцию",
     "View.CorrelateEvents.WordWrapCheckBox": "Переносить по словам",
