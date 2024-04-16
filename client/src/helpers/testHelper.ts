@@ -374,7 +374,7 @@ export class TestHelper {
 
 	public static isDefaultLocalization(localization: string) : boolean {
 		// account start process success на узле wks01.testlab.esc
-		const defaultLocRegExp = /^\S+ \S+ \S+ \S+ (на узле|on host) \S+$/g;
+		const defaultLocRegExp = /^[a-z_0-9]+ [a-z_0-9]+ [a-z_0-9]+ [a-z_0-9]+ (на узле|on host) \S+$/g;
 		return defaultLocRegExp.test(localization);
 	}
 
