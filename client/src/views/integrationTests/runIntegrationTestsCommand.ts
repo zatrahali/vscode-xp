@@ -34,11 +34,11 @@ export class RunIntegrationTestsCommand extends Command {
 			// Уточняем информацию для пользователей если в правиле обнаружено использование сабрулей.
 			const ruleCode = await this.params.rule.getRuleCode();
 			if (TestHelper.isRuleCodeContainsSubrules(ruleCode)) {
-				const progressMessage = config.getMessage("View.IntegrationTests.Progress.RunAllTests", ruleName);
+				const progressMessage = config.getMessage("View.IntegrationTests.Progress.RunAllTestsWithSubrules", ruleName);
 				Log.info(progressMessage);
 				progress.report({message: progressMessage});
 			} else {
-				const progressMessage = config.getMessage("View.IntegrationTests.Progress.RunAllTestsWithSubrules", ruleName);
+				const progressMessage = config.getMessage("View.IntegrationTests.Progress.RunAllTests", ruleName);
 				Log.info(progressMessage);
 				progress.report({message: progressMessage});
 			}
