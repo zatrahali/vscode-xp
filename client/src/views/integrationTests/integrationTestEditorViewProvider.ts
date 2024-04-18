@@ -320,8 +320,13 @@ export class IntegrationTestEditorViewProvider {
 						testNumber: activeTestNumber,
 						tests: message.tests}
 				);
-				await command.execute();
-				this.updateView(activeTestNumber);
+				
+				const result = await command.execute();
+				// Если сохранение прошло успешно, тогда обновляем окно.
+				if(result) {
+					this.updateView(activeTestNumber);
+				}
+				
 				break;
 			}
 
