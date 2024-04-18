@@ -24,6 +24,7 @@ import { ViewCommand } from './viewCommand';
 import { XpException } from '../../../models/xpException';
 import { OperationCanceledException } from '../../../models/operationCanceledException';
 import { CancellationToken } from 'vscode-languageclient';
+import { JsHelper } from '../../../helpers/jsHelper';
 
 /**
  * Проверяет контент по требованиям. В настоящий момент реализована только проверка интеграционных тестов и локализаций.
@@ -239,46 +240,49 @@ export class ContentVerifierCommand extends ViewCommand {
 	) {
 		options.progress.report({ message: `Проверка интеграционных тестов правила корреляции ${rule.getName()}`});
 		if(options.cancellationToken.isCancellationRequested) {
-
 			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 		}
 
 		const siemjResult = await runner.run(rule);
 		if (!siemjResult.testsStatus) {
 			rule.setStatus(ContentItemStatus.Unverified, "Интеграционные тесты не прошли проверку");
-			return;
-		}
-		rule.setStatus(ContentItemStatus.Verified, "Интеграционные тесты прошли проверку");
-
-		options.progress.report({ message: `Проверка локализации правила ${rule.getName()}`});
-			
-		const ruleTmpFilesRuleName = path.join(this.integrationTestTmpFilesPath, rule.getName());
-		if(!fs.existsSync(ruleTmpFilesRuleName)) {
-			throw new XpException("Не найдены результаты выполнения интеграционных тестов");
-		}
-
-		const siemjManager = new SiemjManager(this.config, options.cancellationToken);
-		const locExamples = await siemjManager.buildLocalizationExamples(rule, ruleTmpFilesRuleName);
-
-		if (locExamples.length === 0) {
-			rule.setStatus(ContentItemStatus.Unverified, "Локализации не были получены");
-			return;
-		}
-
-		const verifiedLocalization = locExamples.some(le => TestHelper.isDefaultLocalization(le.ruText));
-		if(verifiedLocalization) {
-			rule.setStatus(
-				ContentItemStatus.Unverified,
-				"Локализация не прошла проверку, обнаружен пример локализации по умолчанию"
-			);
 		} else {
-			rule.setStatus(
-				ContentItemStatus.Verified,
-				"Интеграционные тесты и локализации прошли проверку"
-			);
+			rule.setStatus(ContentItemStatus.Verified, "Интеграционные тесты прошли проверку");
 		}
 
-		rule.setLocalizationExamples(locExamples);
+		// TODO: временно отключены тесты локализаций, так как siemkb_tests.exe падает со следующей ошибкой:
+		// TEST_RULES :: log4cplus:ERROR Unable to open file: C:\Users\user\AppData\Local\Temp\eXtraction and Processing\tmp\5239e794-c14a-7526-113c-52479c1694d6\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\2024-04-18_19-06-45_unknown_sdk_227gsqqu\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\tests\raw_events_4_norm_enr.log
+		// TEST_RULES :: Error: SDK: Cannot open fpta db C:\Users\user\AppData\Local\Temp\eXtraction and Processing\tmp\5239e794-c14a-7526-113c-52479c1694d6\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\2024-04-18_19-06-45_unknown_sdk_227gsqqu\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\tests\raw_events_4_fpta.db : it's not exists
+		// const testTmpDirectory = path.join(this.options.tmpFilesPath, rule.getName());
+
+		// options.progress.report({ message: `Проверка локализации правила ${rule.getName()}`});
+		// const ruleTmpFilesRuleName = path.join(this.integrationTestTmpFilesPath, rule.getName());
+		// if(!fs.existsSync(ruleTmpFilesRuleName)) {
+		// 	throw new XpException("Не найдены результаты выполнения интеграционных тестов");
+		// }
+
+		// const siemjManager = new SiemjManager(this.config, options.cancellationToken);
+		// const locExamples = await siemjManager.buildLocalizationExamples(rule, ruleTmpFilesRuleName);
+
+		// if (locExamples.length === 0) {
+		// 	rule.setStatus(ContentItemStatus.Unverified, "Локализации не были получены");
+		// 	return;
+		// }
+
+		// const verifiedLocalization = locExamples.some(le => TestHelper.isDefaultLocalization(le.ruText));
+		// if(verifiedLocalization) {
+		// 	rule.setStatus(
+		// 		ContentItemStatus.Unverified,
+		// 		"Локализация не прошла проверку, обнаружен пример локализации по умолчанию"
+		// 	);
+		// } else {
+		// 	rule.setStatus(
+		// 		ContentItemStatus.Verified,
+		// 		"Интеграционные тесты и локализации прошли проверку"
+		// 	);
+		// }
+
+		// rule.setLocalizationExamples(locExamples);
 	}
 
 	private async testEnrichment(

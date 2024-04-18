@@ -722,7 +722,7 @@
           "scope": "window",
           "type": "integer",
           "description": "%xp.xpConfig.correlatorTimeoutDescription%",
-          "default": 180
+          "default": 250
         },
         "xpConfig.origin": {
           "type": "object",
