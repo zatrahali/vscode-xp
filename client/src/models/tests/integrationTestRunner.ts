@@ -14,6 +14,7 @@ import { OperationCanceledException } from '../operationCanceledException';
 import { VsCodeApiHelper } from '../../helpers/vsCodeApiHelper';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { KbHelper } from '../../helpers/kbHelper';
+import { Log } from '../../extension';
 
 export enum CompilationType {
 	DontCompile = 'DontCompile',
@@ -25,6 +26,7 @@ export enum CompilationType {
 
 export class IntegrationTestRunnerOptions {
 	tmpFilesPath?: string;
+	currPackagePath?: string;
 	dependentCorrelations : string[] = [];
 	correlationCompilation : CompilationType = CompilationType.Auto;
 	cancellationToken?: vscode.CancellationToken;
@@ -34,7 +36,10 @@ export class IntegrationTestRunnerOptions {
 				this.dependentCorrelations.push(rdc);
 			}
 		}
-		
+
+		this.currPackagePath = right.currPackagePath;
+		this.correlationCompilation = right.correlationCompilation;
+
 		return this;
 	}
 }
@@ -88,21 +93,35 @@ export class IntegrationTestRunner {
 		configBuilder.addEnrichmentsGraphBuilding();
 
 		// Параметры сборки графа корреляций в зависимости от опций.
-		switch (this.options.correlationCompilation) {
+		switch (options.correlationCompilation) {
+			case CompilationType.CurrentPackage: {
+				configBuilder.addCorrelationsGraphBuilding(true, options.currPackagePath);
+				break;
+			}
+			case CompilationType.AllPackages: {
+				configBuilder.addCorrelationsGraphBuilding(true);
+				break;
+			}
 			case CompilationType.Auto: {
-				const dependentCorrelations = this.options.dependentCorrelations;
+				const dependentCorrelations = options.dependentCorrelations;
 				if(dependentCorrelations.length === 0) {
 					throw new XpException("Опции запуска интеграционных тестов неконсистентны");
 				}
 
-				configBuilder.addCorrelationsGraphBuilding(true, this.options.dependentCorrelations);
+				configBuilder.addCorrelationsGraphBuilding(true, options.dependentCorrelations);
+				break;
+			}
+			case CompilationType.DontCompile: {
+				// Если мы не собираем граф корреляции, то нужно создать пустой json-файл, чтобы siemj не ругался.
+				const corrGraphFilePath = this.config.getCorrelationsGraphFilePath(rootFolder);
+				await FileSystemHelper.writeContentFile(corrGraphFilePath, "{}");
 				break;
 			}
 			default: {
 				throw new XpException("Опции запуска интеграционных тестов неконсистентны");
 			}
 		}
-
+		
 		const siemjManager = new SiemjManager(this.config, this.options.cancellationToken);
 		const siemjConfContent = configBuilder.build();
 		const siemjExecutionResult = await siemjManager.executeSiemjConfig(contentRoot, siemjConfContent);
@@ -115,7 +134,6 @@ export class IntegrationTestRunner {
 	}
 
 	public async run(rule : RuleBaseItem) : Promise<SiemjExecutionResult> {
-
 		// Проверяем наличие нужных утилит.
 		this.config.getSiemkbTestsPath();
 
@@ -295,7 +313,6 @@ export class IntegrationTestRunner {
 			default: {
 				throw new XpException("Опции запуска интеграционных тестов неконсистентны");
 			}
-
 		}
 		
 		// Получаем путь к директории с результатами теста.

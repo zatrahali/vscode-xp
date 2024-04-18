@@ -74,7 +74,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 				gitHooks.update();
 			});
 		} else {
-			DialogHelper.showWarning(`Наличие системы контроля версии [git](https://git-scm.com/) необходимо для эффективной работы расширения. Требования можно посмотреть [здесь](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#id3)`);
+			DialogHelper.showError(`Необходимо наличие системы контроля версии [git](https://git-scm.com/). Требования можно посмотреть [здесь](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#id3)`);
 		}
 
 

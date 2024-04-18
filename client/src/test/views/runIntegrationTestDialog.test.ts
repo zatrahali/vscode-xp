@@ -19,7 +19,7 @@ filter {
 	match(correlation_name, "*_Brute")
 }`);
 		const optionsDialog = new RunIntegrationTestDialog(Configuration.get());
-		const options = await optionsDialog.getIntegrationTestRunOptions(rule);
+		const options = await optionsDialog.getIntegrationTestRunOptionsForSingleRule(rule);
 		
 		assert.strictEqual(options.correlationCompilation, CompilationType.CurrentPackage);
 	});

@@ -44,7 +44,7 @@ export class RunIntegrationTestsCommand extends Command {
 			}
 
 			const ritd = new RunIntegrationTestDialog(config, this.params.tmpDirPath);
-			const testRunnerOptions = await ritd.getIntegrationTestRunOptions(this.params.rule);
+			const testRunnerOptions = await ritd.getIntegrationTestRunOptionsForSingleRule(this.params.rule);
 			testRunnerOptions.cancellationToken = cancellationToken;
 
 			const outputParser = new SiemJOutputParser();

@@ -38,6 +38,7 @@ import { OriginsManager } from './models/content/originsManager';
 import { DefaultTLValuesEditorViewProvider } from './views/defaultTLValues/defaultTLValuesEditorViewProvider';
 import { LocalizationEditorViewProvider } from './views/localization/localizationEditorViewProvider';
 import { CommonCommands } from './models/command/commonCommands';
+import mainPackageFile from '../../package.json';
 
 export let Log: Logger;
 let client: LanguageClient;
@@ -48,7 +49,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 		// Инициализация реестр глобальных параметров.
 		const config = await Configuration.init(context);
 		Log = Logger.init(config);
-		Log.info(`Extension activation has started '${Configuration.getExtensionDisplayName()}'`);
+		Log.info(`Extension activation ${mainPackageFile.version} has started '${Configuration.getExtensionDisplayName()}'`);
 
 		// Информация по ОС
 		Log.info(`OS Platform: ${os.platform()}`);

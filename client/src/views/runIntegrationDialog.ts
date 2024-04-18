@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as vscode from 'vscode';
 
 import { TestHelper } from '../helpers/testHelper';
 import { Correlation } from '../models/content/correlation';
@@ -14,18 +15,18 @@ import { Log } from '../extension';
 
 
 export class RunIntegrationTestDialog {
-	constructor(private config : Configuration, private _tmpFilesPath?: string) {}
+	constructor(private config : Configuration, private options?: {tmpFilesPath?: string, cancellationToken: vscode.CancellationToken}) {}
 
-	public async getIntegrationTestRunOptions(rule: RuleBaseItem) : Promise<IntegrationTestRunnerOptions> {
+	public async getIntegrationTestRunOptionsForSingleRule(rule: RuleBaseItem) : Promise<IntegrationTestRunnerOptions> {
 		try {
 			if(rule instanceof Correlation) {
 				// Либо автоматически найдем зависимости корреляции, либо спросим у пользователя.
-				return this.getCorrelationOptions(rule);
+				return this.getCorrelationOptionsForSingleRule(rule);
 			}
 
 			if(rule instanceof Enrichment) {
 				// Уточняем у пользователя, что необходимо скомпилировать для тестов обогащения.
-				return this.getEnrichmentOptions(rule);
+				return this.getEnrichmentOptionsForSingleRule(rule);
 			}
 
 			throw new XpException('Для заданного типа контента не поддерживается получение настроек интеграционных тестов');
@@ -35,70 +36,53 @@ export class RunIntegrationTestDialog {
 		}
 	}
 
-	private async getCorrelationOptions(rule : Correlation) : Promise<IntegrationTestRunnerOptions> {
+	private async getCorrelationOptionsForSingleRule(rule : Correlation) : Promise<IntegrationTestRunnerOptions> {
 		const testRunnerOptions = new IntegrationTestRunnerOptions();
-		testRunnerOptions.tmpFilesPath = this._tmpFilesPath;
+		testRunnerOptions.tmpFilesPath = this.options.tmpFilesPath;
 
-		try {
-			// Получение сабрулей из кода.
-			const ruleCode = await rule.getRuleCode();
-			const subRuleNames = TestHelper.parseSubRuleNamesFromKnownOperation(ruleCode).map(srn => srn.toLocaleLowerCase());
-			const uniqueSubRuleNames = [...new Set(subRuleNames)];
+		// Получение сабрулей из кода.
+		const ruleCode = await rule.getRuleCode();
+		const subRuleNames = TestHelper.parseSubRuleNamesFromKnownOperation(ruleCode).map(srn => srn.toLocaleLowerCase());
+		const uniqueSubRuleNames = [...new Set(subRuleNames)];
 
-			// У правила нет типичных сабрулей корреляций, собираем только его.
-			// if(uniqueSubRuleNames.length == 0) {
-			// 	// Если есть еще другие операции с полем correlation_name, тогда собираем текущий пакет.
-			// 	// Если нет, тогда только правило.
-			// 	if(TestHelper.isCorrelationNameUsedInFilter(ruleCode)) {
-			// 		testRunnerOptions.correlationCompilation = CompilationType.CurrentPackage;	
-			// 	}
-			// 	else {
-			// 		testRunnerOptions.correlationCompilation = CompilationType.CurrentRule;
-			// 	}
-				
-			// 	return testRunnerOptions;
-			// }
-
-			const subRulePaths = await this.getRecursiveSubRulePaths(rule);
-			const uniqueSubRulePaths = [...new Set(subRulePaths)];
-			if(uniqueSubRuleNames.length !== 0) {
-				Log.info(`Из правила ${rule.getName()} получены следующие вспомогательные правила (subrule):`, uniqueSubRulePaths.map(sp => path.basename(sp)));
-			}
-	
-			testRunnerOptions.correlationCompilation = CompilationType.Auto;
-			// Не забываем путь к самой корреляции.
-			testRunnerOptions.dependentCorrelations.push(rule.getDirectoryPath());
-			testRunnerOptions.dependentCorrelations.push(...uniqueSubRulePaths);
-			return testRunnerOptions;
+		const subRulePaths = await this.getRecursiveSubRulePaths(rule);
+		const uniqueSubRulePaths = [...new Set(subRulePaths)];
+		if(uniqueSubRuleNames.length !== 0) {
+			Log.info(`Из правила ${rule.getName()} получены следующие вспомогательные правила (subrule):`, uniqueSubRulePaths.map(sp => path.basename(sp)));
 		}
-		catch(error) {
-			Log.warn(error);
-		}
+
+		testRunnerOptions.correlationCompilation = CompilationType.Auto;
+		// Не забываем путь к самой корреляции.
+		testRunnerOptions.dependentCorrelations.push(rule.getDirectoryPath());
+		testRunnerOptions.dependentCorrelations.push(...uniqueSubRulePaths);
+
+		testRunnerOptions.currPackagePath = rule.getPackagePath(this.config);
+		return testRunnerOptions;
 
 		// Если сабрули, для которых пути не найдены.
-		const result = await DialogHelper.showInfo(
-			`Пути к некоторым [вспомогательным правилам (subrule)](https://help.ptsecurity.com/ru-RU/projects/siem/8.1/help/1492811787) обнаружить не удалось, возможно ошибка в правила. Хотите скомпилировать корреляции из текущего пакета или их всех пакетов?`,
-			this.CURRENT_PACKAGE,
-			this.ALL_PACKAGES);
+		// const result = await DialogHelper.showInfo(
+		// 	`Пути к некоторым [вспомогательным правилам (subrule)](https://help.ptsecurity.com/ru-RU/projects/siem/8.1/help/1492811787) обнаружить не удалось, возможно ошибка в правила. Хотите скомпилировать корреляции из текущего пакета или их всех пакетов?`,
+		// 	this.CURRENT_PACKAGE,
+		// 	this.ALL_PACKAGES);
 
-		if(!result) {
-			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
-		}
+		// if(!result) {
+		// 	throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
+		// }
 		
-		switch(result) {
-			case this.CURRENT_PACKAGE: {
-				testRunnerOptions.dependentCorrelations.push(rule.getPackagePath(this.config));
-				break;
-			}
+		// switch(result) {
+		// 	case this.CURRENT_PACKAGE: {
+		// 		testRunnerOptions.dependentCorrelations.push(rule.getPackagePath(this.config));
+		// 		break;
+		// 	}
 
-			case this.ALL_PACKAGES: {
-				const contentRootPath = this.config.getRootByPath(rule.getDirectoryPath());
-				testRunnerOptions.dependentCorrelations.push(contentRootPath);
-				break;
-			}
-		}
+		// 	case this.ALL_PACKAGES: {
+		// 		const contentRootPath = this.config.getRootByPath(rule.getDirectoryPath());
+		// 		testRunnerOptions.dependentCorrelations.push(contentRootPath);
+		// 		break;
+		// 	}
+		// }
 
-		return testRunnerOptions;
+		// return testRunnerOptions;
 	}
 
 	private async getRecursiveSubRulePaths(rule : Correlation): Promise<string[]> {
@@ -126,6 +110,10 @@ export class RunIntegrationTestDialog {
 				throw new XpException(`Не удалось найти вспомогательные правила: ${ruleNamesNotFound.join(", ")}`);
 			}
 		}
+
+		if(this.options.cancellationToken.isCancellationRequested) {
+			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
+		}
 		
 		for(const subRulePath of subRulePaths) {
 			const subrule = await Correlation.parseFromDirectory(subRulePath);
@@ -143,9 +131,9 @@ export class RunIntegrationTestDialog {
 	 * @param rule 
 	 * @returns 
 	 */
-	private async getEnrichmentOptions(rule : Enrichment) : Promise<IntegrationTestRunnerOptions> {
+	private async getEnrichmentOptionsForSingleRule(rule : Enrichment) : Promise<IntegrationTestRunnerOptions> {
 		const testRunnerOptions = new IntegrationTestRunnerOptions();
-		testRunnerOptions.tmpFilesPath = this._tmpFilesPath;
+		testRunnerOptions.tmpFilesPath = this.options.tmpFilesPath;
 
 		// TODO: экспериментальная оптимизация, добавить только с флагом ExperimentalFeature
 		// const ruleCode = await rule.getRuleCode();
