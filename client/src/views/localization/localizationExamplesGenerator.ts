@@ -44,7 +44,7 @@ export class LocalizationExamplesGenerator {
 
 			if(!result || result === "Повторить") {
 				progress.report({ message: `Получение зависимостей правила для корректной сборки графа корреляций` });
-				const ritd = new RunIntegrationTestDialog(this.config, this.integrationTestTmpFilesPath);
+				const ritd = new RunIntegrationTestDialog(this.config, {tmpFilesPath: this.integrationTestTmpFilesPath, cancellationToken: token});
 				const options = await ritd.getIntegrationTestRunOptionsForSingleRule(rule);
 				options.cancellationToken = token;
 
@@ -68,7 +68,7 @@ export class LocalizationExamplesGenerator {
 
 	private async getEventsForLocalization(rule: RuleBaseItem, progress: any, token : vscode.CancellationToken) {
 		progress.report({ message: `Получение зависимостей правила для корректной сборки графа корреляций` });
-		const ritd = new RunIntegrationTestDialog(this.config, this.integrationTestTmpFilesPath);
+		const ritd = new RunIntegrationTestDialog(this.config, {tmpFilesPath: this.integrationTestTmpFilesPath, cancellationToken: token});
 		const options = await ritd.getIntegrationTestRunOptionsForSingleRule(rule);
 		options.cancellationToken = token;
 

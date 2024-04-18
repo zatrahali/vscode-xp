@@ -12,7 +12,7 @@ import { Configuration } from '../../../models/configuration';
 import { ExceptionHelper } from '../../../helpers/exceptionHelper';
 import { ContentTreeBaseItem } from '../../../models/content/contentTreeBaseItem';
 import { ContentTreeProvider } from '../contentTreeProvider';
-import { OriginsManager } from '../../../models/content/originsManager';
+import { UserSettingsManager } from '../../../models/content/userSettingsManager';
 
 export class PackSIEMAllPackagesAction {
 	constructor(private config: Configuration) {}

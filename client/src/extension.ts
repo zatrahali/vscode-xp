@@ -34,7 +34,7 @@ import { XpEnumValuesCompletionItemProvider } from './providers/xpEnumValuesComp
 import { Logger } from './logger';
 import { RetroCorrelationViewController } from './views/retroCorrelation/retroCorrelationViewProvider';
 import { XpHoverProvider } from './providers/xpHoverProvider';
-import { OriginsManager } from './models/content/originsManager';
+import { UserSettingsManager as UserSettingsManager } from './models/content/userSettingsManager';
 import { DefaultTLValuesEditorViewProvider } from './views/defaultTLValues/defaultTLValuesEditorViewProvider';
 import { LocalizationEditorViewProvider } from './views/localization/localizationEditorViewProvider';
 import { CommonCommands } from './models/command/commonCommands';
@@ -56,9 +56,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
 		Log.info(`OS Type: ${os.type()}`);
 		Log.info(`OS Release: ${os.release()}`);
 
-		config.checkUserSetting();
+		await UserSettingsManager.init(config);
 
-		await OriginsManager.init(config);
+		config.checkUserSetting();
 
 		// Конфигурирование LSP.
 		const serverModule = context.asAbsolutePath(
@@ -185,7 +185,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 		}
 
 		// Очистка директории выходных файлов. Нужна для сохранения консистентности нормализаций.
-		const extensionSettings = config.getConfiguration();
+		const extensionSettings = config.getWorkspaceConfiguration();
 		const outputDirectoryPath = extensionSettings.get<string>("outputDirectoryPath");
 		if(fs.existsSync(outputDirectoryPath)) {
 			try {

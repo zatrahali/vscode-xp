@@ -1,4 +1,6 @@
 import { Guid } from 'guid-typescript';
+import * as path from 'path';
+import * as fs from 'fs';
 
 import { Configuration } from '../configuration';
 import { XpException } from '../xpException';
@@ -10,47 +12,57 @@ export class Origin {
 	id: string;
 }
 
-export class OriginsManager {
+export class UserSettingsManager {
 	public static async init(config : Configuration) : Promise<void> {
-		const configuration = config.getConfiguration();
-		const origin = configuration.get<any>("origin");
-		
+		const configuration = config.getWorkspaceConfiguration();
+
 		// Если id нет, задаём.
+		const origin = configuration.get<any>(UserSettingsManager.ORIGIN_NAME);
 		if(!origin.id) {
 			const newGuid = Guid.create().toString();
 			origin.id = newGuid;
-			await configuration.update("origin", origin, true, false);
+			await configuration.update(UserSettingsManager.ORIGIN_NAME, origin, true, false);
 		}
-		
-		return;
+
+		// Если выходная директория не задана, то задаём её.
+		let outputDirectoryPath = configuration.get<string>(UserSettingsManager.OUTPUT_DIRECTORY_PATH);
+		if(!outputDirectoryPath) {
+			outputDirectoryPath = path.join(config.getExtensionTmpDirectoryPath(), UserSettingsManager.DEFAULT_OUTPUT_DIR_NAME);
+			await configuration.update(UserSettingsManager.OUTPUT_DIRECTORY_PATH, outputDirectoryPath, true, false);
+		}
+
+		// Если выходная директория не создана, создаем.
+		if(!fs.existsSync(outputDirectoryPath)) {
+			await fs.promises.mkdir(outputDirectoryPath);
+		}
 	}
 
 	public static async getCurrentOrigin(config : Configuration) : Promise<any> {
 
-		const configuration = config.getConfiguration();
-		const origin = configuration.get<Origin>("origin");
+		const configuration = config.getWorkspaceConfiguration();
+		const origin = configuration.get<Origin>(UserSettingsManager.ORIGIN_NAME);
 		const id = origin?.id;
 
 		const contentPrefix = origin?.contentPrefix;
 		if(!contentPrefix) {
-			throw OriginsManager.getParamException("contentPrefix");
+			throw UserSettingsManager.getParamException("contentPrefix");
 		}
 
 		const ru = origin?.ru;
 		if(!ru) {
-			throw OriginsManager.getParamException("ru");
+			throw UserSettingsManager.getParamException("ru");
 		}
 
 		const en = origin?.en;
 		if(!en) {
-			throw OriginsManager.getParamException("en");
+			throw UserSettingsManager.getParamException("en");
 		}
 
 		// Автоматически генерируем id 
 		if(!id) {
 			const newGuid = Guid.create().toString();
 			origin.id = newGuid;
-			await configuration.update("origin", origin, true, false);
+			await configuration.update(UserSettingsManager.ORIGIN_NAME, origin, true, false);
 		}
 
 		// [
@@ -96,4 +108,9 @@ export class OriginsManager {
 		return new XpException(
 			`Не задан поставщик для экспорта KB-файла. Задайте параметр [${paramName}](command:workbench.action.openSettings?["xpConfig.origin"]) и повторите`);
 	}
+
+	public static readonly DEFAULT_OUTPUT_DIR_NAME = "output";
+
+	public static readonly ORIGIN_NAME = "origin";
+	public static readonly OUTPUT_DIRECTORY_PATH = "outputDirectoryPath";
 }

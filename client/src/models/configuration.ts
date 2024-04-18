@@ -13,7 +13,7 @@ import { OsType, PathLocator } from './locator/pathLocator';
 import { SIEMPathHelper } from './locator/SIEMPathLocator';
 import { FileDiagnostics } from './siemj/siemJOutputParser';
 import { LocalizationService } from '../l10n/localizationService';
-import { Origin } from './content/originsManager';
+import { Origin } from './content/userSettingsManager';
 import { DialogHelper } from '../helpers/dialogHelper';
 import { LogLevel } from '../logger';
 
@@ -488,7 +488,7 @@ export class Configuration {
 		return path.join(this.getOutputDirectoryPath(rootFolder), this.getFptaDbFileName());
 	}
 
-	public getTmpDirectoryPath(rootFolder?: string) : string {
+	public getExtensionTmpDirectoryPath(rootFolder?: string) : string {
 		let systemTmpPath: string;
 		if(rootFolder) {
 			systemTmpPath = path.join(os.tmpdir(), Configuration.getExtensionDisplayName(), rootFolder);
@@ -499,6 +499,14 @@ export class Configuration {
 		return systemTmpPath;
 	}
 
+	public getTmpDirectoryPath(rootFolder?: string) : string {
+		const tmpDirName = "tmp";
+		if(rootFolder) {
+			return path.join(os.tmpdir(), Configuration.getExtensionDisplayName(), tmpDirName, rootFolder);
+		} else {
+			return  path.join(os.tmpdir(), Configuration.getExtensionDisplayName(), tmpDirName);
+		}
+	}
 
 	public getTmpSiemjConfigPath(rootFolder: string) : string {
 		return path.join(this.getRandTmpSubDirectoryPath(rootFolder), Configuration.SIEMJ_CONFIG_FILENAME);
@@ -507,7 +515,6 @@ export class Configuration {
 	public getRandTmpSubDirectoryPath(rootFolder?: string) : string {
 		return path.join(this.getTmpDirectoryPath(rootFolder), Guid.create().toString());
 	}
-
 
 	public getSiemSdkDirectoryPath() : string {
 		const dirName = "xp-sdk";
@@ -590,19 +597,19 @@ export class Configuration {
 	 * @returns префикс создаваемого контента.
 	 */
 	public getContentPrefix() : string {
-		const configuration = this.getConfiguration();
+		const configuration = this.getWorkspaceConfiguration();
 		const contentPrefix = configuration.get<string>("origin.contentPrefix");
 		return contentPrefix;
 	}
 
 	public async setContentPrefix(prefix: string) : Promise<void> {
-		const configuration = this.getConfiguration();
+		const configuration = this.getWorkspaceConfiguration();
 		const origin = configuration.get<Origin>("origin");
 		origin.contentPrefix = prefix;
 		await configuration.update("origin", origin, true, false);
 	}
 
-	public getConfiguration() : vscode.WorkspaceConfiguration {
+	public getWorkspaceConfiguration() : vscode.WorkspaceConfiguration {
 		return vscode.workspace.getConfiguration(this.CONFIGURATION_PREFIX);
 	}
 
@@ -611,13 +618,13 @@ export class Configuration {
 	 * @returns 
 	 */
 	public getСorrelatorTimeoutPerSecond() : number {
-		const configuration = this.getConfiguration();
+		const configuration = this.getWorkspaceConfiguration();
 		const correlatorTimeout = configuration.get<number>("correlatorTimeout");
 		return correlatorTimeout;
 	}
 
 	public getLogLevel() : LogLevel {
-		const configuration = this.getConfiguration();
+		const configuration = this.getWorkspaceConfiguration();
 		const logLevel = configuration.get<string>("logLevel");
 		switch(logLevel) {
 			case LogLevel[LogLevel.Error]: {
@@ -644,7 +651,7 @@ export class Configuration {
 	}
 
 	public getBaseOutputDirectoryPath() : string {
-		const extensionSettings = this.getConfiguration();
+		const extensionSettings = this.getWorkspaceConfiguration();
 		const outputDirectoryPath = extensionSettings.get<string>("outputDirectoryPath");
 
 		if (!outputDirectoryPath || outputDirectoryPath === ""){
@@ -691,7 +698,7 @@ export class Configuration {
 	}
 
 	public checkUserSetting() : void {
-		const extensionConfig = this.getConfiguration();
+		const extensionConfig = this.getWorkspaceConfiguration();
 
 		// Порядок обратный по приоритету, так как вторая ошибка появится выше чем первая.
 		this.checkOutputSetting(extensionConfig);

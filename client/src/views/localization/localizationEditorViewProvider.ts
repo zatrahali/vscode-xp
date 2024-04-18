@@ -333,7 +333,7 @@ export class LocalizationEditorViewProvider {
 
 			if(!result || result === LocalizationEditorViewProvider.RESTART_TESTS) {
 				progress.report({ message: `Получение зависимостей правила для корректной сборки графа корреляций` });
-				const ritd = new RunIntegrationTestDialog(this.config, this.integrationTestTmpFilesPath);
+				const ritd = new RunIntegrationTestDialog(this.config, {tmpFilesPath: this.integrationTestTmpFilesPath, cancellationToken: token});
 				const options = await ritd.getIntegrationTestRunOptionsForSingleRule(this._rule);
 				options.cancellationToken = token;
 

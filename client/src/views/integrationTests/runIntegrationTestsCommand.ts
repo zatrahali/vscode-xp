@@ -43,7 +43,7 @@ export class RunIntegrationTestsCommand extends Command {
 				progress.report({message: progressMessage});
 			}
 
-			const ritd = new RunIntegrationTestDialog(config, this.params.tmpDirPath);
+			const ritd = new RunIntegrationTestDialog(this.params.config, {tmpFilesPath: this.params.tmpDirPath, cancellationToken: cancellationToken});
 			const testRunnerOptions = await ritd.getIntegrationTestRunOptionsForSingleRule(this.params.rule);
 			testRunnerOptions.cancellationToken = cancellationToken;
 

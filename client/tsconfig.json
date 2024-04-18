@@ -4,7 +4,6 @@
 		"target": "ES2019",
 		"lib": ["ES2019", "DOM"],
 		"outDir": "out",
-		"rootDir": "src",
 		"sourceMap": true,
 		"skipLibCheck": true,
 		"esModuleInterop": true,

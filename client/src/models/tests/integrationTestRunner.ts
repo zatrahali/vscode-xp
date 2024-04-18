@@ -95,7 +95,11 @@ export class IntegrationTestRunner {
 		// Параметры сборки графа корреляций в зависимости от опций.
 		switch (options.correlationCompilation) {
 			case CompilationType.CurrentPackage: {
-				configBuilder.addCorrelationsGraphBuilding(true, options.currPackagePath);
+				// Надо собрать весь пакет, но у нас могут быть внешние зависимости.
+				// Исключаем точечные зависимости из пакета, оставляя внешние.
+				const correlationPaths = options.dependentCorrelations.filter(depCorrPath => !depCorrPath.startsWith(options.currPackagePath));
+				correlationPaths.push(options.currPackagePath);
+				configBuilder.addCorrelationsGraphBuilding(true, correlationPaths);
 				break;
 			}
 			case CompilationType.AllPackages: {
