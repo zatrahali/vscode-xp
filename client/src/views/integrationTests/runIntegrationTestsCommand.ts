@@ -23,6 +23,10 @@ export class RunIntegrationTestsCommand extends Command {
 			cancellable: true,
 		}, async (progress, cancellationToken: vscode.CancellationToken) => {
 
+			// Сбрасываем статус правила
+			this.params.rule.setStatus(ContentItemStatus.Default);
+			await ContentTreeProvider.refresh(this.params.rule);
+
 			const tests = this.params.rule.getIntegrationTests();
 			const ruleName = this.params.rule.getName();
 			const config = this.params.config;

@@ -516,7 +516,7 @@ export abstract class RuleBaseItem extends ContentTreeBaseItem {
 			this.tooltip = tooltip;
 		} else {
 			// Задаем дефолтное значение подсказки, которая показывается при наведении.
-			this.tooltip = this.getName();
+			this.tooltip = this.getLocaleDescription();
 		}
 
 		switch (this._status) {

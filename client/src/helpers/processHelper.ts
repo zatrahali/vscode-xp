@@ -103,6 +103,13 @@ export class ProcessHelper {
 				if(options.outputChannel) {
 					options.outputChannel.append(encodedData);
 				}
+
+				if(options.cancellationToken.isCancellationRequested) {
+					child.kill();
+					executionResult.exitCode = child.exitCode;
+					executionResult.isInterrupted = true;
+					resolve(executionResult);
+				}
 			});
 
 			child.stdout.on("error", function(exception : Error) {
@@ -112,6 +119,13 @@ export class ProcessHelper {
 				if(options.outputChannel) {
 					options.outputChannel.append(encodedData);
 				}
+
+				if(options.cancellationToken.isCancellationRequested) {
+					child.kill();
+					executionResult.exitCode = child.exitCode;
+					executionResult.isInterrupted = true;
+					resolve(executionResult);
+				}
 			});
 
 			child.stderr.on("data", function(exception : Error) {
@@ -120,6 +134,13 @@ export class ProcessHelper {
 
 				if(options.outputChannel) {
 					options.outputChannel.append(encodedData);
+				}
+
+				if(options.cancellationToken.isCancellationRequested) {
+					child.kill();
+					executionResult.exitCode = child.exitCode;
+					executionResult.isInterrupted = true;
+					resolve(executionResult);
 				}
 			});
 		
