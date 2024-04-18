@@ -6,6 +6,7 @@ import { TestHelper } from '../../helpers/testHelper';
 import { Command, CommandParams } from '../../models/command/command';
 import { RuleBaseItem } from '../../models/content/ruleBaseItem';
 import { XpException } from '../../models/xpException';
+import { IntegrationTest } from '../../models/tests/integrationTest';
 
 export interface SaveAllCommandParams extends CommandParams {
 	testNumber: number;
@@ -20,8 +21,18 @@ export class SaveAllCommand extends Command {
 	public async execute(): Promise<boolean> {
 		const config = this.params.config;
 		try {
+			// Номер активного теста.
+			const activeTestNumberString = this.params.testNumber;
+			if (!activeTestNumberString) {
+				throw new XpException(`Не задан номер активного теста`);
+			}
+
 			// В данном руле сохраняются в памяти нормализованные события.
-			this.params.rule = await this.saveAllTests(this.params.rule);
+			const rule = this.params.rule;
+			const newTests = await this.getNewTests();
+			rule.setIntegrationTests(newTests);
+			await rule.saveIntegrationTests();
+
 			DialogHelper.showInfo(config.getMessage("View.IntegrationTests.Message.TestsSavedSuccessfully"));
 			return true;
 		}
@@ -31,22 +42,8 @@ export class SaveAllCommand extends Command {
 		}
 	}
 	
-	private async saveAllTests(rule: RuleBaseItem): Promise<RuleBaseItem> {
-		// Номер активного теста.
-		const activeTestNumberString = this.params.testNumber;
-		if (!activeTestNumberString) {
-			throw new XpException(`Не задан номер активного теста`);
-		}
-
+	private async getNewTests(): Promise<IntegrationTest[]> {
 		const plainTests = this.params.tests as any[];
-
-		// Количество тестов уменьшилось, удаляем старые и записываем новые.
-		if (rule.getIntegrationTests().length > plainTests.length) {
-			const promises = rule.getIntegrationTests()
-				.map(it => it.remove());
-
-			await Promise.all(promises);
-		}
 
 		// Проверяем, что все тесты - нормальные
 		plainTests.forEach((plainTest, index) => {
@@ -64,50 +61,45 @@ export class SaveAllCommand extends Command {
 			}
 		});
 
-		if (plainTests.length) {
-			// Очищаем интеграционные тесты.
-			rule.clearIntegrationTests();
-
-			const tests = plainTests.map((plainTest, index) => {
-				const test = rule.createIntegrationTest();
-
-				const number = index + 1;
-				test.setNumber(number);
-
-				// Сырые события.
-				let rawEvents = plainTest?.rawEvents;
-
-				// Из textarea новые строки только \n, поэтому надо их поправить под систему.
-				rawEvents = rawEvents.replace(/(?<!\\)\n/gm, os.EOL);
-				test.setRawEvents(rawEvents);
-
-				// Код теста.
-				let testCode = plainTest?.testCode;
-
-				// Из textarea новые строки только \n, поэтому надо их поправить под систему.
-				testCode = testCode.replace(/(?<!\\)\n/gm, os.EOL);
-				let compressedCode: string;
-				try {
-					compressedCode = TestHelper.compressTestCode(testCode);
-				}
-				catch(error) {
-					throw new XpException("Ошибка корректности JSON в коде теста. Внесите исправления и повторите", error);
-				}
-				
-				test.setTestCode(compressedCode);
-
-				// Нормализованные события.
-				const normEvents = plainTest?.normEvents;
-				if (normEvents) {
-					test.setNormalizedEvents(TestHelper.compressTestCode(normEvents));
-				}
-
-				return test;
-			});
-
-			rule.setIntegrationTests(tests);
-			await rule.saveIntegrationTests();
-			return rule;
+		if (!plainTests.length) {
+			return [];
 		}
+
+		const newTests = plainTests.map((plainTest, index) => {
+			const number = index + 1;
+			const test = IntegrationTest.create(number);
+
+			// Сырые события.
+			let rawEvents = plainTest?.rawEvents;
+
+			// Из textarea новые строки только \n, поэтому надо их поправить под систему.
+			rawEvents = rawEvents.replace(/(?<!\\)\n/gm, os.EOL);
+			test.setRawEvents(rawEvents);
+
+			// Код теста.
+			let testCode = plainTest?.testCode;
+
+			// Из textarea новые строки только \n, поэтому надо их поправить под систему.
+			testCode = testCode.replace(/(?<!\\)\n/gm, os.EOL);
+			let compressedCode: string;
+			try {
+				compressedCode = TestHelper.compressTestCode(testCode);
+			}
+			catch(error) {
+				throw new XpException("Ошибка корректности JSON в коде теста. Внесите исправления и повторите", error);
+			}
+			
+			test.setTestCode(compressedCode);
+
+			// Нормализованные события.
+			const normEvents = plainTest?.normEvents;
+			if (normEvents) {
+				test.setNormalizedEvents(TestHelper.compressTestCode(normEvents));
+			}
+
+			return test;
+		});
+
+		return newTests;
 	}
 }
