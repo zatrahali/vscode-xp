@@ -1,4 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/vscode-xp/badge/?version=latest)](https://vscode-xp.readthedocs.io/ru/latest/?badge=latest) [![Telegram chat](https://img.shields.io/static/v1?label=chat&message=Telegram&color=blue&logo=telegram)](https://t.me/s3curity_experts_community/75) [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/Security-Experts-Community/vscode-xp/README_EN.md)
+[![Documentation Status](https://readthedocs.org/projects/vscode-xp/badge/?version=latest)](https://vscode-xp.readthedocs.io/ru/latest/?badge=latest) [![Telegram chat](https://img.shields.io/static/v1?label=chat&message=Telegram&color=blue&logo=telegram)](https://t.me/s3curity_experts_community/75) [![en](https://img.shields.io/badge/lang-en-green.svg)](https://github.com/Security-Experts-Community/vscode-xp/README_EN.md)
 
 # Поддержка языка eXtraction and Processing (XP) в Visual Studio Code
 
