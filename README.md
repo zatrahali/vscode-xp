@@ -1,6 +1,6 @@
-# Поддержка языка eXtraction and Processing (XP) в Visual Studio Code ([in English](README_EN.md))
+[![Documentation Status](https://readthedocs.org/projects/vscode-xp/badge/?version=latest)](https://vscode-xp.readthedocs.io/ru/latest/?badge=latest) [![Telegram chat](https://img.shields.io/static/v1?label=chat&message=Telegram&color=blue&logo=telegram)](https://t.me/s3curity_experts_community/75) [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/Security-Experts-Community/vscode-xp/README_EN.md)
 
-[![Documentation Status](https://readthedocs.org/projects/vscode-xp/badge/?version=latest)](https://vscode-xp.readthedocs.io/ru/latest/?badge=latest) [![Telegram chat](https://img.shields.io/static/v1?label=chat&message=Telegram&color=blue&logo=telegram)](https://t.me/s3curity_experts_community/75) [![Telegram chat](https://img.shields.io/matrix/vscode-xp:matrix.org?color=g&label=matrix&logo=matrix&logoColor=green)](https://matrix.to/#/#vscode-xp:matrix.org)
+# Поддержка языка eXtraction and Processing (XP) в Visual Studio Code
 
 Язык [eXtraction and Processing (XP)](https://help.ptsecurity.com/projects/maxpatrol10/26.2/ru-RU/help/1566293515) используется для создания детектирующих правил на основе анализа событий c конечных точек. На языке XP вы можете разрабатывать правила нормализации событий, их корреляции и обогащения.
 
