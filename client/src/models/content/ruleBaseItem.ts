@@ -199,23 +199,18 @@ export abstract class RuleBaseItem extends ContentTreeBaseItem {
 	}
 
 	public getLocaleDescription() : string {
-		let localeDescription = "";
 		switch(vscode.env.language) {
 			case 'ru': {
-				localeDescription = this.getRuDescription();
-				break;
+				return this.getRuDescription();
 			}
 			case 'en': {
-				localeDescription = this.getEnDescription();
-				break;
+				return this.getEnDescription();
+			}
+			default: {
+				// English description by default
+				return this.getEnDescription();
 			}
 		}
-
-		if(!localeDescription) {
-			return "";
-		}
-
-		return localeDescription;
 	}
 
 	public getLocalizations() : Localization[] {

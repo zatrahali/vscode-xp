@@ -161,7 +161,7 @@ export class CorrelateEventsCommand extends WebViewCommand {
                     // Очищаем от лишних полей и форматируем для вывода на FE.
                     const cleanedEvents = TestHelper.removeFieldsFromJsonl(
                         correlatedEventsString,
-                        "generator.version", "incident.name", "siem_id", "labels", "_subjects", "_objects");
+                        "generator.version", "incident.name", "siem_id", "labels", "_rule", "_subjects", "_objects");
                     const formattedEvents = TestHelper.formatTestCodeAndEvents(cleanedEvents);
 					
                     controller.postMessage({

@@ -39,6 +39,7 @@ import { DefaultTLValuesEditorViewProvider } from './views/defaultTLValues/defau
 import { LocalizationEditorViewProvider } from './views/localization/localizationEditorViewProvider';
 import { CommonCommands } from './models/command/commonCommands';
 import mainPackageFile from '../../package.json';
+import { ToolsManager } from './models/content/toolsManager';
 
 export let Log: Logger;
 let client: LanguageClient;
@@ -57,6 +58,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 		Log.info(`OS Release: ${os.release()}`);
 
 		await UserSettingsManager.init(config);
+		await ToolsManager.init(config);
 
 		config.checkUserSetting();
 

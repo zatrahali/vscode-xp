@@ -136,6 +136,10 @@ export class Configuration {
 		return "eXtraction and Processing";
 	}
 
+	public static getExtensionDirectoryName() : string {
+		return "eXtractionAndProcessing";
+	}
+
 	public getOsType() : OsType {
 		const osType = os.platform();
 		switch(osType) {
@@ -190,8 +194,8 @@ export class Configuration {
 		let appName = "";
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "siemj.exe"; break;
-			case OsType.Mac: throw new XpException("Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)");
 			case OsType.Linux: appName = "siemj"; break;
+			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -206,8 +210,8 @@ export class Configuration {
 		let appName = "";
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "siemkb_tests.exe"; break;
-			case OsType.Mac: throw new XpException("Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)");
 			case OsType.Linux: appName = "siemkb_tests"; break;
+			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -222,8 +226,9 @@ export class Configuration {
 		let appName = "";
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "rcc.exe"; break;
-			case OsType.Mac: throw new XpException("Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)");
 			case OsType.Linux: appName = "rcc"; break;
+			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -238,8 +243,8 @@ export class Configuration {
 		let appName = "";
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "mktables.exe"; break;
-			case OsType.Mac: throw new XpException("Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)");
 			case OsType.Linux: appName = "mktables"; break;
+			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -254,8 +259,8 @@ export class Configuration {
 		let appName = "";
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "fpta_filler.exe"; break;
-			case OsType.Mac: throw new XpException("Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)");
 			case OsType.Linux: appName = "fpta_filler"; break;
+			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -270,8 +275,8 @@ export class Configuration {
 		let appName = "";
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "build_l10n_rules.exe"; break;
-			case OsType.Mac: throw new XpException("Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)");
 			case OsType.Linux: appName = "build_l10n_rules"; break;
+			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
 			
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -286,8 +291,8 @@ export class Configuration {
 		let appName = "";
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "siemkb_tests.exe"; break;
-			case OsType.Mac: throw new XpException("Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)");
 			case OsType.Linux: appName = "siemkb_tests"; break;
+			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -302,8 +307,8 @@ export class Configuration {
 		let appName = "";
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "normalizer-cli.exe"; break;
-			case OsType.Mac: throw new XpException("Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)");
 			case OsType.Linux: appName = "normalizer-cli"; break;
+			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -318,8 +323,8 @@ export class Configuration {
 		let appName = "";
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "normalize.exe"; break;
-			case OsType.Mac: throw new XpException("Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)");
 			case OsType.Linux: appName = "normalize"; break;
+			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -339,7 +344,15 @@ export class Configuration {
 	}
 
 	public getEvtxToJsonToolFullPath() : string {
-		const fullPath = path.join(this.getExtensionPath(), "tools", "evtx_converter.exe");
+		let appPath = "";
+		switch(this.getOsType()) {
+			case OsType.Windows: appPath = path.join("win32", "evtx_converter.exe"); break;
+			case OsType.Linux: appPath = path.join("linux_gnu", "evtx_converter"); break;
+			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+
+			default: throw new XpException("Платформа не поддерживается");
+		}
+		const fullPath = path.join(this.getExtensionPath(), "tools", appPath);
 		return fullPath;
 	}
 
@@ -347,8 +360,8 @@ export class Configuration {
 		let appName = "";
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "ecatest.exe"; break;
-			case OsType.Mac: throw new XpException("Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)");
 			case OsType.Linux: appName = "ecatest"; break;
+			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -421,12 +434,35 @@ export class Configuration {
 		return path.join(this.getOutputDirectoryPath(rootFolder), this.getCorrelatedEventsFileName());
 	}
 
+	public getRuleLocaleLocalizationFilePath(rootFolder: string) : string {
+		switch(vscode.env.language) {
+			case 'ru': {
+				return this.getRuRuleLocalizationFilePath(rootFolder);
+			}
+			case 'en': {
+				return this.getEnRuleLocalizationFilePath(rootFolder);
+			}
+			// English by default.
+			default: {
+				return this.getEnRuleLocalizationFilePath(rootFolder);
+			}
+		}
+	}
+
 	public getRuRuleLocalizationFilePath(rootFolder: string) : string {
-		return path.join(this.getOutputDirectoryPath(rootFolder), "ru_events.json");
+		return path.join(this.getOutputDirectoryPath(rootFolder), this.getRuRuleLocalizationFileName());
 	}
 
 	public getEnRuleLocalizationFilePath(rootFolder: string) : string {
-		return path.join(this.getOutputDirectoryPath(rootFolder), "en_events.json");
+		return path.join(this.getOutputDirectoryPath(rootFolder), this.getEnRuleLocalizationFileName());
+	}
+
+	public getRuRuleLocalizationFileName() : string {
+		return "ru_events.json";
+	}
+
+	public getEnRuleLocalizationFileName() : string {
+		return "en_events.json";
 	}
 
 	public getLangsDirName() : string {
@@ -491,9 +527,9 @@ export class Configuration {
 	public getExtensionTmpDirectoryPath(rootFolder?: string) : string {
 		let systemTmpPath: string;
 		if(rootFolder) {
-			systemTmpPath = path.join(os.tmpdir(), Configuration.getExtensionDisplayName(), rootFolder);
+			systemTmpPath = path.join(os.tmpdir(), Configuration.getExtensionDirectoryName(), rootFolder);
 		} else {
-			systemTmpPath = path.join(os.tmpdir(), Configuration.getExtensionDisplayName());
+			systemTmpPath = path.join(os.tmpdir(), Configuration.getExtensionDirectoryName());
 		}
 	
 		return systemTmpPath;
@@ -502,9 +538,9 @@ export class Configuration {
 	public getTmpDirectoryPath(rootFolder?: string) : string {
 		const tmpDirName = "tmp";
 		if(rootFolder) {
-			return path.join(os.tmpdir(), Configuration.getExtensionDisplayName(), tmpDirName, rootFolder);
+			return path.join(os.tmpdir(), Configuration.getExtensionDirectoryName(), tmpDirName, rootFolder);
 		} else {
-			return  path.join(os.tmpdir(), Configuration.getExtensionDisplayName(), tmpDirName);
+			return  path.join(os.tmpdir(), Configuration.getExtensionDirectoryName(), tmpDirName);
 		}
 	}
 
@@ -753,13 +789,15 @@ export class Configuration {
 	private diagnosticCollection: vscode.DiagnosticCollection;
 	private localizationService: LocalizationService;
 	
-	private CONFIGURATION_PREFIX = "xpConfig";
-	private BUILD_TOOLS_DIR_NAME = "build-tools";
+	private readonly CONFIGURATION_PREFIX = "xpConfig";
+	private readonly BUILD_TOOLS_DIR_NAME = "build-tools";
 
-	private KBT_BASE_DIR_SHOW_SETTING_COMMAND = `(command:workbench.action.openSettings?["${this.CONFIGURATION_PREFIX}.kbtBaseDirectory"])`;
-	private KBT_CONFIG_INFO = `Загрузите актуальную версию [отсюда](https://github.com/vxcontrol/xp-kbt/releases), распакуйте архив и укажите путь к основной директории [в настройках]${this.KBT_BASE_DIR_SHOW_SETTING_COMMAND}`;
+	private readonly KBT_BASE_DIR_SHOW_SETTING_COMMAND = `(command:workbench.action.openSettings?["${this.CONFIGURATION_PREFIX}.kbtBaseDirectory"])`;
+	private readonly KBT_CONFIG_INFO = `Загрузите актуальную версию [отсюда](https://github.com/vxcontrol/xp-kbt/releases), распакуйте архив и укажите путь к основной директории [в настройках]${this.KBT_BASE_DIR_SHOW_SETTING_COMMAND}`;
 
-	private OUTPUT_DIR_SHOW_SETTING_COMMAND = `(command:workbench.action.openSettings?["${this.CONFIGURATION_PREFIX}.outputDirectoryPath"])`
+	private readonly OUTPUT_DIR_SHOW_SETTING_COMMAND = `(command:workbench.action.openSettings?["${this.CONFIGURATION_PREFIX}.outputDirectoryPath"])`
+
+	private readonly MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT = "Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)";
 
 	public static readonly TAXONOMY_DIR_NAME = "taxonomy";
 	public static readonly CONTRACTS_DIR_NAME = "contracts";

@@ -17,18 +17,18 @@ export class LocalizationsBuildingOptions {
  */
 export class SiemjConfBuilder {
 
-	constructor(private _config : Configuration, private _contentRootPath: string) {
+	constructor(private config : Configuration, private _contentRootPath: string) {
 		this._contentRootFolder = path.basename(this._contentRootPath);
-		this._outputFolder = this._config.getOutputDirectoryPath(this._contentRootFolder);
+		this._outputFolder = this.config.getOutputDirectoryPath(this._contentRootFolder);
 
 		// Заполнение конфига по умолчанию.
 		this._siemjConfigSection = 
 `[DEFAULT]
-ptsiem_sdk=${this._config.getSiemSdkDirectoryPath()}
-build_tools=${this._config.getBuildToolsDirectoryFullPath()}
-taxonomy=${this._config.getTaxonomyFullPath()}
+ptsiem_sdk=${this.config.getSiemSdkDirectoryPath()}
+build_tools=${this.config.getBuildToolsDirectoryFullPath()}
+taxonomy=${this.config.getTaxonomyFullPath()}
 output_folder=${this._outputFolder}
-temp=${this._config.getTmpDirectoryPath(this._contentRootFolder)}`;
+temp=${this.config.getTmpDirectoryPath(this._contentRootFolder)}`;
 	}
 
 	/**
@@ -41,16 +41,16 @@ temp=${this._config.getTmpDirectoryPath(this._contentRootFolder)}`;
 			throw new XpException(`Дублирование сценария ${SiemjConfBuilder.MAKE_NFGRAPH_SCENARIO} при генерации конфигурационного файла siemj.conf`);
 		}
 
-		const xpAppendixPath = this._config.getAppendixFullPath();
+		const xpAppendixPath = this.config.getAppendixFullPath();
 
 		if (!force){
-			const normGraphFilePath = this._config.getNormalizationsGraphFilePath(this._contentRootFolder);
+			const normGraphFilePath = this.config.getNormalizationsGraphFilePath(this._contentRootFolder);
 			if(fs.existsSync(normGraphFilePath)) {
 				return;
 			}
 		}
 
-		const output = path.join('${output_folder}', this._config.getNormalizationsGraphFileName());
+		const output = path.join('${output_folder}', this.config.getNormalizationsGraphFileName());
 		const nfgraphBuildingSection = 
 `
 [make-nfgraph]
@@ -75,13 +75,13 @@ out=${output}`;
 		}
 
 		if (!force){
-			const arGraphFilePath = this._config.getAggregationsGraphFilePath(this._contentRootFolder);
+			const arGraphFilePath = this.config.getAggregationsGraphFilePath(this._contentRootFolder);
 			if(fs.existsSync(arGraphFilePath)) {
 				return;
 			}
 		}
 
-		const output = path.join('${output_folder}', this._config.getAggregationGraphFileName());
+		const output = path.join('${output_folder}', this.config.getAggregationGraphFileName());
 		const argraphBuildingSection = 
 `
 [make-argraph]
@@ -116,14 +116,14 @@ out=${output}`;
 
 		// Не собираем схему, если она уже есть.
 		if(!force) {
-			const schemaFilePath = this._config.getSchemaFullPath(this._contentRootFolder);
+			const schemaFilePath = this.config.getSchemaFullPath(this._contentRootFolder);
 			if(fs.existsSync(schemaFilePath)) {
 				Log.info("Компиляция схемы не требуется, так как файл схемы уже существует");
 				return;
 			}
 		}
 
-		const contract = this._config.getTablesContract();
+		const contract = this.config.getTablesContract();
 		const tablesSchemaBuildingSection = 
 `
 [make-tables-schema]
@@ -140,15 +140,15 @@ out=\${output_folder}`;
 
 		// Не собираем схему, если она уже есть.
 		if(!force) {
-			const fptaDbFilePath = this._config.getFptaDbFilePath(this._contentRootFolder);
+			const fptaDbFilePath = this.config.getFptaDbFilePath(this._contentRootFolder);
 			if(fs.existsSync(fptaDbFilePath)) {
 				return;
 			}
 		}
 
-		const table_list_schema = path.join('${output_folder}', this._config.getSchemaFileName());
-		const table_list_defaults= path.join('${output_folder}', this._config.getCorrelationDefaultsFileName());
-		const output = path.join('${output_folder}', this._config.getFptaDbFileName());
+		const table_list_schema = path.join('${output_folder}', this.config.getSchemaFileName());
+		const table_list_defaults= path.join('${output_folder}', this.config.getCorrelationDefaultsFileName());
+		const output = path.join('${output_folder}', this.config.getFptaDbFileName());
 		const tablesDatabaseBuildingSection = 
 `
 [make-tables-db]
@@ -172,7 +172,7 @@ out=${output}`;
 		
 		// Не собираем граф, если он уже есть.
 		if(!force) {
-			const enrichGraphFilePath = this._config.getEnrichmentsGraphFilePath(this._contentRootFolder);
+			const enrichGraphFilePath = this.config.getEnrichmentsGraphFilePath(this._contentRootFolder);
 			if(fs.existsSync(enrichGraphFilePath)) {
 				return;
 			}
@@ -190,9 +190,9 @@ out=${output}`;
 			rulesSrcPath = this._contentRootPath;
 		}
 
-		const rulesFilters = this._config.getRulesDirFilters();
-		const table_list_schema = path.join('${output_folder}', this._config.getSchemaFileName());
-		const output = path.join('${output_folder}', this._config.getCorrelationsGraphFileName());
+		const rulesFilters = this.config.getRulesDirFilters();
+		const table_list_schema = path.join('${output_folder}', this.config.getSchemaFileName());
+		const output = path.join('${output_folder}', this.config.getCorrelationsGraphFileName());
 		const cfgraphBuildingSection = 
 `
 [make-crgraph]
@@ -210,15 +210,15 @@ out=${output}`;
 	public addEnrichmentsGraphBuilding(force = true) : void {
 		// Не собираем граф, если он уже есть.
 		if(!force) {
-			const enrichGraphFilePath = this._config.getEnrichmentsGraphFilePath(this._contentRootFolder);
+			const enrichGraphFilePath = this.config.getEnrichmentsGraphFilePath(this._contentRootFolder);
 			if(fs.existsSync(enrichGraphFilePath)) {
 				return;
 			}
 		}
 
-		const rulesFilters = this._config.getRulesDirFilters();
-		const table_list_schema = path.join('${output_folder}', this._config.getSchemaFileName());
-		const output = path.join('${output_folder}', this._config.getEnrichmentsGraphFileName());
+		const rulesFilters = this.config.getRulesDirFilters();
+		const table_list_schema = path.join('${output_folder}', this.config.getSchemaFileName());
+		const output = path.join('${output_folder}', this.config.getEnrichmentsGraphFileName());
 
 		const efgraphBuildingSection = 
 `
@@ -237,8 +237,8 @@ out=${output}`;
 	public addLocalizationsBuilding(options? : LocalizationsBuildingOptions) : void {
 
 		if(options && !options.force) {
-			const enLangFilePath = this._config.getRuLangFilePath(this._contentRootFolder);
-			const ruLangFilePath = this._config.getEnLangFilePath(this._contentRootFolder);
+			const enLangFilePath = this.config.getRuLangFilePath(this._contentRootFolder);
+			const ruLangFilePath = this.config.getEnLangFilePath(this._contentRootFolder);
 			if(fs.existsSync(enLangFilePath) && fs.existsSync(ruLangFilePath)) {
 				return;
 			}
@@ -251,7 +251,7 @@ out=${output}`;
 			rulesSrcPathResult = options.rulesSrcPath;
 		}
 
-		const output = path.join('${output_folder}', this._config.getLocalizationsFolder());
+		const output = path.join('${output_folder}', this.config.getLocalizationsFolder());
 		const localizationBuildingSection = 
 `
 [make-loca]
@@ -265,9 +265,9 @@ out=${output}`;
 
 	public addEventsNormalization(options: {rawEventsFilePath : string, mime?: EventMimeType}) : void {
 
-		const formulas = path.join('${output_folder}', this._config.getNormalizationsGraphFileName());
-		const not_norm_events = path.join('${output_folder}', this._config.getNotNormalizedEventsFileName());
-		const output = path.join('${output_folder}', this._config.getNormalizedEventsFileName());
+		const formulas = path.join('${output_folder}', this.config.getNormalizationsGraphFileName());
+		const not_norm_events = path.join('${output_folder}', this.config.getNotNormalizedEventsFileName());
+		const output = path.join('${output_folder}', this.config.getNormalizedEventsFileName());
 
 		let eventNormalizationSection: string;
 		if(options.mime) {
@@ -301,9 +301,9 @@ out=${output}`;
 
 	public addEventsEnrichment() : void {
 
-		const enrules = path.join('${output_folder}', this._config.getEnrichmentsGraphFileName());
-		const input = path.join('${output_folder}', this._config.getNormalizedEventsFileName());
-		const output = path.join('${output_folder}', this._config.getEnrichedEventsFileName());
+		const enrules = path.join('${output_folder}', this.config.getEnrichmentsGraphFileName());
+		const input = path.join('${output_folder}', this.config.getNormalizedEventsFileName());
+		const output = path.join('${output_folder}', this.config.getEnrichedEventsFileName());
 		const eventEnrichSection = 
 `
 [run-enrich]
@@ -324,11 +324,11 @@ out=${output}`;
 	 */
 	public addTestsRun(testsRuleFullPath: string, tmpFilesPath?: string) : void {
 
-		const formulas = path.join('${output_folder}', this._config.getNormalizationsGraphFileName());
-		const enrules = path.join('${output_folder}', this._config.getEnrichmentsGraphFileName());
-		const corrules = path.join('${output_folder}', this._config.getCorrelationsGraphFileName());
-		const table_list_defaults = path.join('${output_folder}', this._config.getCorrelationDefaultsFileName());
-		const crTimeout = this._config.getСorrelatorTimeoutPerSecond();
+		const formulas = path.join('${output_folder}', this.config.getNormalizationsGraphFileName());
+		const enrules = path.join('${output_folder}', this.config.getEnrichmentsGraphFileName());
+		const corrules = path.join('${output_folder}', this.config.getCorrelationsGraphFileName());
+		const table_list_defaults = path.join('${output_folder}', this.config.getCorrelationDefaultsFileName());
+		const crTimeout = this.config.getСorrelatorTimeoutPerSecond();
 		
 		let rulesTestsSection = 
 `
@@ -354,10 +354,10 @@ keep_temp_files=yes`;
 
 	public addCorrelateEnrichedEvents() : void {
 
-		const corrules = path.join('${output_folder}', this._config.getCorrelationsGraphFileName());
-		const input = path.join('${output_folder}', this._config.getEnrichedEventsFileName());
-		const table_list_database = path.join('${output_folder}', this._config.getFptaDbFileName());
-		const output = path.join('${output_folder}', this._config.getCorrelatedEventsFileName());
+		const corrules = path.join('${output_folder}', this.config.getCorrelationsGraphFileName());
+		const input = path.join('${output_folder}', this.config.getEnrichedEventsFileName());
+		const table_list_database = path.join('${output_folder}', this.config.getFptaDbFileName());
+		const output = path.join('${output_folder}', this.config.getCorrelatedEventsFileName());
 		const eventEnrichSection = 
 `
 [run-correlate]
@@ -373,10 +373,10 @@ out=${output}`;
 
 	public addCorrelateNormalizedEvents() : void {
 
-		const corrules = path.join('${output_folder}', this._config.getCorrelationsGraphFileName());
-		const input = path.join('${output_folder}', this._config.getNormalizedEventsFileName());
-		const table_list_database = path.join('${output_folder}', this._config.getFptaDbFileName());
-		const output = path.join('${output_folder}', this._config.getCorrelatedEventsFileName());
+		const corrules = path.join('${output_folder}', this.config.getCorrelationsGraphFileName());
+		const input = path.join('${output_folder}', this.config.getNormalizedEventsFileName());
+		const table_list_database = path.join('${output_folder}', this.config.getFptaDbFileName());
+		const output = path.join('${output_folder}', this.config.getCorrelatedEventsFileName());
 		const eventEnrichSection = 
 `
 [run-correlate]
@@ -397,12 +397,14 @@ out=${output}`;
 
 		let resultCorrelatedEventsFilePath : string;
 		if(!correlatedEventsFilePath) {
-			resultCorrelatedEventsFilePath = path.join('${output_folder}', this._config.getCorrelatedEventsFileName());
+			resultCorrelatedEventsFilePath = path.join('${output_folder}', this.config.getCorrelatedEventsFileName());
 		} else {
 			resultCorrelatedEventsFilePath = correlatedEventsFilePath;
 		}
 
-		const locaRulesDir = path.join('${output_folder}', this._config.getLangsDirName());
+		const locaRulesDir = path.join('${output_folder}', this.config.getLangsDirName());
+		const ruOutput = path.join('${output_folder}', this.config.getRuRuleLocalizationFileName());
+		const enOutput = path.join('${output_folder}', this.config.getEnRuleLocalizationFileName());
 
 		const ruLocalization = 
 `
@@ -411,14 +413,14 @@ type=FRONTEND
 lang=ru
 locarules=${locaRulesDir}
 in=${resultCorrelatedEventsFilePath}
-out=\${output_folder}\\ru_events.json
+out=${ruOutput}
 
 [run-loca-en]
 type=FRONTEND
 lang=en
 locarules=${locaRulesDir}
 in=${resultCorrelatedEventsFilePath}
-out=\${output_folder}\\en_events.json`;
+out=${enOutput}`;
 
 		this._siemjConfigSection += ruLocalization;
 		this._scenarios.push("run-loca-ru");

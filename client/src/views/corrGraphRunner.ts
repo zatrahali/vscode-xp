@@ -8,7 +8,7 @@ import { Configuration } from '../models/configuration';
 import { XpException } from '../models/xpException';
 import { SiemjConfBuilder } from '../models/siemj/siemjConfigBuilder';
 import { Log } from '../extension';
-import { Block } from 'typescript';
+import { DialogHelper } from '../helpers/dialogHelper';
 
 export class CorrGraphRunnerOptions {
 	config : Configuration;
@@ -25,7 +25,7 @@ export class CorrGraphRunnerOptions {
 
 export class CorrGraphRunner {
 
-	constructor(private _options : CorrGraphRunnerOptions) {}
+	constructor(private options : CorrGraphRunnerOptions) {}
 
 	/**
 	 * Коррелирует события в конверте с помощью корреляционных правил
@@ -43,26 +43,26 @@ export class CorrGraphRunner {
 			throw new XpException(`Директория контента '${contentFullPath}' не существует`);
 		}
 
-		const rootPath = this._options.config.getRootByPath(contentFullPath);
+		const rootPath = this.options.config.getRootByPath(contentFullPath);
 
 		// В зависимости от типа контента получаем нужную выходную директорию.
 		const rootFolder = path.basename(rootPath);
-		const outputFolder = this._options.config.getOutputDirectoryPath(rootFolder);
+		const outputFolder = this.options.config.getOutputDirectoryPath(rootFolder);
 
 		if(!fs.existsSync(outputFolder)) {
 			await fs.promises.mkdir(outputFolder, {recursive: true});
 		}
 		
-		const configBuilder = new SiemjConfBuilder(this._options.config, rootPath);
-		configBuilder.addNormalizationsGraphBuilding(this._options.forceNormalizationsGraphBuilding);
-		configBuilder.addTablesSchemaBuilding(this._options.forceTablesSchemaBuilding);
-		configBuilder.addTablesDbBuilding(this._options.forceTablesDbBuilding);
-		configBuilder.addCorrelationsGraphBuilding(this._options.forceCorrelationsGraphBuilding);
-		configBuilder.addEnrichmentsGraphBuilding(this._options.forceEnrichmentsGraphBuilding);
+		const configBuilder = new SiemjConfBuilder(this.options.config, rootPath);
+		configBuilder.addNormalizationsGraphBuilding(this.options.forceNormalizationsGraphBuilding);
+		configBuilder.addTablesSchemaBuilding(this.options.forceTablesSchemaBuilding);
+		configBuilder.addTablesDbBuilding(this.options.forceTablesDbBuilding);
+		configBuilder.addCorrelationsGraphBuilding(this.options.forceCorrelationsGraphBuilding);
+		configBuilder.addEnrichmentsGraphBuilding(this.options.forceEnrichmentsGraphBuilding);
 
 		// Собираем локализации для правил.
 		configBuilder.addLocalizationsBuilding({
-			force: this._options.forceLocalizationsBuilding
+			force: this.options.forceLocalizationsBuilding
 		});
 
 		configBuilder.addEventsNormalization({rawEventsFilePath: rawEventsFilePath});
@@ -72,22 +72,22 @@ export class CorrGraphRunner {
 
 		const siemjConfContent = configBuilder.build();
 
-		const randTmpDir = this._options.config.getRandTmpSubDirectoryPath(rootFolder);
+		const randTmpDir = this.options.config.getRandTmpSubDirectoryPath(rootFolder);
 		await fs.promises.mkdir(randTmpDir, {recursive: true});
 
 		// Сохраняем конфигурационный файл для siemj.
 		const siemjConfigPath = path.join(randTmpDir, Configuration.SIEMJ_CONFIG_FILENAME);
-		const siemjExePath = this._options.config.getSiemjPath();
+		const siemjExePath = this.options.config.getSiemjPath();
 		await FileSystemHelper.writeContentFile(siemjConfigPath, siemjConfContent);
 
 		// Без удаления базы возникали странные ошибки filler-а, но это не точно.
-		const ftpaDbPath = this._options.config.getFptaDbFilePath(rootFolder);
+		const ftpaDbPath = this.options.config.getFptaDbFilePath(rootFolder);
 		if(fs.existsSync(ftpaDbPath)) {
 			await fs.promises.unlink(ftpaDbPath);
 		}
 		
 		// Удаляем коррелированные события, если такие были.
-		const corrEventFilePath = this._options.config.getCorrelatedEventsFilePath(rootFolder);
+		const corrEventFilePath = this.options.config.getCorrelatedEventsFilePath(rootFolder);
 		if(fs.existsSync(corrEventFilePath)) {
 			await fs.promises.unlink(corrEventFilePath);
 		}
@@ -98,24 +98,29 @@ export class CorrGraphRunner {
 			siemjExePath,
 			["-c", siemjConfigPath, "main"],
 			{
-				encoding: this._options.config.getSiemjOutputEncoding(),
-				outputChannel: this._options.config.getOutputChannel(),
-				cancellationToken: this._options.cancellationToken
+				encoding: this.options.config.getSiemjOutputEncoding(),
+				outputChannel: this.options.config.getOutputChannel(),
+				cancellationToken: this.options.cancellationToken
 			}
 		);
 
-		const corrEventsFilePath = this._options.config.getCorrelatedEventsFilePath(rootFolder);
+		const corrEventsFilePath = this.options.config.getCorrelatedEventsFilePath(rootFolder);
 		if(!fs.existsSync(corrEventsFilePath)) {
-			throw new XpException("Ошибка прогона события на графе корреляций");
+			throw new XpException("Ошибка корреляции событий из файлов");
 		}
 
-		const ruLocalizationFilePath = this._options.config.getRuRuleLocalizationFilePath(rootFolder);
-		if(!fs.existsSync(ruLocalizationFilePath)) {
-			throw new XpException(`Файл локализованных событий не был создан`);
+		const ruleLocalizationFilePath = this.options.config.getRuleLocaleLocalizationFilePath(rootFolder);
+		if(!fs.existsSync(ruleLocalizationFilePath)) {
+			DialogHelper.showWarning(`Не удалось локализовать корреляционные события, они выведены без локализаций`);
+			Log.warn(`Файл локализованных событий по пути ${ruleLocalizationFilePath} не был найден`);
+
+			const notLocalizedEventsContent = await FileSystemHelper.readContentFile(corrEventsFilePath);
+			await fs.promises.unlink(siemjConfigPath);
+			return notLocalizedEventsContent;
 		}
 
 		// TODO: поддержать английскую локализацию.
-		const localizedEventsContent = await FileSystemHelper.readContentFile(ruLocalizationFilePath);
+		const localizedEventsContent = await FileSystemHelper.readContentFile(ruleLocalizationFilePath);
 		await fs.promises.unlink(siemjConfigPath);
 		return localizedEventsContent;
 	}

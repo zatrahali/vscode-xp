@@ -43,10 +43,7 @@ export class AppendEventsCommand extends WebViewCommand<AppendEventMessage> {
         const showOpenDialogUris = await vscode.window.showOpenDialog({
 			canSelectMany: true, 
 			canSelectFolders: true,
-            canSelectFiles: true,
-            filters: {
-                Evtx: ['evtx']
-            }
+            canSelectFiles: true
 		});
 
 		if(!showOpenDialogUris || showOpenDialogUris.length != 1) {
@@ -64,8 +61,9 @@ export class AppendEventsCommand extends WebViewCommand<AppendEventMessage> {
             return;
         }
 
-        if(Configuration.get().getOsType() !== OsType.Windows) {
-            DialogHelper.showWarning(`Данная функциональность поддерживается только на платформе Windows`);
+        const osType = Configuration.get().getOsType();
+        if(osType !== OsType.Windows && osType !== OsType.Linux) {
+            DialogHelper.showWarning(`Данная функциональность поддерживается только на платформах Windows и Linux`);
             return;
         }
 

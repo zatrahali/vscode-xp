@@ -33,7 +33,7 @@ export class UserSettingsManager {
 
 		// Если выходная директория не создана, создаем.
 		if(!fs.existsSync(outputDirectoryPath)) {
-			await fs.promises.mkdir(outputDirectoryPath);
+			await fs.promises.mkdir(outputDirectoryPath, {recursive: true});
 		}
 	}
 
