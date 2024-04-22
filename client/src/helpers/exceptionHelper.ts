@@ -7,7 +7,8 @@ import { Configuration } from '../models/configuration';
 export class ExceptionHelper {
 	public static async show(error: Error, defaultMessage?: string) : Promise<void> {
 		const errorType = error.constructor.name;
-		const outputChannel = Configuration.get().getOutputChannel();
+		const configuration = Configuration.get();
+		const outputChannel = configuration.getOutputChannel();
 
 		switch(errorType)  {
 			case "XpException": 
@@ -27,16 +28,18 @@ export class ExceptionHelper {
 				break;
 			}
 			default: {
+				const uncaughtExceptionMessage = configuration.getMessage("UncaughtExceptionMessage");
 				if(defaultMessage) {
 					if(defaultMessage.endsWith(".")) {
-						vscode.window.showErrorMessage(`${defaultMessage} ${ExceptionHelper.FEEDBACK_WAY_INFO}`);
+						vscode.window.showErrorMessage(`${defaultMessage} ${uncaughtExceptionMessage}`);
 					}
 					else {
-						vscode.window.showErrorMessage(`${defaultMessage}. ${ExceptionHelper.FEEDBACK_WAY_INFO}`);
+						vscode.window.showErrorMessage(`${defaultMessage}. ${uncaughtExceptionMessage}`);
 					}
 					
 				} else {
-					vscode.window.showErrorMessage(`Обнаружена неожиданная ошибка. ${ExceptionHelper.FEEDBACK_WAY_INFO}`);
+					const unexpectedError = configuration.getMessage("UnexpectedError");
+					vscode.window.showErrorMessage(`${unexpectedError}. ${uncaughtExceptionMessage}`);
 				}
 
 				// Пишем stack в output.
@@ -59,7 +62,4 @@ export class ExceptionHelper {
 			Log.error(error.message, error);
 		}
 	}
-
-	public static FEEDBACK_WAY_INFO = 
-		"В случае её повторения проверьте наличие соответствующего [issue](https://github.com/Security-Experts-Community/vscode-xp/issues/). Если подобная ошибка раньше не встречалась, заведите [баг](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) и приложите логи из окна Output. Любые вопросы также можно обсудить [Telegram-канале](https://t.me/s3curity_experts_community/75)";
 }
