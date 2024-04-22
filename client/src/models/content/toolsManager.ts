@@ -10,8 +10,14 @@ export class ToolsManager {
 		
 		switch(config.getOsType()) {
 			case OsType.Linux: {
-				await fs.promises.chmod(evtxToJsonToolFullPath, 0x777); 
-				Log.info(`The utility file '${evtxToJsonToolFullPath}' is assigned an executable flag`);
+				const toolStat = await fs.promises.stat(evtxToJsonToolFullPath);
+				if(!(fs.constants.S_IXUSR & toolStat.mode)) {
+					// Added a bit of execution
+					Log.debug(`The utility file '${evtxToJsonToolFullPath}' has ${toolStat.mode.toString(16)}`);
+					
+					await fs.promises.chmod(evtxToJsonToolFullPath, 0x544); 
+					Log.debug(`The utility file '${evtxToJsonToolFullPath}' is assigned an executable flag`);
+				}
 				break;
 			}
 		}
