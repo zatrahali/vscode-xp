@@ -47,7 +47,7 @@ export class BuildNormalizationsCommand extends ViewCommand {
 				const siemjConfContent = siemjConfContentEntity['configContent'];
 				try {
 					if(!siemjConfContent) {
-						throw new XpException("Не удалось сгенерировать siemj.conf для заданного правила и тестов");
+						throw new XpException(this.config.getMessage("CouldNotGenerateSiemjConf"));
 					}
 
 					const siemjManager = new SiemjManager(this.config, cancellationToken);
@@ -70,7 +70,7 @@ export class BuildNormalizationsCommand extends ViewCommand {
 						return;
 					}
 
-					DialogHelper.showInfo(`Компиляция всех нормализаций успешно завершена`);
+					DialogHelper.showInfo(this.config.getMessage("View.ObjectTree.Message.BuildAllNormalizationsCompletedSuccessfully"));
 				}
 				finally {
 					const tmpPath = this.config.getTmpDirectoryPath(rootFolder);

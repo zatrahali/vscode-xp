@@ -31,7 +31,7 @@ import { GitHooks } from './gitHooks';
 import { InitKBRootCommand } from './commands/initKnowledgebaseRootCommand';
 import { ExceptionHelper } from '../../helpers/exceptionHelper';
 import { ContentTreeBaseItem } from '../../models/content/contentTreeBaseItem';
-import { ContentVerifierCommand } from './commands/contentVerifierCommand';
+import { ContentCheckingCommand } from './commands/contentCheckingCommand';
 import { BuildLocalizationsCommand } from './commands/buildLocalizationsCommand';
 import { BuildWldCommand } from './commands/buildWldCommand';
 import { BuildNormalizationsCommand } from './commands/buildNormalizationsCommand';
@@ -97,7 +97,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 			vscode.commands.registerCommand(
 				ContentTreeProvider.verifyFolderCommand,
 				async (item: ContentTreeBaseItem) => {
-					const command = new ContentVerifierCommand(config, item);
+					const command = new ContentCheckingCommand(config, item);
 					await CommandHelper.singleExecutionCommand(command);
 				}
 			)

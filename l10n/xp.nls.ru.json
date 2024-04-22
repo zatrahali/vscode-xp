@@ -9,6 +9,8 @@
 
     "NameOfNewRule": "Название нового правила",
 
+    "CouldNotGenerateSiemjConf": "Не удалось сгенерировать siemj.conf",
+
     "View.ObjectTree.Message.TheKnowledgeBaseIsNotInitialized": "База знаний не найдена. Создать стандартные папки для продукта {0}?",
     "View.ObjectTree.Message.NeedToOpenKnowledgeBase": "Для выполнения команды нужно [открыть базу знаний](command:xp.contentTree.openKnowledgebaseCommand)",
     "View.ObjectTree.Message.Create": "Создать",
@@ -26,8 +28,25 @@
     "View.ObjectTree.Progress.BuildAllNormalizations": "Компиляция всех правил нормализации",
     "View.ObjectTree.Progress.BuildAllWlds": "Компиляция всех WLD-файлов",
 
-    "View.ObjectTree.ItemStatus.TestsPassed": "Интеграционные тесты пройдены",
-    "View.ObjectTree.ItemStatus.TestsFailed": "Интеграционные тесты не пройдены",
+    "View.ObjectTree.Progress.ContentChecking.GetDependencies": "Получение зависимостей правила {0} для корректной сборки графа корреляций",
+    "View.ObjectTree.Progress.ContentChecking.BuildAllArtifacts": "Сборка артефактов для всех правил",
+    "View.ObjectTree.Progress.ContentChecking.NormalizationChecking": "Проверка тестов нормализации {0}",
+    "View.ObjectTree.Progress.ContentChecking.CorrelationChecking": "Проверка тестов корреляции {0}",
+    "View.ObjectTree.Progress.ContentChecking.EnrichmentChecking": "Проверка тестов обогащения {0}",
+
+    "View.ObjectTree.Message.BuildAllGraphsCompletedSuccessfully": "Компиляция всех графов и табличных списков успешно завершена",
+    "View.ObjectTree.Message.BuildAllLocalizationsCompletedSuccessfully": "Компиляция всех локализаций успешно завершена",
+    "View.ObjectTree.Message.BuildAllNormalizationsCompletedSuccessfully": "Компиляция всех нормализаций успешно завершена",
+    "View.ObjectTree.Message.BuildAllWldsCompletedSuccessfully": "Компиляция WLD-файлов успешно завершена",
+
+    "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation": "Правила обогащения из выбранной директории могут обрабатывать как нормализованные события, так и корреляционные. Какие корреляции необходимо компилировать для корректного тестирования?",
+    "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.AllPackages": "Все пакеты",
+    "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.CurrentPackage": "Текущий пакет",
+    "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.DontCompile": "Не компилировать корреляции",
+    "View.ObjectTree.Message.ContentChecking.CompletedSuccessfully": "Проверка директории {0} завершена",
+    
+    "View.ObjectTree.ItemStatus.TestsPassed": "Тесты пройдены",
+    "View.ObjectTree.ItemStatus.TestsFailed": "Тесты не пройдены",
     
     "View.IntegrationTests.Title": "Тесты для {0}",
     "View.IntegrationTests.Test": "Тест", 

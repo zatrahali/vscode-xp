@@ -47,7 +47,7 @@ export class BuildAllGraphsAndTableListsCommand extends ViewCommand {
 				const siemjConfContent = siemjConfContentEntity['configContent'];
 				try {
 					if(!siemjConfContent) {
-						throw new XpException("Не удалось сгенерировать siemj.conf для заданного правила и тестов");
+						throw new XpException(this.config.getMessage("CouldNotGenerateSiemjConf"));
 					}
 
 					const siemjManager = new SiemjManager(this.config, cancellationToken);
@@ -70,7 +70,7 @@ export class BuildAllGraphsAndTableListsCommand extends ViewCommand {
 						return;
 					}
 
-					DialogHelper.showInfo(`Компиляция всех графов и табличных списков успешно завершена`);
+					DialogHelper.showInfo(this.config.getMessage("View.ObjectTree.Message.BuildAllGraphsCompletedSuccessfully"));
 				}
 				finally {
 					const tmpPath = this.config.getTmpDirectoryPath(rootFolder);
@@ -85,7 +85,7 @@ export class BuildAllGraphsAndTableListsCommand extends ViewCommand {
 						}
 					}
 					catch(e){
-						Log.warn("Очистка временных файлов", e);
+						Log.warn("Clearing temporary files", e);
 					}
 				}
 			}

@@ -9,6 +9,8 @@
 
     "NameOfNewRule": "Name of the new rule",
 
+    "CouldNotGenerateSiemjConf": "Could not generate siemj.conf",
+
     "View.ObjectTree.Message.TheKnowledgeBaseIsNotInitialized": "The knowledge base is not initialized. Create required folders for {0} format?",
     "View.ObjectTree.Message.NeedToOpenKnowledgeBase": "To execute the command you need to [open the knowledge base](command:xp.contentTree.openKnowledgebaseCommand)",
     "View.ObjectTree.Message.Create": "Create",
@@ -26,8 +28,25 @@
     "View.ObjectTree.Progress.BuildAllNormalizations": "Compilation of all normalizations",
     "View.ObjectTree.Progress.BuildAllWlds": "Compiling all wld files",
 
-    "View.ObjectTree.ItemStatus.TestsPassed": "Integration tests passed",
-    "View.ObjectTree.ItemStatus.TestsFailed": "Integration tests failed",
+    "View.ObjectTree.Progress.ContentChecking.GetDependencies": "Getting the dependencies of the {0} rule for the correct assembly of the correlation graph",
+    "View.ObjectTree.Progress.ContentChecking.BuildAllArtifacts": "Building artifacts for all rules",
+    "View.ObjectTree.Progress.ContentChecking.NormalizationChecking": "Checking normalization tests {0}",
+    "View.ObjectTree.Progress.ContentChecking.CorrelationChecking": "Checking correlation tests {0}",
+    "View.ObjectTree.Progress.ContentChecking.EnrichmentChecking": "Checking enrichment tests {0}",
+
+    "View.ObjectTree.Message.BuildAllGraphsCompletedSuccessfully": "Compilation of all graphs and tabular lists has been completed successfully",
+    "View.ObjectTree.Message.BuildAllLocalizationsCompletedSuccessfully": "Compilation of all localizations has been completed successfully",
+    "View.ObjectTree.Message.BuildAllNormalizationsCompletedSuccessfully": "Compilation of all normalizations has been completed successfully",
+    "View.ObjectTree.Message.BuildAllWldsCompletedSuccessfully": "Compilation of wld files has been completed successfully",
+
+    "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation": "The enrichment rules from the selected directory can handle both normalized and correlated events. Which correlations need to be compiled for correct testing?",
+    "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.AllPackages": "All packages",
+    "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.CurrentPackage": "The current package",
+    "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.DontCompile": "Do not compile correlations",
+    "View.ObjectTree.Message.ContentChecking.CompletedSuccessfully": "Check of directory {0} completed",
+
+    "View.ObjectTree.ItemStatus.TestsPassed": "Tests passed",
+    "View.ObjectTree.ItemStatus.TestsFailed": "Tests failed",
 
     "View.IntegrationTests.Title": "{0} tests",
     "View.IntegrationTests.Test": "Test", 

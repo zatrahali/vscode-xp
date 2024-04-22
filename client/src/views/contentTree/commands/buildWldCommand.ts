@@ -46,7 +46,7 @@ export class BuildWldCommand extends ViewCommand {
 
 				const siemjConfContent = siemjConfContentEntity['configContent'];
 				if(!siemjConfContent) {
-					throw new XpException("Не удалось сгенерировать siemj.conf для заданного правила и тестов");
+					throw new XpException(this.config.getMessage("CouldNotGenerateSiemjConf"));
 				}
 
 				// Для сборки WLD нам нужен файл схемы, собираем его.
@@ -94,7 +94,7 @@ export class BuildWldCommand extends ViewCommand {
 					return;
 				}
 
-				DialogHelper.showInfo(`Компиляция wld-файлов успешно завершена`);
+				DialogHelper.showInfo(this.config.getMessage("View.ObjectTree.Message.BuildAllWldsCompletedSuccessfully"));
 			}
 		});
 	}

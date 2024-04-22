@@ -10,10 +10,9 @@ import { TestHelper } from '../../../helpers/testHelper';
 import { SiemjManager } from '../../../models/siemj/siemjManager';
 import { Configuration } from '../../../models/configuration';
 import { RunIntegrationTestDialog } from '../../runIntegrationDialog';
-import { SiemJOutputParser, SiemjExecutionResult } from '../../../models/siemj/siemJOutputParser';
+import { SiemJOutputParser} from '../../../models/siemj/siemJOutputParser';
 import { CompilationType, IntegrationTestRunner, IntegrationTestRunnerOptions } from '../../../models/tests/integrationTestRunner';
 import { ContentTreeBaseItem } from '../../../models/content/contentTreeBaseItem';
-import { ExceptionHelper } from '../../../helpers/exceptionHelper';
 import { Enrichment } from '../../../models/content/enrichment';
 import { Log } from '../../../extension';
 import { FileSystemHelper } from '../../../helpers/fileSystemHelper';
@@ -21,17 +20,14 @@ import { Normalization } from '../../../models/content/normalization';
 import { TestStatus } from '../../../models/tests/testStatus';
 import { BaseUnitTest } from '../../../models/tests/baseUnitTest';
 import { ViewCommand } from './viewCommand';
-import { XpException } from '../../../models/xpException';
 import { OperationCanceledException } from '../../../models/operationCanceledException';
-import { CancellationToken } from 'vscode-languageclient';
-import { JsHelper } from '../../../helpers/jsHelper';
 
 /**
  * Проверяет контент по требованиям. В настоящий момент реализована только проверка интеграционных тестов и локализаций.
  * TODO: учесть обновление дерева контента пользователем во время операции.
  * TODO: после обновления дерева статусы item-ам присваиваться не будут, нужно обновить список обрабатываемых рулей.
  */
-export class ContentVerifierCommand extends ViewCommand {
+export class ContentCheckingCommand extends ViewCommand {
 	constructor(private readonly config: Configuration, private parentItem: ContentTreeBaseItem) {
 		super();
 	}
@@ -101,7 +97,7 @@ export class ContentVerifierCommand extends ViewCommand {
 				await ContentTreeProvider.refresh(rule);
 			}
 
-			DialogHelper.showInfo(`Проверка директории ${this.parentItem.getName()} завершена`);
+			DialogHelper.showInfo(this.config.getMessage("View.ObjectTree.Message.ContentChecking.CompletedSuccessfully", this.parentItem.getName()));
 		});
 	}
 
@@ -122,7 +118,10 @@ export class ContentVerifierCommand extends ViewCommand {
 			}
 
 			if(rule instanceof Correlation) {
-				options.progress.report({ message: `Получение зависимостей правила ${rule.getName()} для корректной сборки графа корреляций`});
+				const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.GetDependencies", rule.getName());
+				Log.info(statusMessage);
+				options.progress.report({ message: statusMessage});
+				
 				const ritd = new RunIntegrationTestDialog(this.config, {cancellationToken: options.cancellationToken});
 				const ruleRunOptions = await ritd.getIntegrationTestRunOptionsForSingleRule(rule);
 				unionOptions.union(ruleRunOptions);
@@ -142,7 +141,10 @@ export class ContentVerifierCommand extends ViewCommand {
 		const testRunner = new IntegrationTestRunner(this.config, outputParser);
 
 		if(correlationBuildingConfigured || enrichmentBuildingConfigured) {
-			options.progress.report({ message: `Сборка артефактов для всех правил`});
+			const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.BuildAllArtifacts");
+			Log.info(statusMessage);
+			options.progress.report({ message: statusMessage});
+			
 			await testRunner.compileArtifacts(unionOptions);
 		}
 		
@@ -157,17 +159,17 @@ export class ContentVerifierCommand extends ViewCommand {
 		testRunnerOptions.currPackagePath = rule.getPackagePath(this.config);
 		
 		switch(result) {
-			case this.CURRENT_PACKAGE: {
+			case this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.CurrentPackage"): {
 				testRunnerOptions.correlationCompilation = CompilationType.CurrentPackage;
 				break;
 			}
 
-			case this.ALL_PACKAGES: {
+			case this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.AllPackages"): {
 				testRunnerOptions.correlationCompilation = CompilationType.AllPackages;
 				break;
 			}
 			
-			case this.DONT_COMPILE_CORRELATIONS: {
+			case this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.DontCompile"): {
 				testRunnerOptions.correlationCompilation = CompilationType.DontCompile;
 				break;
 			}
@@ -178,10 +180,11 @@ export class ContentVerifierCommand extends ViewCommand {
 
 	private async askTheUser(): Promise<string> {
 		const result = await DialogHelper.showInfo(
-			"Правила обогащения из выбранной директории могут обрабатывать как нормализованные события, так и корреляционные. Какие корреляции необходимо компилировать для корректного тестирования?",
-			this.CURRENT_PACKAGE,
-			this.ALL_PACKAGES,
-			this.DONT_COMPILE_CORRELATIONS);
+			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation"),
+			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.CurrentPackage"),
+			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.DontCompile"),
+			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.AllPackages")
+		);
 
 		if(!result) {
 			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
@@ -194,7 +197,9 @@ export class ContentVerifierCommand extends ViewCommand {
 		rule: RuleBaseItem,
 		options: {progress: any, cancellationToken: vscode.CancellationToken}
 	) {
-		options.progress.report({ message: `Проверка тестов нормализации ${rule.getName()}`});
+		const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.NormalizationChecking", rule.getName());
+		Log.info(statusMessage);
+		options.progress.report({ message: statusMessage});
 
 		if(options.cancellationToken.isCancellationRequested) {
 			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
@@ -223,11 +228,11 @@ export class ContentVerifierCommand extends ViewCommand {
 
 		// Проверяем результаты тестов и меняем статус в UI.
 		if(tests.every(t => t.getStatus() === TestStatus.Success)) {
-			const message = "Тесты прошли проверку";
+			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsPassed");
 			Log.debug(message);
 			rule.setStatus(ContentItemStatus.Verified, message);
 		} else {
-			const message = "Тесты не прошли проверку";
+			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsFailed");
 			Log.debug(message);
 			rule.setStatus(ContentItemStatus.Unverified, message);		
 		}
@@ -238,16 +243,23 @@ export class ContentVerifierCommand extends ViewCommand {
 		runner: IntegrationTestRunner,
 		options: {progress: any, cancellationToken: vscode.CancellationToken}
 	) {
-		options.progress.report({ message: `Проверка интеграционных тестов правила корреляции ${rule.getName()}`});
+		const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.CorrelationChecking", rule.getName());
+		Log.info(statusMessage);
+		options.progress.report({ message: statusMessage});
+
 		if(options.cancellationToken.isCancellationRequested) {
 			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 		}
 
 		const siemjResult = await runner.run(rule);
-		if (!siemjResult.testsStatus) {
-			rule.setStatus(ContentItemStatus.Unverified, "Интеграционные тесты не прошли проверку");
+		if (siemjResult.testsStatus) {
+			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsPassed");
+			Log.debug(message);
+			rule.setStatus(ContentItemStatus.Verified, message);
 		} else {
-			rule.setStatus(ContentItemStatus.Verified, "Интеграционные тесты прошли проверку");
+			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsFailed");
+			Log.debug(message);
+			rule.setStatus(ContentItemStatus.Unverified, message);	
 		}
 
 		// TODO: временно отключены тесты локализаций, так как siemkb_tests.exe падает со следующей ошибкой:
@@ -290,19 +302,24 @@ export class ContentVerifierCommand extends ViewCommand {
 		runner: IntegrationTestRunner,
 		options: {progress: any, cancellationToken: vscode.CancellationToken}
 	) {
-		options.progress.report({ message: `Проверка интеграционных тестов правила обогащения ${rule.getName()}`});
+		const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.EnrichmentChecking", rule.getName());
+		Log.info(statusMessage);
+		options.progress.report({ message: statusMessage});
 
 		if(options.cancellationToken.isCancellationRequested) {
-
 			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 		}
 
 		const siemjResult = await runner.run(rule);
 		
-		if (!siemjResult.testsStatus) {
-			rule.setStatus(ContentItemStatus.Unverified, "Интеграционные тесты не прошли проверку");
+		if (siemjResult.testsStatus) {
+			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsPassed");
+			Log.debug(message);
+			rule.setStatus(ContentItemStatus.Verified, message);
 		} else {
-			rule.setStatus(ContentItemStatus.Verified, "Интеграционные тесты прошли проверку");
+			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsFailed");
+			Log.debug(message);
+			rule.setStatus(ContentItemStatus.Unverified, message);	
 		}
 	}
 
@@ -322,96 +339,5 @@ export class ContentVerifierCommand extends ViewCommand {
 		return totalItems;
 	}
 
-	private async testRule(rule: RuleBaseItem, progress: any, cancellationToken: vscode.CancellationToken) {
-		// В отдельную директорию положим все временные файлы, чтобы не путаться.
-		if(fs.existsSync(this.integrationTestTmpFilesPath)) {
-			await FileSystemHelper.deleteAllSubDirectoriesAndFiles(this.integrationTestTmpFilesPath);
-		}
-		
-		const ruleTmpFilesRuleName = path.join(this.integrationTestTmpFilesPath, rule.getName());
-		if(!fs.existsSync(ruleTmpFilesRuleName)) {
-			await fs.promises.mkdir(ruleTmpFilesRuleName, {recursive: true});
-		}
-
-		// Тестирование нормализаций
-		if(rule instanceof Normalization) {
-			const tests = rule.getUnitTests();
-
-			// Сбрасываем результаты предыдущих тестов.
-			tests.forEach(t => t.setStatus(TestStatus.Unknown));
-			const testHandler = async (unitTest : BaseUnitTest) => {
-				const rule = unitTest.getRule();
-				const testRunner = rule.getUnitTestRunner();
-				return testRunner.run(unitTest);
-			};
-	
-			// Запускаем все тесты
-			for (let test of tests) {
-				try {
-					test = await testHandler(test);
-				}
-				catch(error) {
-					test.setStatus(TestStatus.Failed);
-					Log.error(error);
-				} 
-			}
-
-			// Проверяем результаты тестов и меняем статус в UI.
-			if(tests.every(t => t.getStatus() === TestStatus.Success)) {
-				rule.setStatus(ContentItemStatus.Verified, "Тесты прошли проверку");
-				return;
-			}
-			rule.setStatus(ContentItemStatus.Unverified, "Тесты не прошли проверку");
-
-			ContentTreeProvider.refresh(rule);
-		}
-
-		if(rule instanceof Correlation || rule instanceof Enrichment) {
-			progress.report({ message: `Получение зависимостей правила ${rule.getName()} для корректной сборки графа корреляций` });
-			const ritd = new RunIntegrationTestDialog(this.config, {tmpFilesPath: ruleTmpFilesRuleName, cancellationToken: cancellationToken});
-			const options = await ritd.getIntegrationTestRunOptionsForSingleRule(rule);
-			options.cancellationToken = cancellationToken;
-	
-			progress.report({ message: `Проверка интеграционных тестов правила ${rule.getName()}`});
-			const outputParser = new SiemJOutputParser();
-			const testRunner = new IntegrationTestRunner(this.config, outputParser);
-	
-			// TODO: исключить лишнюю сборку артефактов
-			const siemjResult = await testRunner.runOnce(rule, options);
-	
-			if (!siemjResult.testsStatus) {
-				rule.setStatus(ContentItemStatus.Unverified, "Интеграционные тесты не прошли проверку");
-				return;
-			}
-
-			rule.setStatus(ContentItemStatus.Verified, "Интеграционные тесты прошли проверку");
-		}
-
-		if(rule instanceof Correlation) {
-			progress.report({ message: `Проверка локализаций правила ${rule.getName()}`});
-			
-			const siemjManager = new SiemjManager(this.config);
-			const locExamples = await siemjManager.buildLocalizationExamples(rule, ruleTmpFilesRuleName);
-
-			if (locExamples.length === 0) {
-				rule.setStatus(ContentItemStatus.Unverified, "Локализации не были получены");
-				return;
-			}
-
-			const verifiedLocalization = locExamples.some(le => TestHelper.isDefaultLocalization(le.ruText));
-			if(verifiedLocalization) {
-				rule.setStatus(ContentItemStatus.Unverified, "Локализация не прошла проверку, обнаружен пример локализации по умолчанию");
-			} else {
-				rule.setStatus(ContentItemStatus.Verified, "Интеграционные тесты и локализации прошли проверку");
-			}
-
-			rule.setLocalizationExamples(locExamples);
-		}
-	}
-
-	private integrationTestTmpFilesPath: string
-
-	public ALL_PACKAGES = "Все пакеты";
-	public CURRENT_PACKAGE = "Текущий пакет";
-	public DONT_COMPILE_CORRELATIONS = "Не компилировать";
+	private integrationTestTmpFilesPath: string;
 }
