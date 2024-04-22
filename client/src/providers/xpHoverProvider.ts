@@ -41,7 +41,7 @@ export class XpHoverProvider implements vscode.HoverProvider {
 				.map(s => {
 					const instance = classTransformer.plainToInstance(CompleteSignature, s);
 
-					// Не нашёл другого способа сделать интервал между параметрами и примером кода.
+					// Не нашел другого способа сделать интервал между параметрами и примером кода.
 					const lastParamIndex = instance.params.length - 1;
 					instance.params[lastParamIndex] += "\n\n";
 

@@ -47,7 +47,7 @@ export class MetainfoViewProvider {
 
 	public async showMetaInfoEditor(rule: RuleBaseItem) : Promise<void> {
 
-		// Если открыта еще одна метаинформация, то закрываем её перед открытием новой.
+		// Если открыта еще одна метаинформация, то закрываем ее перед открытием новой.
 		if (this._view) {
 			this._view.dispose();
 			this._view = undefined;

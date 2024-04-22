@@ -1,5 +1,10 @@
 # Change Log
 
+## 3.15.3 (Pre-Release)
+
+- исправлена ошибка отображения описания правила в дереве, которая приводила к проблемам визуализации дерева объектов (special thanks @sanguis_meus, @dushnyaga);
+- улучшена локализация (special thanks @feelstacy, @eugzolotukhin).
+
 ## 3.15.2 (Pre-Release)
 
 - реализована фича [#195](https://github.com/Security-Experts-Community/vscode-xp/issues/195) - добавлена возможность коррелировать EVTX-файлы на Linux;

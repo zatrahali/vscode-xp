@@ -95,13 +95,13 @@ export class CorrelationUnitTestsRunner implements UnitTestRunner {
 			return test;
 		}
 
-		// Заполняем вывод как есть. Далее он будет обновлён в зависимости от ситуации.
+		// Заполняем вывод как есть. Далее он будет обновлен в зависимости от ситуации.
 		test.setOutput(output.output);
 		
 		// Получаем путь к правилу для которого запускали тест
 		const ruleFileUri = vscode.Uri.file(ruleFilePath);
 
-		// Если ничего не ожидали (expect not) и ничего не получили, то всё хорошо.
+		// Если ничего не ожидали (expect not) и ничего не получили, то все хорошо.
 		if(output.output.includes(this.EMPTY_EXPECTED_RESULT)) {
 			test.setStatus(TestStatus.Success);
 			return test;

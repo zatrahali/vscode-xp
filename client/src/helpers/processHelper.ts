@@ -55,7 +55,7 @@ export class ProcessHelper {
 	 * @param command команда/путь к исполняемому файлу для выполнения
 	 * @param params параметры команды
 	 * @param options дополнительные настройки
-	 * @returns возвращает результат выполнения команды по её окончанию
+	 * @returns возвращает результат выполнения команды по ее окончанию
 	 */
 	public static execute(command : string, params : string[], options: ExecutionProcessOptions ) : Promise<ExecutionResult> {
 

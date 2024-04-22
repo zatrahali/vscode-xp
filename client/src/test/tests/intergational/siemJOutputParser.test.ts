@@ -58,7 +58,7 @@ TEST_RULES [Err] :: Errors found.`;
 		assert.ok(!status.testsStatus);
 	});
 
-	test('Один тест не прошёл', async () => {
+	test('Один тест не прошел', async () => {
 		const parser = new SiemJOutputParser();
 
 		const output = 

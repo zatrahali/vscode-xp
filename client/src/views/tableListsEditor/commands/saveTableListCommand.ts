@@ -50,7 +50,7 @@ export class SaveTableListCommand implements TableListCommand {
 
 	async execute(webView: TableListsEditorViewProvider): Promise<boolean> {
 
-		// Либо редактируем существующий табличный список, либо создаём новый.
+		// Либо редактируем существующий табличный список, либо создаем новый.
 		const tableObject = JSON.parse(this._message.data) as TableView;
 
 		if(!tableObject?.fillType) {

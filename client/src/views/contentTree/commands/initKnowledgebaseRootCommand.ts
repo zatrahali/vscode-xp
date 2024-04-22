@@ -7,7 +7,7 @@ import { ContentTreeProvider } from '../contentTreeProvider';
 
 
 /**
- * Создаём папки для формирования необходимой структуры корня базы знаний
+ * Создаем папки для формирования необходимой структуры корня базы знаний
  */
 export class InitKBRootCommand {
 

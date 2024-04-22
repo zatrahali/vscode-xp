@@ -759,7 +759,7 @@ export class Configuration {
 		const outputDirectoryPath = extensionConfig.get<string>("outputDirectoryPath");
 
 		if (!outputDirectoryPath){
-			DialogHelper.showError(`Выходная директория не задана. Задайте её [в настройках]${this.OUTPUT_DIR_SHOW_SETTING_COMMAND}`);
+			DialogHelper.showError(`Выходная директория не задана. Задайте ее [в настройках]${this.OUTPUT_DIR_SHOW_SETTING_COMMAND}`);
 			return;
 		}
 

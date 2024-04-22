@@ -53,7 +53,7 @@ export class RenameTreeItemCommand extends ViewCommand {
 		}
 		
 		try {
-			// Получаем директорию для исходного правила, дабы удалить её после переименования.
+			// Получаем директорию для исходного правила, дабы удалить ее после переименования.
 			const oldRuleDirectoryPath = this.selectedItem.getDirectoryPath();
 
 			const newRuleName = userInput.trim();

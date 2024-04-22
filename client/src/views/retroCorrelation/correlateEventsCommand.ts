@@ -68,7 +68,7 @@ export class CorrelateEventsCommand extends WebViewCommand {
                         switch(userDecision) {
                             case this.RECREATE_NEW: {
                                 await fs.promises.unlink(envelopedEventsFilePath);
-                                Log.info(`Общий файл ${envelopedEventsFilePath} для результирующих событий в конверте удалён`);
+                                Log.info(`Общий файл ${envelopedEventsFilePath} для результирующих событий в конверте удален`);
                                 break;
                             }
 
@@ -89,7 +89,7 @@ export class CorrelateEventsCommand extends WebViewCommand {
                             Log.info(`Начата обработка файла ${jsonFilePath}`);
                             envelopedEventsCounter += await Enveloper.streamEnvelopeJsonlEvents(jsonFilePath, envelopedEventsFilePath, "utf8");
     
-                            Log.info(`События из файла ${jsonFilePath} обёрнуты в конверт и добавлены в файл ${envelopedEventsFilePath}`);
+                            Log.info(`События из файла ${jsonFilePath} обернуты в конверт и добавлены в файл ${envelopedEventsFilePath}`);
                         }
     
                         // Фиксируем сколько времени ушло на корреляцию.
@@ -103,7 +103,7 @@ export class CorrelateEventsCommand extends WebViewCommand {
                     }
 
                     progress.report({
-                        message: `Идёт корреляция ${envelopedEventsCounter} извлеченных событий`
+                        message: `Идет корреляция ${envelopedEventsCounter} извлеченных событий`
                     });
 
                     const startCorrelation = moment();

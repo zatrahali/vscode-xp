@@ -154,7 +154,7 @@ export class CreateRuleViewProvider {
         }
     }
 
-    // Функция добавляет defaultFolder к parentPath, если последний является путём к пакету
+    // Функция добавляет defaultFolder к parentPath, если последний является путем к пакету
     private getPath(parentPath: string, defaultFolder: string) : string {
         // Магическая функция получения декартового произведения
         const cartesian = (...args) => args.reduce((root, packs) => root.flatMap(root => packs.map(pack => [root, pack].flat())));

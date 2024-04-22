@@ -12,7 +12,7 @@ export class CommandHelper {
 	 */
 	public static async singleExecutionCommand(command: ViewCommand, defaultError?: string): Promise<void> {
 		if (ExtensionState.get().isExecutedState()) {
-			DialogHelper.showError("Дождитесь окончания выполняющихся процессов и повторите. Если ошибка остаётся, то перезапустите VSCode");
+			DialogHelper.showError("Дождитесь окончания выполняющихся процессов и повторите. Если ошибка остается, то перезапустите VSCode");
 			return;
 		}
 

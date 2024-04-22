@@ -198,7 +198,7 @@ suite('CorrelationHelper.createCorrelationFromTemplate', async () => {
 		await rule.save(tmpPath);
 	});
 
-	test('Сохранение правила по созданию удалённого потока в Windows', async () => {
+	test('Сохранение правила по созданию удаленного потока в Windows', async () => {
 		const ruleName = "ESC_Super_Duper";
 		const rule = await ContentHelper.createCorrelationFromTemplate(ruleName, "Windows_Remote_Thread", Configuration.get());
 		

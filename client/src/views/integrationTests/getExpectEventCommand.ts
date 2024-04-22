@@ -36,7 +36,7 @@ export class GetExpectedEventCommand  {
 			await viewProvider.updateTestCode(
 				this.params.test.getTestCode() 
 				// ,
-				// TODO: добавить конкретный тест для обновления, иначе может быть обновлён не тот тест.
+				// TODO: добавить конкретный тест для обновления, иначе может быть обновлен не тот тест.
 				// testWithNewTestCode.getNumber()
 			);
 		}
@@ -84,7 +84,7 @@ export class GetExpectedEventCommand  {
 				throw new XpException("Для запуска быстрого теста нужно хотя бы одно нормализованное событие. Нормализуйте сырые события и повторите действие");
 			}
 
-			// Временно создать модульный тест путём добавления к интеграционному нормализованного события в конец файла.
+			// Временно создать модульный тест путем добавления к интеграционному нормализованного события в конец файла.
 			// Убираем фильтр по полям в тесте, так как в модульном тесте нет обогащения, поэтому проверяем только сработку теста.
 			const integrationTestPath = this.params.test.getTestCodeFilePath();
 			const integrationTestContent = await FileSystemHelper.readContentFile(integrationTestPath);
@@ -213,7 +213,7 @@ export class GetExpectedEventCommand  {
 		}
 
 		if(expectedFilteredEvents.length === 0) {
-			throw new XpException(`Не найдено результирующих событий после интеграционного теста правила ${ruleName}. Возможно тест не прошёл или он не подразумевание получение результирующего события`);
+			throw new XpException(`Не найдено результирующих событий после интеграционного теста правила ${ruleName}. Возможно тест не прошел или он не подразумевание получение результирующего события`);
 		}
 
 		if(expectedFilteredEvents.length != 1) {
@@ -235,15 +235,15 @@ export class GetExpectedEventCommand  {
 		}
 
 		if(rule instanceof Enrichment) {
-			// Проверяем сначала нормализованное обогащённое событие
+			// Проверяем сначала нормализованное обогащенное событие
 			const enrichedNormFilePath = TestHelper.getEnrichedNormEventFilePath(
 				this.params.tmpDirPath,
 				ruleName,
 				this.params.test.getNumber());
 
-			// В любом случае должно быть нормализованное обогащённое событие.
+			// В любом случае должно быть нормализованное обогащенное событие.
 			if(!fs.existsSync(enrichedNormFilePath)) {
-				throw new XpException(`Результирующее обогащённое нормализованное событие не найдено`);
+				throw new XpException(`Результирующее обогащенное нормализованное событие не найдено`);
 			}
 
 			// Может быть обогащено нормализованное событие, либо корреляция
@@ -256,7 +256,7 @@ export class GetExpectedEventCommand  {
 				return enrichedNormFilePath;
 			}
 
-			// Если обогащённое корреляции нет, тогда будет обогащённое нормализованное событие.
+			// Если обогащенное корреляции нет, тогда будет обогащенное нормализованное событие.
 			if(!fs.existsSync(enrichedCorrFilePath)) {
 				return enrichedNormFilePath;
 			}

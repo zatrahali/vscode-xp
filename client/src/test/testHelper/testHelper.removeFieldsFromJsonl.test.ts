@@ -4,7 +4,7 @@ import { TestHelper } from '../../helpers/testHelper';
 
 suite('testHelper.removeFieldsFromJsonl', async () => {
 
-	test('Удаление поля body из трёх событий', async () => {
+	test('Удаление поля body из трех событий', async () => {
 
 		const jsonl = 
 `{"src.host": "::1", "src.ip": "::1", "body": "body content"}

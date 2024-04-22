@@ -171,7 +171,7 @@ export class IntegrationTestEditorViewProvider {
 		try {
 			const integrationTest = this.rule.getIntegrationTests();
 
-			// Если тестов нет, то создаём пустую форму для первого теста
+			// Если тестов нет, то создаем пустую форму для первого теста
 			if (integrationTest.length === 0) {
 				plain["IntegrationTests"].push({
 					"TestNumber": 1,
@@ -267,7 +267,7 @@ export class IntegrationTestEditorViewProvider {
 	private async receiveMessageFromWebView(message: any) {
 
 		if (ExtensionState.get().isExecutedState()) {
-			DialogHelper.showError("Дождитесь окончания выполняющихся процессов и повторите. Если ошибка остаётся, то перезапустите VSCode");
+			DialogHelper.showError("Дождитесь окончания выполняющихся процессов и повторите. Если ошибка остается, то перезапустите VSCode");
 			return true;
 		}
 

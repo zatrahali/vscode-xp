@@ -13,7 +13,7 @@ export class Enveloper {
 	 * Оборачивает события без конверта в конверт с соответствующим mimeType и раскладывает их в одну строку.
 	 * @param rawEvents сырые события
 	 * @param mimeType тип конверта для не обернутых событий
-	 * @returns события без конверта обёрнуты в конверт и разложены в одну строку каждое
+	 * @returns события без конверта обернуты в конверт и разложены в одну строку каждое
 	 */
 	public static addEnvelope(rawEvents: string, mimeType : EventMimeType): string[] {
 		if(!rawEvents) {
@@ -126,7 +126,7 @@ export class Enveloper {
 	 * Оборачивает сжатые сырые события в конверт.
 	 * @param compressedRawEvents список сырых событий в строке
 	 * @param mimeType тип событий
-	 * @returns массив сырых событий, в котором каждое событие обёрнуто в конверт заданного типа и начинается с новой строки
+	 * @returns массив сырых событий, в котором каждое событие обернуто в конверт заданного типа и начинается с новой строки
 	 */
 	public static addEventsToEnvelope(compressedRawEvents : string[], mimeType : EventMimeType) : string[] {
 		const envelopedEvents = [];

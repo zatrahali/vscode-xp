@@ -83,7 +83,7 @@ export class WhitelistingAndAlertKeyValidator extends IValidator {
 			const dollarRegEx = /(\$|\s+)/g;
 			alertKeyValue = alertKeyValue.replace(dollarRegEx, "");
 	
-			// Проброс alert.key из сабруля, всё ок.
+			// Проброс alert.key из сабруля, все ок.
 			if(whitelistingKeyName === "lower(alert.key)") {
 				return true;
 			}
@@ -92,7 +92,7 @@ export class WhitelistingAndAlertKeyValidator extends IValidator {
 				return true;
 			}
 		
-			// Если совпадение, тогда всё ок идёт дальше.
+			// Если совпадение, тогда все ок идет дальше.
 			if(alertKeyValue === whitelistingKeyName) {
 				return true;
 			}

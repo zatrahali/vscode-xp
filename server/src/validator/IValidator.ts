@@ -25,7 +25,7 @@ export abstract class IValidator {
 		diagnosticSeverity : DiagnosticSeverity) : Diagnostic {
 		const commonMatch = lowerCallResult[0];
 	
-		// Выделяем всё сравнение как ошибку. 
+		// Выделяем все сравнение как ошибку. 
 		// lower(event_src.subsys) == "Directory Service"
 		const startPosition = lowerCallResult.index;
 		const endPosition = lowerCallResult.index + commonMatch.length;

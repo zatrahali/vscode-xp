@@ -199,18 +199,25 @@ export abstract class RuleBaseItem extends ContentTreeBaseItem {
 	}
 
 	public getLocaleDescription() : string {
+		let localeDescription = "";
 		switch(vscode.env.language) {
 			case 'ru': {
-				return this.getRuDescription();
+				localeDescription = this.getRuDescription(); break;
 			}
 			case 'en': {
-				return this.getEnDescription();
+				localeDescription =  this.getEnDescription(); break;
 			}
 			default: {
 				// English description by default
-				return this.getEnDescription();
+				localeDescription = this.getEnDescription();
 			}
 		}
+
+		if(!localeDescription) {
+			localeDescription = this.getName();
+		}
+
+		return localeDescription;
 	}
 
 	public getLocalizations() : Localization[] {
@@ -406,7 +413,7 @@ export abstract class RuleBaseItem extends ContentTreeBaseItem {
 			locId = this.generateLocalizationId();
 			localization.setLocalizationId(locId);
 
-			// Дублируем описание в локализацию и добавляем её в новый список.
+			// Дублируем описание в локализацию и добавляем ее в новый список.
 			localization.setRuDescription(this.getRuDescription());
 			localization.setEnDescription(this.getEnDescription());
 			this._localizations.push(localization);

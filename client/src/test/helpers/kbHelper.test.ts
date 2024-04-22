@@ -7,7 +7,7 @@ suite('KbHelper', async () => {
 		assert.strictEqual(actual, 'Тут встречается новая строка \n');
 	});
 
-	test('Проверяем коллизию для различных имён правил', async () => {
+	test('Проверяем коллизию для различных имен правил', async () => {
 		const firstObjectId = KbHelper.generateObjectId("ESC_Sessions_Hijacked", "LOC", "CR");
 		const secondObjectId = KbHelper.generateObjectId("OpenVPN_Password_Spraying", "LOC", "CR");
 		assert.ok(firstObjectId != secondObjectId);

@@ -153,7 +153,7 @@ export class Correlation extends RuleBaseItem {
 			duplicatedRule.setParentPath(newParentPath);
 		}
 
-		// Каждый тест связываем с новым правилом и задаём команду на открытие
+		// Каждый тест связываем с новым правилом и задаем команду на открытие
 		const unitTests = duplicatedRule.getUnitTests();
 		const fixedUnitTests = unitTests.map((test): BaseUnitTest => {
 			const fixedTest = Object.assign(CorrelationUnitTest.create(duplicatedRule), test) as CorrelationUnitTest;

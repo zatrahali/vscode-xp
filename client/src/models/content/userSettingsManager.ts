@@ -16,7 +16,7 @@ export class UserSettingsManager {
 	public static async init(config : Configuration) : Promise<void> {
 		const configuration = config.getWorkspaceConfiguration();
 
-		// Если id нет, задаём.
+		// Если id нет, задаем.
 		const origin = configuration.get<any>(UserSettingsManager.ORIGIN_NAME);
 		if(!origin.id) {
 			const newGuid = Guid.create().toString();
@@ -24,7 +24,7 @@ export class UserSettingsManager {
 			await configuration.update(UserSettingsManager.ORIGIN_NAME, origin, true, false);
 		}
 
-		// Если выходная директория не задана, то задаём её.
+		// Если выходная директория не задана, то задаем ее.
 		let outputDirectoryPath = configuration.get<string>(UserSettingsManager.OUTPUT_DIRECTORY_PATH);
 		if(!outputDirectoryPath) {
 			outputDirectoryPath = path.join(config.getExtensionTmpDirectoryPath(), UserSettingsManager.DEFAULT_OUTPUT_DIR_NAME);

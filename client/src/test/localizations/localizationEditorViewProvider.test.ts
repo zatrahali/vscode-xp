@@ -45,7 +45,7 @@ suite('LocalizationEditorViewProvider', () => {
 	});
 
 	test('Сохранение одной добавленой локализации к корреляции', async () => {
-		// Создание корреляции из шаблона и её сохранение.
+		// Создание корреляции из шаблона и ее сохранение.
 		const rule = await ContentHelper.createCorrelationFromTemplate("ESC_Super_Duper", "Windows_Universal", Configuration.get());
 
 		const tmpPath = TestFixture.getTmpPath();

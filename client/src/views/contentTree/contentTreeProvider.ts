@@ -636,7 +636,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 		// Перебираем все интересующие нас расширения и проверяем есть ли в текущем списке файлы с таким расширением
 		for (const extension in entityCreators){
 			const createEntityFunction = entityCreators[extension];			
-			// Если в списке файлов есть файл с текущим расширением, то создаём из него нужный объект		
+			// Если в списке файлов есть файл с текущим расширением, то создаем из него нужный объект		
 			const files = await fs.promises.readdir(elementDirectoryPath);	
 			const entityFile = files.find(filename => filename.endsWith(extension));
 			if (entityFile) {				
@@ -650,7 +650,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 			return ContentFolder.create(elementDirectoryPath, ContentFolderType.PackageFolder);	
 		}
 
-		// TODO: переделать логику так, чтобы если базовая директория Auxiliary, то и её дочерний узел такой же.
+		// TODO: переделать логику так, чтобы если базовая директория Auxiliary, то и ее дочерний узел такой же.
 		// TODO: учесть структуру контента EDR.
 		// Вспомогательные директории в корне базы знаний кроме директории с пакетами.
 		// const baseDirPath = path.dirname(elementDirectoryPath);

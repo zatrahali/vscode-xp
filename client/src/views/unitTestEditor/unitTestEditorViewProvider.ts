@@ -314,7 +314,7 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
       this._test.setTestExpectation(expectation);
       await this._test.save();
 
-      DialogHelper.showInfo("Тест успешно сохранён");
+      DialogHelper.showInfo("Тест успешно сохранен");
     } catch (error) {
       ExceptionHelper.show(
         error,

@@ -730,13 +730,13 @@ export class SDKUtilitiesWrappers {
 // 			// TODO: fix this
 // 			const folder = path.basename(basePath);
 // 			try {
-// 				// Создаём директории, в которые утилиты будут сохранять результаты запуска	
+// 				// Создаем директории, в которые утилиты будут сохранять результаты запуска	
 // 				const root = this.config.getRootByPath(basePath);
 // 				const rootFolder = path.basename(root);
 // 				const outputFolder = this.config.getOutputDirectoryPath(rootFolder);			
 // 				const outputDirectory = path.join(outputFolder, folder);
 				
-// 				// Создаём директорию, если её нет
+// 				// Создаем директорию, если ее нет
 // 				if (!fs.existsSync(outputDirectory)){
 // 					fs.mkdirSync(outputDirectory, {recursive: true});
 // 				}
@@ -781,7 +781,7 @@ export class SDKUtilitiesWrappers {
 // 			title: `Сбор всех графов`
 // 		}, async (progress) => {
 // 			try {
-// 				// Создаём директории, в которые утилиты будут сохранять результаты запуска
+// 				// Создаем директории, в которые утилиты будут сохранять результаты запуска
 // 				const root = this.config.getRootByPath(rule.getDirectoryPath());
 // 				const rootFolder = path.basename(root);
 // 				const outputDirectory = this.config.getOutputDirectoryPath(rootFolder);
@@ -832,7 +832,7 @@ export class SDKUtilitiesWrappers {
 // 			title: `Сбор всех графов`
 // 		}, async (progress) => {
 // 			try {
-// 				// Создаём директории, в которые утилиты будут сохранять результаты запуска
+// 				// Создаем директории, в которые утилиты будут сохранять результаты запуска
 // 				const root = this.config.getRootByPath(rule.getDirectoryPath());
 // 				const rootFolder = path.basename(root);
 // 				const outputDirectory = this.config.getOutputDirectoryPath(rootFolder);
@@ -894,7 +894,7 @@ export class SDKUtilitiesWrappers {
 // 			title: `Сбор всех графов`
 // 		}, async (progress) => {
 // 			try {
-// 				// Создаём директории, в которые утилиты будут сохранять результаты запуска
+// 				// Создаем директории, в которые утилиты будут сохранять результаты запуска
 // 				const root = this.config.getRootByPath(normalizations_path);
 // 				const rootFolder = path.basename(root);
 // 				const outputDirectory = this.config.getOutputDirectoryPath(rootFolder);				

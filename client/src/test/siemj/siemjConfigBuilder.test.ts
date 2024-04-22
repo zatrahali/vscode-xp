@@ -8,7 +8,7 @@ import { IntegrationTest } from '../../models/tests/integrationTest';
 
 suite('SiemjConfigBuilder', () => {
 
-	test('Собрать локализации с путём по умолчанию', async () => {
+	test('Собрать локализации с путем по умолчанию', async () => {
 		const config = Configuration.get();
 		const configBuilder = new SiemjConfBuilder(config, "packages");
 		configBuilder.addLocalizationsBuilding();
@@ -26,7 +26,7 @@ suite('SiemjConfigBuilder', () => {
 		assert.ok(siemJConfig.includes("make-loca"));
 	});
 
-	test('Собрать локализации с заданным путём', async () => {
+	test('Собрать локализации с заданным путем', async () => {
 		const configBuilder = new SiemjConfBuilder(Configuration.get(), "packages");
 		configBuilder.addLocalizationsBuilding({
 			rulesSrcPath: "C:\\Content\\knowledgebase\\packages",

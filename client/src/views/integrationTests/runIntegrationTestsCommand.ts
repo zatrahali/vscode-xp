@@ -59,7 +59,7 @@ export class RunIntegrationTestsCommand extends Command {
 
 			const executedIntegrationTests = this.params.rule.getIntegrationTests();
 			if(executedIntegrationTests.every(it => it.getStatus() === TestStatus.Success)) {
-				// Задаём и обновляем статус элемента дерева
+				// Задаем и обновляем статус элемента дерева
 				this.params.rule.setStatus(
 					ContentItemStatus.Verified,
 					config.getMessage("View.ObjectTree.ItemStatus.TestsPassed")

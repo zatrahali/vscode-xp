@@ -25,7 +25,7 @@ export abstract class BaseWebViewController {
 
 	protected async showDefault() : Promise<void> {
 
-		// Если открыта еще одна локализация, то закрываем её перед открытием новой.
+		// Если открыта еще одна локализация, то закрываем ее перед открытием новой.
 		if (this._view) {
 			this._view.dispose();
 			this._view = undefined;
@@ -63,7 +63,7 @@ export abstract class BaseWebViewController {
 	protected abstract receiveMessageFromWebView(message: WebViewMessage) : Promise<void>
 
 	/**
-	 * Получает вёрстку для отображения webView
+	 * Получает верстку для отображения webView
 	 */
 	protected abstract getHtml() : string;
 

@@ -55,7 +55,7 @@ export class LocalizationEditorViewProvider {
 	public static showLocalizationEditorCommand = "LocalizationView.showLocalizationEditor";
 	public async showLocalizationEditor(rule: RuleBaseItem, keepTmpFiles = false) : Promise<void> {
 
-		// Если открыта еще одна локализация, то закрываем её перед открытием новой.
+		// Если открыта еще одна локализация, то закрываем ее перед открытием новой.
 		if (this._view) {
 			this._view.dispose();
 			this._view = undefined;
@@ -102,7 +102,7 @@ export class LocalizationEditorViewProvider {
 	}
 
 	/**
-	 * Обновляем состояние правила и его визуализацию, если оно изменилось. Нельзя обновить одно правило другим, проверяется совпадение имён правил.
+	 * Обновляем состояние правила и его визуализацию, если оно изменилось. Нельзя обновить одно правило другим, проверяется совпадение имен правил.
 	 * @param newRule новое состояние правила
 	 * @returns было ли обновлено правило
 	 */

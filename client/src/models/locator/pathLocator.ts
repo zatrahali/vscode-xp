@@ -14,7 +14,7 @@ export abstract class PathLocator {
 		this._kbFullPath = kbFullPath;
 	}
 
-	// Получение имён файлов в графами
+	// Получение имен файлов в графами
 	public abstract getNormalizationsGraphFileName() : string
 	public abstract getEnrichmentsGraphFileName() : string
 	public abstract getCorrelationsGraphFileName() : string
