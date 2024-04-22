@@ -1,13 +1,9 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
 
 import { DialogHelper } from '../../../helpers/dialogHelper';
 import { Correlation } from '../../../models/content/correlation';
 import { ContentItemStatus, RuleBaseItem } from '../../../models/content/ruleBaseItem';
 import { ContentTreeProvider } from '../contentTreeProvider';
-import { TestHelper } from '../../../helpers/testHelper';
-import { SiemjManager } from '../../../models/siemj/siemjManager';
 import { Configuration } from '../../../models/configuration';
 import { RunIntegrationTestDialog } from '../../runIntegrationDialog';
 import { SiemJOutputParser} from '../../../models/siemj/siemJOutputParser';
@@ -15,7 +11,6 @@ import { CompilationType, IntegrationTestRunner, IntegrationTestRunnerOptions } 
 import { ContentTreeBaseItem } from '../../../models/content/contentTreeBaseItem';
 import { Enrichment } from '../../../models/content/enrichment';
 import { Log } from '../../../extension';
-import { FileSystemHelper } from '../../../helpers/fileSystemHelper';
 import { Normalization } from '../../../models/content/normalization';
 import { TestStatus } from '../../../models/tests/testStatus';
 import { BaseUnitTest } from '../../../models/tests/baseUnitTest';
@@ -113,6 +108,10 @@ export class ContentCheckingCommand extends ViewCommand {
 		let correlationBuildingConfigured = false;
 		let enrichmentBuildingConfigured = false;
 		for(const rule of rules) {
+			// Сбрасываем статус для правила в дереве объектов.
+			rule.setStatus(ContentItemStatus.Default);
+			ContentTreeProvider.refresh(rule);
+
 			if(options.cancellationToken.isCancellationRequested) {
 				throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 			}
