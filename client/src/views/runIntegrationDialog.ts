@@ -12,6 +12,7 @@ import { OperationCanceledException } from '../models/operationCanceledException
 import { XpException } from '../models/xpException';
 import { DialogHelper } from '../helpers/dialogHelper';
 import { Log } from '../extension';
+import { RegExpHelper } from '../helpers/regExpHelper';
 
 
 export class RunIntegrationTestDialog {
@@ -93,7 +94,7 @@ export class RunIntegrationTestDialog {
 			return [];
 		}
 
-		// Ищем сабрули во текущем для правиле пакете
+		// Ищем сабрули в текущем для правиле пакете
 		const currentPackagePath = rule.getPackagePath(this.config);
 		let subRulePaths = FileSystemHelper.getRecursiveDirPathByName(currentPackagePath, uniqueParsedSubRuleNames);
 		if(uniqueParsedSubRuleNames.length !== subRulePaths.length) {
@@ -135,38 +136,58 @@ export class RunIntegrationTestDialog {
 		const testRunnerOptions = new IntegrationTestRunnerOptions();
 		testRunnerOptions.tmpFilesPath = this.options.tmpFilesPath;
 
-		// TODO: экспериментальная оптимизация, добавить только с флагом ExperimentalFeature
-		// const ruleCode = await rule.getRuleCode();
-		// const events = RegExpHelper.getAllStrings(ruleCode, /event\s*(\w+)\s*:/gm);
-
-		// // Одно событие, значит если там проверяется отсутствие в фильтре правила корреляции, то можно граф корреляции не собирать.
-		// if(events.length === 1) {
-		// 	const corrNameFilter = RegExpHelper.getAllStrings(ruleCode, /filter\s+{[\s\S]+?(correlation_name\s+==\s+null|filter::NotFromCorrelator\s*\(\))[\s\S]+?}/gm);
-		// 	if(corrNameFilter.length === 1) {
-		// 		testRunnerOptions.correlationCompilation = CompilationType.DontCompile;
-		// 		return testRunnerOptions;
-		// 	} 
-		// } 
-
-		const result = await this.askTheUser();
-		
-		switch(result) {
-			case this.CURRENT_PACKAGE: {
-				testRunnerOptions.correlationCompilation = CompilationType.CurrentPackage;
-				break;
-			}
-
-			case this.ALL_PACKAGES: {
-				testRunnerOptions.correlationCompilation = CompilationType.AllPackages;
-				break;
-			}
-			
-			case this.DONT_COMPILE_CORRELATIONS: {
-				testRunnerOptions.correlationCompilation = CompilationType.DontCompile;
-				break;
+		// Получаем список зависимых корреляции на основании поля correlation_name из блока expect.
+		const depRules: string[] = [];
+		for (const it of rule.getIntegrationTests()) {
+			const testCode = it.getTestCode();
+			const expectEvent = RegExpHelper.getSingleExpectEvent(testCode);
+			const expectEventObject = JSON.parse(expectEvent);
+			if(expectEventObject?.correlation_name) {
+				depRules.push(expectEventObject?.correlation_name);
 			}
 		}
+		const uniqueDepRuleNames = [...new Set(depRules)].map(srn => srn.toLocaleLowerCase());
 
+		const contentRootPath = this.config.getRootByPath(rule.getDirectoryPath());
+		const depRulePaths = FileSystemHelper.getRecursiveDirPathByName(contentRootPath, uniqueDepRuleNames);
+
+		if(uniqueDepRuleNames.length !== depRulePaths.length) {
+			// Выводим список правил, которые не удалось найти.
+			const foundedSubruleNamesSet = new Set(depRulePaths.map(p => path.basename(p).toLocaleLowerCase()));
+			const ruleNamesNotFound = [...uniqueDepRuleNames].filter(x => !foundedSubruleNamesSet.has(x));
+			Log.warn(`Не удалось найти вспомогательные правила: ${ruleNamesNotFound.join(", ")}`);
+
+			const result = await this.askTheUser();
+			switch(result) {
+				case this.CURRENT_PACKAGE: {
+					testRunnerOptions.correlationCompilation = CompilationType.CurrentPackage;
+					break;
+				}
+
+				case this.ALL_PACKAGES: {
+					testRunnerOptions.correlationCompilation = CompilationType.AllPackages;
+					break;
+				}
+				
+				case this.DONT_COMPILE_CORRELATIONS: {
+					testRunnerOptions.correlationCompilation = CompilationType.DontCompile;
+					break;
+				}
+			}
+			return;
+		}
+
+		const uniqueDepRulePaths = depRulePaths;
+		for(const depRulePath of depRulePaths) {
+			const depRule = await Correlation.parseFromDirectory(depRulePath);
+			const depRuleNames = await this.getRecursiveSubRulePaths(depRule);
+			uniqueDepRulePaths.push(...depRuleNames);
+		}
+
+		// Возвращаем список зависимых от обогащения корреляций.
+		testRunnerOptions.correlationCompilation = CompilationType.Auto;
+		testRunnerOptions.dependentCorrelations.push(...uniqueDepRulePaths);
+		testRunnerOptions.currPackagePath = rule.getPackagePath(this.config);
 		return testRunnerOptions;
 	}
 

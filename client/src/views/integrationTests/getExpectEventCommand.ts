@@ -261,7 +261,7 @@ export class GetExpectedEventCommand  {
 				return enrichedNormFilePath;
 			}
 
-			throw new XpException(`Результирующее обогащенное корреляционное событие не найдено`);
+			return enrichedCorrFilePath;
 		}
 
 		throw new XpException(`Правило ${ruleName} не поддерживает получение ожидаемого события`);

@@ -76,10 +76,10 @@ export class IntegrationTestEditorViewProvider {
 	public static readonly showEditorCommand = "IntegrationTestEditorView.showEditor";
 	public async showEditor(rule: Correlation | Enrichment) : Promise<void> {
 
-		Log.info(`Редактор интеграционных тестов открыт для правила ${rule.getName()}`);
+		Log.debug(`Редактор интеграционных тестов открыт для правила ${rule.getName()}`);
 
 		if (this._view) {
-			Log.info(`Открытый ранее редактор интеграционных тестов для правила ${this.rule.getName()} был автоматически закрыт`);
+			Log.debug(`Открытый ранее редактор интеграционных тестов для правила ${this.rule.getName()} был автоматически закрыт`);
 
 			this.rule = null;
 			this._view.dispose();
