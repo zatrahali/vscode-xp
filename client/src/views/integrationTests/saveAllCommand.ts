@@ -30,6 +30,7 @@ export class SaveAllCommand extends Command {
 			// В данном руле сохраняются в памяти нормализованные события.
 			const rule = this.params.rule;
 			const newTests = await this.getNewTests();
+
 			rule.setIntegrationTests(newTests);
 			await rule.saveIntegrationTests();
 

@@ -261,12 +261,7 @@ export class GetExpectedEventCommand  {
 				return enrichedNormFilePath;
 			}
 
-			const enrichedCorrEvent = await FileSystemHelper.readContentFile(enrichedCorrFilePath);
-			if(!enrichedCorrEvent) {
-				return enrichedCorrEvent;
-			}
-
-			return enrichedCorrEvent;
+			throw new XpException(`Результирующее обогащенное корреляционное событие не найдено`);
 		}
 
 		throw new XpException(`Правило ${ruleName} не поддерживает получение ожидаемого события`);

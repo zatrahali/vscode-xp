@@ -155,17 +155,17 @@ export abstract class RuleBaseItem extends ContentTreeBaseItem {
 			it.setNumber(index + 1);
 			it.setRuleDirectoryPath(ruleDirectoryPath);
 
-			this._integrationTests.push(it);
+			this.integrationTests.push(it);
 		});
 	}
 
 	public setIntegrationTests(tests: IntegrationTest[]) : void {
-		this._integrationTests = [];
+		this.integrationTests = [];
 		this.addIntegrationTests(tests);
 	}
 
 	public createIntegrationTest() : IntegrationTest {
-		const newItTestNumber = this._integrationTests.length + 1;
+		const newItTestNumber = this.integrationTests.length + 1;
 		if(this.getDirectoryPath()) {
 			return IntegrationTest.create(newItTestNumber, this.getDirectoryPath());
 		}
@@ -174,22 +174,49 @@ export abstract class RuleBaseItem extends ContentTreeBaseItem {
 	}
 
 	public async clearIntegrationTests() : Promise<void> {
-		this._integrationTests = [];
+		this.integrationTests = [];
 	}
 
 	public getIntegrationTests() : IntegrationTest[] {
-		return this._integrationTests;
+		return this.integrationTests;
 	}
 
 	public reloadIntegrationTests() : void {
-		this._integrationTests = [];
+		this.integrationTests = [];
 
 		const integrationTests = IntegrationTest.parseFromRuleDirectory(this.getDirectoryPath());
 		this.addIntegrationTests(integrationTests);
 	}
 
 	public async saveIntegrationTests(ruleDirPath?: string) : Promise<void> {
-		for (const it of this._integrationTests)  {
+
+		let testDirectoryPath: string;
+		if(!ruleDirPath) {
+			testDirectoryPath = path.join(this.getDirectoryPath(), RuleBaseItem.TESTS_DIRNAME);
+		} else {
+			testDirectoryPath = path.join(ruleDirPath, RuleBaseItem.TESTS_DIRNAME);
+		}
+
+		// Очищаем старые тесты, так как если их стало меньше, то будут оставаться удалённые.
+		if(fs.existsSync(testDirectoryPath)) {
+			let oldTestFilePaths = 
+				FileSystemHelper
+					.readFilesNameFilter(testDirectoryPath, /test_conds_\d+.tc/g)
+					.map(fileName => path.join(testDirectoryPath, fileName));
+
+			const rawEventFilePaths = 
+				FileSystemHelper
+					.readFilesNameFilter(testDirectoryPath, /raw_events_\d+.json/g)
+					.map(fileName => path.join(testDirectoryPath, fileName));
+
+			oldTestFilePaths = oldTestFilePaths.concat(rawEventFilePaths);
+
+			for(const it of oldTestFilePaths) {
+				await fs.promises.unlink(it);
+			}
+		}
+
+		for (const it of this.integrationTests)  {
 			if(ruleDirPath) {
 				it.setRuleDirectoryPath(ruleDirPath);
 			}
@@ -567,7 +594,7 @@ export abstract class RuleBaseItem extends ContentTreeBaseItem {
 	private _localizationExamples : LocalizationExample [] = [];
 
 	protected _unitTests: BaseUnitTest [] = [];
-	protected _integrationTests : IntegrationTest [] = [];
+	protected integrationTests : IntegrationTest [] = [];
 	
 	private _ruDescription : string;
 	private _enDescription : string;

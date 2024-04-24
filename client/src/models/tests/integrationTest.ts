@@ -166,27 +166,27 @@ export class IntegrationTest {
 		return this._number;
 	}
 
-	public setNormalizedEvents(normalizeEvents: string) {
+	public setNormalizedEvents(normalizeEvents: string) : void {
 		this._normalizeEvents = normalizeEvents;
 	}
 
-	public getNormalizedEvents() {
+	public getNormalizedEvents() : string  {
 		return this._normalizeEvents;
 	}
 
-	public setRawEvents(rawEvent: string) {
+	public setRawEvents(rawEvent: string)  : void  {
 		this._rawEvents = rawEvent;
 	}
 
-	public getRawEvents() {
+	public getRawEvents(): string {
 		return this._rawEvents;
 	}
 
-	public setTestCode(testCode: string) {
+	public setTestCode(testCode: string) : void  {
 		this._testCode = testCode;
 	}
 
-	public getTestCode() {
+	public getTestCode() : string {
 		return this._testCode;
 	}
 

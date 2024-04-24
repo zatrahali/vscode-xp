@@ -267,7 +267,7 @@ export class FileSystemHelper {
         }
     }
 
-    public static readFiles(filePath: string) {
+    public static readFiles(filePath: string): string[] {
 
         const files = fs.readdirSync(filePath, { withFileTypes: true })
             .filter(entity => entity.isFile())
@@ -277,7 +277,6 @@ export class FileSystemHelper {
     }
 
     public static readFilesNameFilter(filePath: string, regExp: RegExp): string[] {
-
         const files = fs.readdirSync(filePath, { withFileTypes: true })
             .filter(entity => entity.isFile())
             .map(entity => entity.name)
