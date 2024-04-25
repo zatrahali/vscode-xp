@@ -1,11 +1,9 @@
 # Getting started
 
 You can install the extension very quickly from the VSCode marketplace:
-
 ![Installing extension](./ru_gif/install_extension.gif)
 
 To simplify the creation of rules, the most popular templates are used:
-
 ![Creating rules from templates](./ru_gif/create_rules_from_templates.gif)
 
 The extension provides auto-completion of taxonomy fields, keywords, functions with their descriptions. Snippets (template pieces of code) are also available to speed up and simplify the addition of XP language constructs:
@@ -22,3 +20,6 @@ If you collect events from Windows logs, you can convert them to the desired for
 
 If you want to correlate EVTX files using selected content:
 ![Correlation of EVTX files](./ru_gif/evtx_correlator.gif)
+
+You can create a table list in a very simple way:
+![Creating a table list](./ru_gif/create_table.gif)
