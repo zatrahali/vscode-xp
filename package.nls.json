@@ -18,7 +18,7 @@
 	"xp.views.knowledgebaseTree.createMacroCommand": "Create a macro",
 	"xp.views.knowledgebaseTree.createFolderCommand": "Create a folder",
 
-	"xp.views.knowledgebaseTree.verifyFolderCommand": "Check objects",
+	"xp.views.knowledgebaseTree.verifyFolderCommand": "Check object",
 	"xp.views.knowledgebaseTree.deleteCommand": "Delete",
 	"xp.views.knowledgebaseTree.renameCommand": "Rename",
 	"xp.views.knowledgebaseTree.duplicateCommand": "Duplicate",

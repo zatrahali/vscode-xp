@@ -23,7 +23,7 @@ import { OperationCanceledException } from '../../../models/operationCanceledExc
  * TODO: после обновления дерева статусы item-ам присваиваться не будут, нужно обновить список обрабатываемых рулей.
  */
 export class ContentCheckingCommand extends ViewCommand {
-	constructor(private readonly config: Configuration, private parentItem: ContentTreeBaseItem) {
+	constructor(private readonly config: Configuration, private selectedItem: ContentTreeBaseItem) {
 		super();
 	}
 
@@ -35,12 +35,18 @@ export class ContentCheckingCommand extends ViewCommand {
 			cancellable: true,
 		}, async (progress, token) => {
 
-			// Сбрасываем статус правил в исходный
-			// TODO: Добавить поддержку других типов
-			const totalChildItems = this.getChildrenRecursively(this.parentItem, token);
+			let totalChildItems: ContentTreeBaseItem[] = [];
+
+			// Либо выбрана директория, либо конкретное правило.
+			if(this.selectedItem.isFolder()) {
+				totalChildItems = this.getChildrenRecursively(this.selectedItem, token);
+			} else {
+				totalChildItems.push(this.selectedItem);
+			}
+			
 			const rules = totalChildItems.filter(i => (i instanceof RuleBaseItem)).map<RuleBaseItem>(r => r as RuleBaseItem);
 			if(rules.length === 0) {
-				DialogHelper.showInfo(`В директории ${this.parentItem.getName()} не найдено контента для проверки`);
+				DialogHelper.showInfo(`В директории ${this.selectedItem.getName()} не найдено контента для проверки`);
 				return;
 			}
 
@@ -92,7 +98,7 @@ export class ContentCheckingCommand extends ViewCommand {
 				await ContentTreeProvider.refresh(rule);
 			}
 
-			DialogHelper.showInfo(this.config.getMessage("View.ObjectTree.Message.ContentChecking.CompletedSuccessfully", this.parentItem.getName()));
+			DialogHelper.showInfo(this.config.getMessage("View.ObjectTree.Message.ContentChecking.CompletedSuccessfully", this.selectedItem.getName()));
 		});
 	}
 
@@ -111,25 +117,25 @@ export class ContentCheckingCommand extends ViewCommand {
 			// Сбрасываем статус для правила в дереве объектов.
 			rule.setStatus(ContentItemStatus.Default);
 			ContentTreeProvider.refresh(rule);
+			const ritd = new RunIntegrationTestDialog(this.config, {cancellationToken: options.cancellationToken});
 
 			if(options.cancellationToken.isCancellationRequested) {
 				throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 			}
 
+			const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.GetDependencies", rule.getName());
+			Log.info(statusMessage);
+			options.progress.report({message: statusMessage});
+
 			if(rule instanceof Correlation) {
-				const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.GetDependencies", rule.getName());
-				Log.info(statusMessage);
-				options.progress.report({ message: statusMessage});
-				
-				const ritd = new RunIntegrationTestDialog(this.config, {cancellationToken: options.cancellationToken});
 				const ruleRunOptions = await ritd.getIntegrationTestRunOptionsForSingleRule(rule);
 				unionOptions.union(ruleRunOptions);
 
 				correlationBuildingConfigured = true;
 			}
 
-			if(rule instanceof Enrichment && !enrichmentBuildingConfigured) {
-				const ruleRunOptions = await this.enrichmentBuildingConfigurationForAllEnrichment(rule);
+			if(rule instanceof Enrichment) {
+				const ruleRunOptions = await ritd.getIntegrationTestRunOptionsForSingleRule(rule);
 				unionOptions.union(ruleRunOptions);
 
 				enrichmentBuildingConfigured = true;
@@ -142,7 +148,7 @@ export class ContentCheckingCommand extends ViewCommand {
 		if(correlationBuildingConfigured || enrichmentBuildingConfigured) {
 			const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.BuildAllArtifacts");
 			Log.info(statusMessage);
-			options.progress.report({ message: statusMessage});
+			options.progress.report({message: statusMessage});
 			
 			await testRunner.compileArtifacts(unionOptions);
 		}

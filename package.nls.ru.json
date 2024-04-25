@@ -18,7 +18,7 @@
 	"xp.views.knowledgebaseTree.createMacroCommand": "Создать макрос",
 	"xp.views.knowledgebaseTree.createFolderCommand": "Создать папку",
 
-	"xp.views.knowledgebaseTree.verifyFolderCommand": "Проверить объекты",
+	"xp.views.knowledgebaseTree.verifyFolderCommand": "Проверить объект",
 	"xp.views.knowledgebaseTree.deleteCommand": "Удалить",
 	"xp.views.knowledgebaseTree.renameCommand": "Переименовать",
 	"xp.views.knowledgebaseTree.duplicateCommand": "Создать копию",

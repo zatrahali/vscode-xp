@@ -1,8 +1,10 @@
-[![Documentation Status](https://readthedocs.org/projects/vscode-xp/badge/?version=latest)](https://vscode-xp.readthedocs.io/ru/latest/?badge=latest) [![Telegram chat](https://img.shields.io/static/v1?label=chat&message=Telegram&color=blue&logo=telegram)](https://t.me/s3curity_experts_community/75) [![en](https://img.shields.io/badge/lang-en-green.svg)](https://github.com/Security-Experts-Community/vscode-xp/blob/develop/README_EN.md)
+[![Documentation Status](https://readthedocs.org/projects/vscode-xp/badge/?version=latest)](https://vscode-xp.readthedocs.io/ru/latest/?badge=latest) [![Telegram chat](https://img.shields.io/static/v1?label=chat&message=Telegram&color=blue&logo=telegram)](https://t.me/s3curity_experts_community/75) [![en](https://img.shields.io/badge/lang-en-green.svg)](README_EN.md)
 
 # Поддержка языка eXtraction and Processing (XP) в Visual Studio Code
 
-Язык [eXtraction and Processing (XP)](https://help.ptsecurity.com/projects/maxpatrol10/26.2/ru-RU/help/1566293515) используется для создания детектирующих правил на основе анализа событий c конечных точек. На языке XP вы можете разрабатывать правила нормализации событий, их корреляции и обогащения.
+Язык [eXtraction and Processing (XP)](https://help.ptsecurity.com/projects/maxpatrol10/26.2/ru-RU/help/1566293515) используется для создания детектирующих правил на основе анализа событий c конечных точек, подобно [Sigma-правилам](https://github.com/SigmaHQ/sigma). На языке XP вы можете разрабатывать правила нормализации, агрегации событий, их корреляции и обогащения.
+
+Быстро ознакомиться с процессом создания правил можно [тут](./docs/GETTING_STARTED.md).
 
 Настоящее расширение разработано [Dmitry Fedosov](https://github.com/DmitryOffsec) и [контрибьютерами](https://github.com/Security-Experts-Community/vscode-xp/graphs/contributors), оно позволяет разрабатывать и тестировать правила в VSCode и VSCodium, а также публиковать их в необходимый для вашего продукта формат.
 

@@ -42,10 +42,11 @@
     "View.ObjectTree.Message.BuildAllWldsCompletedSuccessfully": "Compilation of all wld files completed successfully",
 
     "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation": "The enrichment rules from the selected directory can handle both normalized and correlated events. Which correlations need to be compiled for correct testing?",
+    "View.ObjectTree.Message.ContentChecking.ChoosingSingleCorrelationCompilation": "The enrichment rule {0} can process both normalized and correlated events. What correlations need to be compiled?",
     "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.AllPackages": "All packages",
     "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.CurrentPackage": "The current package",
     "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.DontCompile": "Do not compile correlations",
-    "View.ObjectTree.Message.ContentChecking.CompletedSuccessfully": "Check of directory {0} completed",
+    "View.ObjectTree.Message.ContentChecking.CompletedSuccessfully": "Check {0} completed",
 
     "View.ObjectTree.ItemStatus.TestsPassed": "Tests passed",
     "View.ObjectTree.ItemStatus.TestsFailed": "Tests failed",

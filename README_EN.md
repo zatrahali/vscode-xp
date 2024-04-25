@@ -2,7 +2,9 @@
 
 # XP language support in Visual Studio Code
 
-The [eXtraction and Processing (XP)](https://help.ptsecurity.com/en-US/projects/maxpatrol10/26.2/help/1566293515) language is used to create detection rules based on the analysis of events from endpoints. In the XP language, you can develop rules for event normalization, correlation, and enrichment.
+The [eXtraction and Processing (XP)](https://help.ptsecurity.com/en-US/projects/maxpatrol10/26.2/help/1566293515) language is used to create detection rules based on the analysis of events from endpoints, similar to [Sigma rules](https://github.com/SigmaHQ/sigma). In the XP language, you can develop rules for normalization, event aggregation, correlation and enrichment.
+
+You can quickly start [here](./docs/GETTING_STARTED_EN.md).
 
 This extension was developed by [Dmitry Fedosov](https://github.com/DmitryOffsec) and [contributors](https://github.com/Security-Experts-Community/vscode-xp/graphs/contributors), it allows you to develop and test rules in VSCode and VSCodium, and publish them in the format required for your product.
 

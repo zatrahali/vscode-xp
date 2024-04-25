@@ -42,10 +42,11 @@
     "View.ObjectTree.Message.BuildAllWldsCompletedSuccessfully": "Компиляция всех WLD-файлов завершена успешно",
 
     "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation": "Правила обогащения из выбранной папки могут обрабатывать как нормализованные события, так и корреляционные. Какие корреляции необходимо компилировать для корректного тестирования?",
+    "View.ObjectTree.Message.ContentChecking.ChoosingSingleCorrelationCompilation": "Правило обогащения {0} может обрабатывать как нормализованные события, так и корреляционные. Какие корреляции необходимо компилировать?",
     "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.AllPackages": "Все пакеты",
     "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.CurrentPackage": "Текущий пакет",
     "View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.DontCompile": "Не компилировать корреляции",
-    "View.ObjectTree.Message.ContentChecking.CompletedSuccessfully": "Проверка директории {0} завершена",
+    "View.ObjectTree.Message.ContentChecking.CompletedSuccessfully": "Проверка {0} завершена",
     
     "View.ObjectTree.ItemStatus.TestsPassed": "Тесты пройдены",
     "View.ObjectTree.ItemStatus.TestsFailed": "Тесты не пройдены",

@@ -49,7 +49,7 @@ export class RunIntegrationTestDialog {
 		const subRulePaths = await this.getRecursiveSubRulePaths(rule);
 		const uniqueSubRulePaths = [...new Set(subRulePaths)];
 		if(uniqueSubRuleNames.length !== 0) {
-			Log.info(`Из правила ${rule.getName()} получены следующие вспомогательные правила (subrule):`, uniqueSubRulePaths.map(sp => path.basename(sp)));
+			Log.info(`Из правила корреляции ${rule.getName()} получены следующие вспомогательные правила (subrule):`, uniqueSubRulePaths.map(sp => path.basename(sp)));
 		}
 
 		testRunnerOptions.correlationCompilation = CompilationType.Auto;
@@ -141,40 +141,56 @@ export class RunIntegrationTestDialog {
 		for (const it of rule.getIntegrationTests()) {
 			const testCode = it.getTestCode();
 			const expectEvent = RegExpHelper.getSingleExpectEvent(testCode);
-			const expectEventObject = JSON.parse(expectEvent);
+			if(!expectEvent) {
+				continue;
+			}
+
+			let expectEventObject: any;
+			try {
+				expectEventObject = JSON.parse(expectEvent);
+			}
+			catch(error) {
+				Log.warn("Ошибка парсинга ожидаемого события", error);
+				continue;
+			}
+			
 			if(expectEventObject?.correlation_name) {
 				depRules.push(expectEventObject?.correlation_name);
 			}
 		}
+
 		const uniqueDepRuleNames = [...new Set(depRules)].map(srn => srn.toLocaleLowerCase());
+		if(uniqueDepRuleNames.length !== 0) {
+			Log.info(`Из правила обогащения ${rule.getName()} получены следующие зависимые правила:`, depRules);
+		}
 
 		const contentRootPath = this.config.getRootByPath(rule.getDirectoryPath());
 		const depRulePaths = FileSystemHelper.getRecursiveDirPathByName(contentRootPath, uniqueDepRuleNames);
 
-		if(uniqueDepRuleNames.length !== depRulePaths.length) {
-			// Выводим список правил, которые не удалось найти.
+		// 
+		if(uniqueDepRuleNames.length !== depRulePaths.length && uniqueDepRuleNames.length !== 0) {
 			const foundedSubruleNamesSet = new Set(depRulePaths.map(p => path.basename(p).toLocaleLowerCase()));
 			const ruleNamesNotFound = [...uniqueDepRuleNames].filter(x => !foundedSubruleNamesSet.has(x));
-			Log.warn(`Не удалось найти вспомогательные правила: ${ruleNamesNotFound.join(", ")}`);
+			throw new XpException(`Не удалось найти зависимые от обогащения правила: ${ruleNamesNotFound.join(", ")}`);
 
-			const result = await this.askTheUser();
-			switch(result) {
-				case this.CURRENT_PACKAGE: {
-					testRunnerOptions.correlationCompilation = CompilationType.CurrentPackage;
-					break;
-				}
+			// const result = await this.askTheUser(rule.getName());
+			// switch(result) {
+			// 	case this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingSingleCorrelationCompilation.CurrentPackage", rule.getName()): {
+			// 		testRunnerOptions.correlationCompilation = CompilationType.CurrentPackage;
+			// 		break;
+			// 	}
 
-				case this.ALL_PACKAGES: {
-					testRunnerOptions.correlationCompilation = CompilationType.AllPackages;
-					break;
-				}
+			// 	case this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingSingleCorrelationCompilation.AllPackages", rule.getName()): {
+			// 		testRunnerOptions.correlationCompilation = CompilationType.AllPackages;
+			// 		break;
+			// 	}
 				
-				case this.DONT_COMPILE_CORRELATIONS: {
-					testRunnerOptions.correlationCompilation = CompilationType.DontCompile;
-					break;
-				}
-			}
-			return;
+			// 	case this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingSingleCorrelationCompilation.DontCompile", rule.getName()): {
+			// 		testRunnerOptions.correlationCompilation = CompilationType.DontCompile;
+			// 		break;
+			// 	}
+			// }
+			//  return testRunnerOptions;
 		}
 
 		const uniqueDepRulePaths = depRulePaths;
@@ -185,18 +201,24 @@ export class RunIntegrationTestDialog {
 		}
 
 		// Возвращаем список зависимых от обогащения корреляций.
-		testRunnerOptions.correlationCompilation = CompilationType.Auto;
+		if(uniqueDepRulePaths.length === 0) {
+			testRunnerOptions.correlationCompilation = CompilationType.CurrentPackage;
+		} else {
+			testRunnerOptions.correlationCompilation = CompilationType.Auto;
+		}
+
 		testRunnerOptions.dependentCorrelations.push(...uniqueDepRulePaths);
 		testRunnerOptions.currPackagePath = rule.getPackagePath(this.config);
 		return testRunnerOptions;
 	}
 
-	private async askTheUser(): Promise<string> {
+	private async askTheUser(ruleName : string): Promise<string> {
 		const result = await DialogHelper.showInfo(
-			"Правило обогащения может обрабатывать как нормализованные события, так и корреляционные. Какие корреляции необходимо компилировать?",
-			this.CURRENT_PACKAGE,
-			this.ALL_PACKAGES,
-			this.DONT_COMPILE_CORRELATIONS);
+			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingEnrichmentCompilation", ruleName),
+			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.CurrentPackage"),
+			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.DontCompile"),
+			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.AllPackages")
+		);
 
 		if(!result) {
 			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
@@ -204,8 +226,4 @@ export class RunIntegrationTestDialog {
 
 		return result;
 	}
-	
-	public ALL_PACKAGES = "Все пакеты";
-	public CURRENT_PACKAGE = "Текущий пакет";
-	public DONT_COMPILE_CORRELATIONS = "Не компилировать";
 }

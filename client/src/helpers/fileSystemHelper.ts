@@ -210,6 +210,10 @@ export class FileSystemHelper {
     }
 
     public static getRecursiveDirPathByName(dirPath : string, dirNames: string []) : string[] {
+        if(dirNames.length === 0) {
+            return [];
+        }
+
         const results : string [] = [];
         const list = fs.readdirSync(dirPath);
 
