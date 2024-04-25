@@ -68,6 +68,8 @@
 
     "View.IntegrationTests.Progress.RunAllTests": "Integration tests for rule {0}",
     "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Integration tests for rule {0} with subrules",
+    "View.IntegrationTests.Progress.Normalization": "Normalization of raw events for test №{0}",
+    "View.IntegrationTests.Progress.NormalizationAndEnrichment": "Normalization and enrichment of raw events for test №{0}",
 
     "View.IntegrationTests.Message.NoTestsFound": "No tests found for rule {0}. Add at least one test and try again",
     "View.IntegrationTests.Message.TestsPassed": "Integration tests for rule {0} passed successfully",
@@ -76,6 +78,8 @@
 
     "View.IntegrationTests.Message.TestsSavedSuccessfully": "All tests saved",
     "View.IntegrationTests.Message.FailedToSaveTests": "Failed to save tests",
+    "View.IntegrationTests.Message.SuccessfulNormalization": "Normalization of raw test events #{0} completed successfully",
+    "View.IntegrationTests.Message.SuccessfulNormalizationAndEnrichment": "Normalization and enrichment of raw test events #{0} completed successfully",
 
     "View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated": "The expected event in the test code was successfully updated. Adjust if necessary and save the test",
     "View.IntegrationTests.Message.UnableGetExpectedEvent": "Unable to get expected event for test that failed",

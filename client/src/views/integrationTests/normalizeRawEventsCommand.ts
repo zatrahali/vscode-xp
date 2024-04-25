@@ -28,10 +28,14 @@ export class NormalizeRawEventsCommand extends Command {
 				const siemjManager = new SiemjManager(this.params.config, cancellationToken);
 				let normEvents: string;
 				if (this.params.isEnrichmentRequired) {
-					progress.report({message: `Нормализация и обогащение необработанных событий для теста №${this.params.test.getNumber()}`});
+					const progressMessage = this.params.config.getMessage("View.IntegrationTests.Progress.NormalizationAndEnrichment", this.params.test.getNumber());
+					progress.report({message: progressMessage});
+					
 					normEvents = await siemjManager.normalizeAndEnrich(this.params.rule, rawEventsFilePath);
 				} else {
-					progress.report({message: `Нормализация необработанных событий для теста №${this.params.test.getNumber()}`});
+					const progressMessage = this.params.config.getMessage("View.IntegrationTests.Progress.Normalization", this.params.test.getNumber());
+					progress.report({message: progressMessage});
+
 					normEvents = await siemjManager.normalize(this.params.rule, rawEventsFilePath);
 				}
 
@@ -51,11 +55,15 @@ export class NormalizeRawEventsCommand extends Command {
 			}
 
 			// Выводим статус.
+			let statusMessage: string;
 			if (this.params.isEnrichmentRequired) {
-				DialogHelper.showInfo(`Нормализация и обогащение сырых событий теста №${this.params.test.getNumber()} завершено успешно`);
+				statusMessage = this.params.config.getMessage("View.IntegrationTests.Progress.SuccessfulNormalizationAndEnrichment", this.params.test.getNumber());
 			} else {
-				DialogHelper.showInfo(`Нормализация сырых событий теста №${this.params.test.getNumber()} завершена успешно`);
+				statusMessage = this.params.config.getMessage("View.IntegrationTests.Progress.SuccessfulNormalization", this.params.test.getNumber());
 			}
+
+			progress.report({message: statusMessage});
+			DialogHelper.showInfo(statusMessage);
 
 			// Обновляем правило.
 			tests[ruleTestIndex] = this.params.test;

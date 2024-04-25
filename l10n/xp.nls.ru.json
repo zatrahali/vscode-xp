@@ -68,6 +68,8 @@
 
     "View.IntegrationTests.Progress.RunAllTests": "Выполняются интеграционные тесты для правила {0}",
     "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Выполняются интеграционные тесты для правила {0} со вспомогательными правилами (correlation_type = 'subrule')",
+    "View.IntegrationTests.Progress.Normalization": "Нормализация необработанных событий для теста №{0}",
+    "View.IntegrationTests.Progress.NormalizationAndEnrichment": "Нормализация и обогащение необработанных событий для теста №{0}",
 
     "View.IntegrationTests.Message.NoTestsFound": "Тесты для правила {0} не найдены. Добавьте хотя бы один тест и повторите попытку",
     "View.IntegrationTests.Message.TestsPassed": "Интеграционные тесты для правила {0} пройдены успешно",
@@ -76,6 +78,8 @@
     
     "View.IntegrationTests.Message.TestsSavedSuccessfully": "Все тесты сохранены",
     "View.IntegrationTests.Message.FailedToSaveTests": "Не удалось сохранить тесты",
+    "View.IntegrationTests.Message.SuccessfulNormalization": "Нормализация сырых событий теста №{0} завершена успешно",
+    "View.IntegrationTests.Message.SuccessfulNormalizationAndEnrichment": "Нормализация и обогащение сырых событий теста №{0} завершено успешно",
 
     "View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated": "Ожидаемое событие в коде теста обновлено. Скорректируйте если необходимо и сохраните тест",
     "View.IntegrationTests.Message.UnableGetExpectedEvent": "Невозможно получить ожидаемое событие для теста, который завершился неуспешно",

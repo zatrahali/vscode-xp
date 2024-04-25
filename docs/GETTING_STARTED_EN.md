@@ -14,12 +14,11 @@ The extension provides auto-completion of taxonomy fields, keywords, functions w
 Testing a rule is the key to its stable and accurate operation without false positives. To do this, you need to create tests. This is how you need to work with integration tests for correlations and enrichments:
 ![Integration tests](./ru_gif/integration_tests.gif)
 
-You can also test localizations of rules, as well as test multiple rules from the object tree:
+Check the localization of rules, as well as test entire directories with rules:
 ![Localization testing and mass testing of rules](./ru_gif/localization_test_and_test_folder.gif)
 
 If you collect events from Windows logs, you can convert them to the desired format as follows:
-
-![Windows events in tests](./ru_gif/xml_to_json.gif)
+![Adding Windows events to tests](./ru_gif/xml_to_json.gif)
 
 If you want to correlate EVTX files using selected content:
-![Windows events in tests](./ru_gif/evtx_correlator.gif)
+![Correlation of EVTX files](./ru_gif/evtx_correlator.gif)
