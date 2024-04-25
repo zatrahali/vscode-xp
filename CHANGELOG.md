@@ -3,7 +3,7 @@
 ## 3.15.6 (Pre-Release)
 
 - улучшена логика тестирования обогащений;
-- добавлен раздел [Getting Started](https://github.com/Security-Experts-Community/vscode-xp/blob/develop/docs/GETTING_STARTED.md) с gif-ками по базовым кейсам работы с расширением и контентом (special thanks @Yulia17_00);
+- добавлен раздел [Getting Started](https://github.com/Security-Experts-Community/vscode-xp/blob/develop/docs/GETTING_STARTED.md) с gif-ками по базовым кейсам работы с расширением и контентом (special thanks @Yulia17_00, @GenRockeR);
 - добавлена возможность тестировать отдельные правила в дереве объектов;
 - улучшена локализация.
 
