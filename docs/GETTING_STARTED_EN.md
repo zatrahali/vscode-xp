@@ -15,7 +15,7 @@ Testing a rule is the key to its stable and accurate operation without false pos
 ![Integration tests](./ru_gif/integration_tests.gif)
 
 You can also test localizations of rules, as well as test multiple rules from the object tree:
-![Localization testing and mass testing of rules](./ru_gif/integration_tests.gif)
+![Localization testing and mass testing of rules](./ru_gif/localization_test_and_test_folder.gif)
 
 If you collect events from Windows logs, you can convert them to the desired format as follows:
 
