@@ -23,3 +23,6 @@ If you want to correlate EVTX files using selected content:
 
 You can create a table list in a very simple way:
 ![Creating a table list](./ru_gif/create_table.gif)
+
+To load the resulting content into the product, you must export to a KB file:
+![Export KB file](./ru_gif/export_kb.gif)
