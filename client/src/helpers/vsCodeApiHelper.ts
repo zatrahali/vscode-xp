@@ -6,6 +6,15 @@ import { RuleBaseItem } from '../models/content/ruleBaseItem';
 import { FileSystemHelper } from './fileSystemHelper';
 
 export class VsCodeApiHelper {
+
+	public static showDifferencesBetweenTwoFiles(leftFileUri: vscode.Uri, rightFileUri: vscode.Uri, title?: string) : Thenable<unknown> {
+		return vscode.commands.executeCommand("vscode.diff", 
+			leftFileUri,
+			rightFileUri,
+			title
+		);
+	}
+
 	public static getDocumentRange(textEditor: vscode.TextEditor) : vscode.Range {
 		const firstLine = textEditor.document.lineAt(0);
 		const lastLine = textEditor.document.lineAt(textEditor.document.lineCount - 1);

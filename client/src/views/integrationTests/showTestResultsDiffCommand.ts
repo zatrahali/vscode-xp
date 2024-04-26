@@ -11,6 +11,7 @@ import { TestHelper } from '../../helpers/testHelper';
 import { XpException } from '../../models/xpException';
 import { Log } from '../../extension';
 import { FileSystemException } from '../../models/fileSystemException';
+import { VsCodeApiHelper } from '../../helpers/vsCodeApiHelper';
 
 export interface ShowTestResultsDiffParams extends CommandParams {
 	testNumber: number;
@@ -118,7 +119,7 @@ export class ShowTestResultsDiffCommand extends Command {
 
 		Log.info(`Фактическое событие сохранено в файле по пути ${actualEventTestFilePath}, ожидаемое - ${expectedEventTestFilePath}`);
 
-		vscode.commands.executeCommand("vscode.diff", 
+		VsCodeApiHelper.showDifferencesBetweenTwoFiles(
 			vscode.Uri.file(actualEventTestFilePath),
 			vscode.Uri.file(expectedEventTestFilePath),
 			`Фактическое и ожидаемое события теста №${this.params.testNumber}`
