@@ -131,7 +131,10 @@ export class TestHelper {
 
 		return jsonl.map(j => TestHelper.removeFieldsFromJsonl(
 			j,
-			"generator.version", "uuid", "time", "incident.name", "siem_id", "labels", "_subjects", "subevents", "subevents.time")
+			"generator.version", "uuid", "time",
+			"incident.name", "siem_id", "labels", 
+			"_subjects", "_objects", "_rule",
+			"subevents", "subevents.time")
 		);
 	}
 

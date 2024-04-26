@@ -10,7 +10,7 @@ import { SiemjConfBuilder } from '../../../models/siemj/siemjConfigBuilder';
 import { XpException } from '../../../models/xpException';
 import { DialogHelper } from '../../../helpers/dialogHelper';
 import { SiemjManager } from '../../../models/siemj/siemjManager';
-import { ViewCommand } from './viewCommand';
+import { ViewCommand } from '../../../models/command/command';
 import { Log } from '../../../extension';
 
 /**

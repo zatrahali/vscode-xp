@@ -162,7 +162,7 @@ export class IntegrationTestRunner {
 		});
 
 		if(!atLeastOneTestIsValid) {
-			throw new XpException("Для запуска тестов нужно добавить сырые события и условия выполнения теста");
+			throw new XpException("Для запуска тестов нужно добавить сырые события и код теста");
 		}
 
 		const rootPath = this.config.getContentRoots()[0];

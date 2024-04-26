@@ -13,6 +13,15 @@ export class IntegrationTest {
 		//
 	}
 
+	public static updateTestStatus(oldTest: IntegrationTest, newTest: IntegrationTest): void {
+		if(
+			oldTest.getRawEvents() === newTest.getRawEvents() &&
+			oldTest.getTestCode() === newTest.getTestCode()
+		) {
+			newTest.setStatus(oldTest.getStatus());
+		}
+	}
+
 	public static parseFromRuleDirectory(ruleDirFullPath: string) : IntegrationTest [] {
 		const testsDirectoryFullPath = path.join(ruleDirFullPath, RuleBaseItem.TESTS_DIRNAME);
 

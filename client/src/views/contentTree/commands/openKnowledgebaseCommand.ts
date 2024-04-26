@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 
 import { VsCodeApiHelper } from '../../../helpers/vsCodeApiHelper';
-import { ViewCommand } from './viewCommand';
+import { ViewCommand } from '../../../models/command/command';
 import { Configuration } from '../../../models/configuration';
 
 export class OpenKnowledgebaseCommand extends ViewCommand {

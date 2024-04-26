@@ -182,10 +182,17 @@ export abstract class RuleBaseItem extends ContentTreeBaseItem {
 	}
 
 	public reloadIntegrationTests() : void {
-		this.integrationTests = [];
+		const reloadedIntegrationTests = IntegrationTest.parseFromRuleDirectory(this.getDirectoryPath());
 
-		const integrationTests = IntegrationTest.parseFromRuleDirectory(this.getDirectoryPath());
-		this.addIntegrationTests(integrationTests);
+		for(let reloadedTestIndex = 0; reloadedTestIndex < reloadedIntegrationTests.length; reloadedTestIndex++) {
+			if(this.integrationTests?.[reloadedTestIndex]) {
+				IntegrationTest.updateTestStatus(
+					this.integrationTests[reloadedTestIndex],
+					reloadedIntegrationTests[reloadedTestIndex]
+				);
+			}
+		}
+		this.setIntegrationTests(reloadedIntegrationTests);
 	}
 
 	public async saveIntegrationTests(ruleDirPath?: string) : Promise<void> {

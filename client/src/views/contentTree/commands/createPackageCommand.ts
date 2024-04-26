@@ -10,7 +10,7 @@ import { Configuration } from '../../../models/configuration';
 import { YamlHelper } from '../../../helpers/yamlHelper';
 import { MetaInfo } from '../../../models/metaInfo/metaInfo';
 import { ContentFolder } from '../../../models/content/contentFolder';
-import { ViewCommand } from './viewCommand';
+import { ViewCommand } from '../../../models/command/command';
 
 export class CreatePackageCommand extends ViewCommand {
 

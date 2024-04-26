@@ -7,7 +7,7 @@ import { RuleBaseItem } from '../../../models/content/ruleBaseItem';
 import { DialogHelper } from '../../../helpers/dialogHelper';
 import { ContentHelper } from '../../../helpers/contentHelper';
 import { Configuration } from '../../../models/configuration';
-import { ViewCommand } from './viewCommand';
+import { ViewCommand } from '../../../models/command/command';
 
 export class RenameTreeItemCommand extends ViewCommand {
 

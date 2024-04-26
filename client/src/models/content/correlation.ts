@@ -331,7 +331,8 @@ export class Correlation extends RuleBaseItem {
 			unitTest => {
 				const testExpectation = unitTest.getTestExpectation();
 				const newTestExpectation = ContentHelper.replaceAllRuleNamesWithinString(oldRuleName, newRuleName, testExpectation);
-				unitTest.setTestExpectation(newTestExpectation);				
+				unitTest.setTestExpectation(newTestExpectation);
+							
 				const testInputData = unitTest.getTestInputData();
 				const newTestInputData = ContentHelper.replaceAllRuleNamesWithinString(oldRuleName, newRuleName, testInputData);
 				unitTest.setTestInputData(newTestInputData);

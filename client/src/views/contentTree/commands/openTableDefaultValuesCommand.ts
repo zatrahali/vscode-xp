@@ -6,7 +6,7 @@ import { VsCodeApiHelper } from '../../../helpers/vsCodeApiHelper';
 import { YamlHelper } from '../../../helpers/yamlHelper';
 import { Configuration } from '../../../models/configuration';
 import { FileSystemHelper } from '../../../helpers/fileSystemHelper';
-import { ViewCommand } from './viewCommand';
+import { ViewCommand } from '../../../models/command/command';
 import { Table } from '../../../models/content/table';
 import { Log } from '../../../extension';
 import { DefaultTLValuesEditorViewProvider } from '../../defaultTLValues/defaultTLValuesEditorViewProvider';

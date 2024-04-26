@@ -1,3 +1,6 @@
+import { Configuration } from '../models/configuration';
+import { OsType } from '../models/locator/pathLocator';
+
 export class StringHelper {
 	/**
 	 * Позволяет избежать поведения, когда из replaceValue пропадают символы доллара
@@ -11,6 +14,18 @@ export class StringHelper {
 		return str.replace(searchValue, 
 			function() {return replaceValue;}
 		);
+	}
+
+	public static crossPlatformPathCompare(left: string, right: string, osType: OsType) : boolean {
+		switch (osType) {
+			case OsType.Windows: {
+				return left.toLowerCase() === right.toLocaleLowerCase();
+			}
+			case OsType.Mac: 
+			case OsType.Linux: {
+				return left === right;
+			}
+		}
 	}
 
 	public static textToOneLine(str : string) : string {

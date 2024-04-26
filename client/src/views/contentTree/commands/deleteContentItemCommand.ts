@@ -5,7 +5,7 @@ import { DialogHelper } from '../../../helpers/dialogHelper';
 import { RuleBaseItem } from '../../../models/content/ruleBaseItem';
 import { ContentTreeProvider } from '../contentTreeProvider';
 import { Configuration } from '../../../models/configuration';
-import { ViewCommand } from './viewCommand';
+import { ViewCommand } from '../../../models/command/command';
 
 export class DeleteContentItemCommand extends ViewCommand {
 

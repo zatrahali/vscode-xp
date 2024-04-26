@@ -10,7 +10,7 @@ import { XpException } from '../../../models/xpException';
 import { DialogHelper } from '../../../helpers/dialogHelper';
 import { Log } from '../../../extension';
 import { SiemjManager } from '../../../models/siemj/siemjManager';
-import { ViewCommand } from './viewCommand';
+import { ViewCommand } from '../../../models/command/command';
 
 /**
  * Команда выполняющая сборку всех графов: нормализации, агрегации, обогащения и корреляции.

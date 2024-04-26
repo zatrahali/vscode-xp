@@ -57,6 +57,8 @@ export class IntegrationTestEditorViewProvider {
 						DialogHelper.showError("Правило еще не успело загрузится. Повторите еще раз");
 						return;
 					}
+
+					// TODO: обновление интеграционных тестов с диска сбрасывает их статус. Можно использовать watcher для этого.
 					rule.reloadIntegrationTests();
 					return provider.showEditor(rule);
 				}

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { Command, CommandParams } from '../../models/command/command';
+import { Command, RuleCommandParams } from '../../models/command/command';
 import { TestHelper } from '../../helpers/testHelper';
 import { DialogHelper } from '../../helpers/dialogHelper';
 import { RunIntegrationTestDialog } from '../runIntegrationDialog';
@@ -13,7 +13,7 @@ import { ContentTreeProvider } from '../contentTree/contentTreeProvider';
 
 export class RunIntegrationTestsCommand extends Command {
 
-	constructor(private params: CommandParams) {
+	constructor(private params: RuleCommandParams) {
 		super();
 	}
 	

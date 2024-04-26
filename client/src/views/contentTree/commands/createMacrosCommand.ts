@@ -5,7 +5,7 @@ import { ContentTreeProvider } from '../contentTreeProvider';
 import { Configuration } from '../../../models/configuration';
 import { NameValidator } from '../../../models/nameValidator';
 import { Macros } from '../../../models/content/macros';
-import { ViewCommand } from './viewCommand';
+import { ViewCommand } from '../../../models/command/command';
 
 export class CreateMacroCommand extends ViewCommand {
 

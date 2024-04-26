@@ -5,8 +5,8 @@ import * as path from 'path';
 import { KbHelper } from '../../../helpers/kbHelper';
 import { RuleBaseItem } from '../../../models/content/ruleBaseItem';
 import { ContentTreeProvider } from '../contentTreeProvider';
-import { ViewCommand } from './viewCommand';
 import { Configuration } from '../../../models/configuration';
+import { ViewCommand } from '../../../models/command/command';
 
 export class CreateSubFolderCommand extends ViewCommand {
 

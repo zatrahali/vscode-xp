@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 
 import { DialogHelper } from '../../helpers/dialogHelper';
-import { Command, CommandParams } from '../../models/command/command';
+import { Command, RuleCommandParams } from '../../models/command/command';
 import { SiemjManager } from '../../models/siemj/siemjManager';
 import { IntegrationTest } from '../../models/tests/integrationTest';
 import { ExceptionHelper } from '../../helpers/exceptionHelper';
 
-export interface NormalizeRawEventsParams extends CommandParams {
+export interface NormalizeRawEventsParams extends RuleCommandParams {
 	isEnrichmentRequired: boolean;
 	test: IntegrationTest;
 }

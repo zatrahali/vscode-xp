@@ -21,6 +21,8 @@ import { ContentTreeProvider } from '../contentTree/contentTreeProvider';
 import { OperationCanceledException } from '../../models/operationCanceledException';
 import { JsHelper } from '../../helpers/jsHelper';
 import { ContentHelper } from '../../helpers/contentHelper';
+import { CheckLocalizationCommand } from './checkLocalizationsCommand';
+import { CommandHelper } from '../../helpers/commandHelper';
 
 export class LocalizationEditorViewProvider {
 
@@ -28,7 +30,7 @@ export class LocalizationEditorViewProvider {
 	public static provider: LocalizationEditorViewProvider;
 
 	private _view?: vscode.WebviewPanel;
-	private _rule: RuleBaseItem;
+	private rule: RuleBaseItem;
 
 	constructor(
 		private readonly config: Configuration,
@@ -61,7 +63,7 @@ export class LocalizationEditorViewProvider {
 			this._view = undefined;
 		}
 
-		this._rule = rule;
+		this.rule = rule;
 
 		// Сохраняем директорию для временных файлов, которая будет единая для вьюшки.
 		if(!keepTmpFiles) {
@@ -107,16 +109,16 @@ export class LocalizationEditorViewProvider {
 	 * @returns было ли обновлено правило
 	 */
 	public async updateRule(newRule: RuleBaseItem): Promise<boolean> {
-		if(this._view && this._rule && this._rule.getName() === newRule.getName()) {
+		if(this._view && this.rule && this.rule.getName() === newRule.getName()) {
 			// Сохраняем текущий статус правила
-			const prevIcon = this._rule.iconPath;
+			const prevIcon = this.rule.iconPath;
 			newRule.iconPath = prevIcon;
 
 			// Сохраняем примеры локализаций
-			const localizationExamples = this._rule.getLocalizationExamples();
+			const localizationExamples = this.rule.getLocalizationExamples();
 			newRule.setLocalizationExamples(localizationExamples);
 
-			this._rule = newRule;
+			this.rule = newRule;
 			if(this._view) {
 				this.updateView();
 			}
@@ -130,7 +132,7 @@ export class LocalizationEditorViewProvider {
 	 * Обновляем визуализацию правила
 	 */
 	public async updateView() : Promise<void> {
-		const localizations = this._rule.getLocalizations();
+		const localizations = this.rule.getLocalizations();
 
 		const plainLocalizations = localizations.map(
 		loc => {
@@ -163,17 +165,17 @@ export class LocalizationEditorViewProvider {
 		const resourcesUri = this.config.getExtensionUri();
 		const extensionBaseUri = this._view.webview.asWebviewUri(resourcesUri);
 
-		const locExamples = this._rule.getLocalizationExamples();
+		const locExamples = this.rule.getLocalizationExamples();
 		const templatePlainObject = {
-			"RuleName": this._rule.getName(),
-			"RuDescription": this._rule.getRuDescription(),
-			"EnDescription": this._rule.getEnDescription(),
+			"RuleName": this.rule.getName(),
+			"RuDescription": this.rule.getRuDescription(),
+			"EnDescription": this.rule.getEnDescription(),
 			"Localizations": plainLocalizations,
 			"ExtensionBaseUri": extensionBaseUri,
 			"LocalizationExamples": locExamples,
-			"IsLocalizableRule": ContentHelper.isLocalizableRule(this._rule),
-			"IsTestedLocalizationsRule" : TestHelper.isTestedLocalizationsRule(this._rule),
-			"DefaultLocalizationCriteria" : await ContentHelper.getDefaultLocalizationCriteria(this._rule),
+			"IsLocalizableRule": ContentHelper.isLocalizableRule(this.rule),
+			"IsTestedLocalizationsRule" : TestHelper.isTestedLocalizationsRule(this.rule),
+			"DefaultLocalizationCriteria" : await ContentHelper.getDefaultLocalizationCriteria(this.rule),
 
 			"Locale": {
 				"CheckLocalizations" : this.config.getMessage("View.Localization.CheckLocalizations"),
@@ -193,57 +195,16 @@ export class LocalizationEditorViewProvider {
 		this._view.webview.html = htmlContent;
 	}
 
-	async receiveMessageFromWebView(message: any) : Promise<string> {
+	async receiveMessageFromWebView(message: any) : Promise<void> {
 		switch (message.command) {
 			case 'buildLocalizations': {
-				try {
-					if(!TestHelper.isTestedLocalizationsRule(this._rule)) {
-						return DialogHelper.showInfo(
-							"В настоящий момент поддерживается проверка локализаций только для корреляций. Если вам требуется поддержка других правил, можете добавить или проверить наличие подобного [Issue](https://github.com/Security-Experts-Community/vscode-xp/issues).");					
-					}
-
-					// Сбрасываем статус правила в исходный
-					this._rule.setStatus(ContentItemStatus.Default);
-					await ContentTreeProvider.refresh(this._rule);
-	
-					const localizations = message.localizations;
-					await this.saveLocalization(localizations, false);
-					
-					const locExamples = await this.getLocalizationExamples();
-
-					if (locExamples.length === 0) {
-						return DialogHelper.showInfo(
-							"По имеющимся событиям не отработала ни одна локализация. Проверьте, что интеграционные тесты проходят, корректны критерии локализации. После исправлений повторите.");
-					}
-
-					const isDefaultLocalization = locExamples.some(le => TestHelper.isDefaultLocalization(le.ruText));
-					if(isDefaultLocalization) {
-						DialogHelper.showError("Обнаружена локализация по умолчанию. Исправьте/добавьте нужные критерии локализаций и повторите");
-						this._rule.setStatus(ContentItemStatus.Unverified, "Локализация не прошла проверку, обнаружен пример локализации по умолчанию");
-					} else {
-						this._rule.setStatus(ContentItemStatus.Verified, "Интеграционные тесты и локализации прошли проверку");
-					}
-
-					await ContentTreeProvider.refresh(this._rule);
-	
-					this._rule.setLocalizationExamples(locExamples);
-					this.showLocalizationEditor(this._rule, true);
-				}
-				catch(error) {
-					ExceptionHelper.show(error, "Неожиданная ошибка тестирования локализаций");
-
-					// Если произошла отмена операции, мы не очищаем временные файлы.
-					if(error instanceof OperationCanceledException) {
-						return;	
-					}
-					
-					try {
-						await FileSystemHelper.deleteAllSubDirectoriesAndFiles(this.integrationTestTmpFilesPath);
-					}
-					catch(error) {
-						Log.warn("Ошибка очистки временных файлов интеграционных тестов", error);
-					}
-				}
+				const command = new CheckLocalizationCommand(this, {
+					config: this.config,
+					rule: this.rule,
+					tmpDirPath: this.integrationTestTmpFilesPath,
+					message: message
+				});
+				await CommandHelper.singleExecutionCommand(command);
 				break;
 			}
 
@@ -259,16 +220,16 @@ export class LocalizationEditorViewProvider {
 		}
 	}
 
-	private async saveLocalization(localization : any, informUser : boolean) {
+	public async saveLocalization(localization : any, informUser : boolean): Promise<void> {
 		// Получаем описание на русском
 		let ruDescription = localization.RuDescription as string;
 		ruDescription = ruDescription.trim();
-		this._rule.setRuDescription(ruDescription);
+		this.rule.setRuDescription(ruDescription);
 
 		// Получаем описание на английском
 		let enDescription = localization.EnDescription as string;
 		enDescription = enDescription.trim();
-		this._rule.setEnDescription(enDescription);
+		this.rule.setEnDescription(enDescription);
 
 		// Получаем нужные данные из вебвью и тримим их.
 		const criteria = (localization.Criteria as string[]).map(c => c.trim());
@@ -298,67 +259,14 @@ export class LocalizationEditorViewProvider {
 
 		// Обновляем локализации и сохраняем их.
 		if (localizations.length !== 0) {
-			this._rule.setLocalizationTemplates(localizations);
+			this.rule.setLocalizationTemplates(localizations);
 		}
 
-		await this._rule.saveMetaInfoAndLocalizations();
+		await this.rule.saveMetaInfoAndLocalizations();
 		if(informUser) {
-			DialogHelper.showInfo(`Правила локализации для ${this._rule.getName()} сохранены`);
+			DialogHelper.showInfo(`Правила локализации для ${this.rule.getName()} сохранены`);
 		}
 	}
-
-	private async getLocalizationExamples(): Promise<LocalizationExample[]> {
-		return await vscode.window.withProgress({
-			location: vscode.ProgressLocation.Notification,
-			cancellable: true,
-		}, async (progress, token) => {
-				
-			let result: string;
-			
-			if(fs.existsSync(this.integrationTestTmpFilesPath)) {
-				const subDirItems = await fs.promises.readdir(this.integrationTestTmpFilesPath, { withFileTypes: true });
-
-				if(subDirItems.length > 0) {
-					result = await DialogHelper.showInfo(
-						"Обнаружены результаты предыдущего запуска интеграционных тестов. Если вы модифицировали только правила локализации, то можно использовать предыдущие результаты. В противном случае необходимо запустить интеграционные тесты еще раз.", 
-						LocalizationEditorViewProvider.USE_OLD_TESTS_RESULT,
-						LocalizationEditorViewProvider.RESTART_TESTS);
-	
-					// Если пользователь закрыл диалог, завершаем работу.
-					if(!result) {
-						throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
-					}
-				}
-			}
-
-			if(!result || result === LocalizationEditorViewProvider.RESTART_TESTS) {
-				progress.report({ message: `Получение зависимостей правила для корректной сборки графа корреляций` });
-				const ritd = new RunIntegrationTestDialog(this.config, {tmpFilesPath: this.integrationTestTmpFilesPath, cancellationToken: token});
-				const options = await ritd.getIntegrationTestRunOptionsForSingleRule(this._rule);
-				options.cancellationToken = token;
-
-				progress.report({ message: `Получение корреляционных событий на основе интеграционных тестов правила` });
-				const outputParser = new SiemJOutputParser();
-				const testRunner = new IntegrationTestRunner(this.config, outputParser);
-				const siemjResult = await testRunner.runOnce(this._rule, options);
-
-				if (!siemjResult.testsStatus) {
-					throw new XpException("Не все интеграционные тесты прошли. Для получения тестовых локализации необходимо чтобы успешно проходили все интеграционные тесты");
-				}
-			}
-
-			progress.report({ message: `Генерация локализаций на основе корреляционных событий из интеграционных тестов`});
-			const siemjManager = new SiemjManager(this.config);
-			const locExamples = await siemjManager.buildLocalizationExamples(this._rule, this.integrationTestTmpFilesPath);
-
-			return locExamples;
-		});
-	}
-
-
 
 	private integrationTestTmpFilesPath: string;
-
-	public static readonly USE_OLD_TESTS_RESULT = "Использовать";
-	public static readonly RESTART_TESTS = "Повторить";
 }

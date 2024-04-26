@@ -3,12 +3,12 @@ import * as os from 'os';
 import { DialogHelper } from '../../helpers/dialogHelper';
 import { ExceptionHelper } from '../../helpers/exceptionHelper';
 import { TestHelper } from '../../helpers/testHelper';
-import { Command, CommandParams } from '../../models/command/command';
+import { Command, RuleCommandParams } from '../../models/command/command';
 import { RuleBaseItem } from '../../models/content/ruleBaseItem';
 import { XpException } from '../../models/xpException';
 import { IntegrationTest } from '../../models/tests/integrationTest';
 
-export interface SaveAllCommandParams extends CommandParams {
+export interface SaveAllCommandParams extends RuleCommandParams {
 	testNumber: number;
 	tests : any[];
 }
@@ -66,16 +66,17 @@ export class SaveAllCommand extends Command {
 			return [];
 		}
 
+		const oldTests = this.params.rule.getIntegrationTests();
 		const newTests = plainTests.map((plainTest, index) => {
 			const number = index + 1;
-			const test = IntegrationTest.create(number);
+			const newTest = IntegrationTest.create(number);
 
 			// Сырые события.
 			let rawEvents = plainTest?.rawEvents;
 
 			// Из textarea новые строки только \n, поэтому надо их поправить под систему.
 			rawEvents = rawEvents.replace(/(?<!\\)\n/gm, os.EOL);
-			test.setRawEvents(rawEvents);
+			newTest.setRawEvents(rawEvents);
 
 			// Код теста.
 			let testCode = plainTest?.testCode;
@@ -90,15 +91,23 @@ export class SaveAllCommand extends Command {
 				throw new XpException("Ошибка корректности JSON в коде теста. Внесите исправления и повторите", error);
 			}
 			
-			test.setTestCode(compressedCode);
+			newTest.setTestCode(compressedCode);
 
 			// Нормализованные события.
 			const normEvents = plainTest?.normEvents;
 			if (normEvents) {
-				test.setNormalizedEvents(TestHelper.compressTestCode(normEvents));
+				newTest.setNormalizedEvents(TestHelper.compressTestCode(normEvents));
 			}
 
-			return test;
+			// Переносим статус из тестов до сохранения если такие же сырые события и код теста.
+			if(oldTests?.[index]) {
+				IntegrationTest.updateTestStatus(
+					oldTests[index],
+					newTest
+				);
+			}
+
+			return newTest;
 		});
 
 		return newTests;

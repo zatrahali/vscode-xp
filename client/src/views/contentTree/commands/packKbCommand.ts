@@ -13,7 +13,7 @@ import { ExceptionHelper } from '../../../helpers/exceptionHelper';
 import { ContentTreeBaseItem } from '../../../models/content/contentTreeBaseItem';
 import { ContentTreeProvider } from '../contentTreeProvider';
 import { UserSettingsManager } from '../../../models/content/userSettingsManager';
-import { ViewCommand } from './viewCommand';
+import { ViewCommand } from '../../../models/command/command';
 import { Log } from '../../../extension';
 import { JsHelper } from '../../../helpers/jsHelper';
 

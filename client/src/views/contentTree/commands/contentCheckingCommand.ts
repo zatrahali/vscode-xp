@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 
 import { DialogHelper } from '../../../helpers/dialogHelper';
 import { Correlation } from '../../../models/content/correlation';
@@ -14,8 +15,10 @@ import { Log } from '../../../extension';
 import { Normalization } from '../../../models/content/normalization';
 import { TestStatus } from '../../../models/tests/testStatus';
 import { BaseUnitTest } from '../../../models/tests/baseUnitTest';
-import { ViewCommand } from './viewCommand';
 import { OperationCanceledException } from '../../../models/operationCanceledException';
+import { StringHelper } from '../../../helpers/stringHelper';
+import { ParserHelper } from '../../../helpers/parserHelper';
+import { ViewCommand } from '../../../models/command/command';
 
 /**
  * Проверяет контент по требованиям. В настоящий момент реализована только проверка интеграционных тестов и локализаций.
@@ -64,7 +67,7 @@ export class ContentCheckingCommand extends ViewCommand {
 				}
 
 				if(rule instanceof Correlation) {
-					await this.testCorrelation(
+					await this.checkCorrelation(
 						rule,
 						testRunner,
 						{
@@ -75,7 +78,7 @@ export class ContentCheckingCommand extends ViewCommand {
 				}
 
 				if(rule instanceof Enrichment) {
-					await this.testEnrichment(
+					await this.checkEnrichment(
 						rule,
 						testRunner,
 						{
@@ -86,7 +89,7 @@ export class ContentCheckingCommand extends ViewCommand {
 				}
 
 				if(rule instanceof Normalization) {
-					await this.testNormalization(
+					await this.checkNormalization(
 						rule,
 						{
 							progress: progress,
@@ -198,7 +201,7 @@ export class ContentCheckingCommand extends ViewCommand {
 		return result;
 	}
 
-	private async testNormalization(
+	private async checkNormalization(
 		rule: RuleBaseItem,
 		options: {progress: any, cancellationToken: vscode.CancellationToken}
 	) {
@@ -243,7 +246,7 @@ export class ContentCheckingCommand extends ViewCommand {
 		}
 	}
 
-	private async testCorrelation(
+	private async checkCorrelation(
 		rule: RuleBaseItem,
 		runner: IntegrationTestRunner,
 		options: {progress: any, cancellationToken: vscode.CancellationToken}
@@ -251,6 +254,7 @@ export class ContentCheckingCommand extends ViewCommand {
 		const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.CorrelationChecking", rule.getName());
 		Log.info(statusMessage);
 		options.progress.report({ message: statusMessage});
+		this.checkDirectoryNameEqualRuleName(rule);
 
 		if(options.cancellationToken.isCancellationRequested) {
 			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
@@ -302,11 +306,13 @@ export class ContentCheckingCommand extends ViewCommand {
 		// rule.setLocalizationExamples(locExamples);
 	}
 
-	private async testEnrichment(
+	private async checkEnrichment(
 		rule: RuleBaseItem,
 		runner: IntegrationTestRunner,
 		options: {progress: any, cancellationToken: vscode.CancellationToken}
 	) {
+		this.checkDirectoryNameEqualRuleName(rule);
+
 		const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.EnrichmentChecking", rule.getName());
 		Log.info(statusMessage);
 		options.progress.report({ message: statusMessage});
@@ -342,6 +348,22 @@ export class ContentCheckingCommand extends ViewCommand {
 			totalItems.push(...childItems);
 		}
 		return totalItems;
+	}
+
+	private async checkDirectoryNameEqualRuleName(rule: RuleBaseItem) : Promise<void> {
+		const parentPath = rule.getDirectoryPath();
+		const directoryName = path.basename(parentPath);
+		const ruleNameFromCode = ParserHelper.parseRuleName(await rule.getRuleCode());
+
+		const result = StringHelper.crossPlatformPathCompare(
+			directoryName,
+			ruleNameFromCode,
+			this.config.getOsType()
+		);
+
+		if(!result) {
+			DialogHelper.showWarning(`В правиле ${ruleNameFromCode} имя директории ${directoryName} отличается от имени правила. Исправьте данную ошибку и повторите`);
+		}
 	}
 
 	private integrationTestTmpFilesPath: string;

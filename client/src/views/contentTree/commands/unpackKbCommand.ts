@@ -17,7 +17,7 @@ import { YamlHelper } from '../../../helpers/yamlHelper';
 import { Log } from '../../../extension';
 import { ContentFolder } from '../../../models/content/contentFolder';
 import { Localization } from '../../../models/content/localization';
-import { ViewCommand } from './viewCommand';
+import { ViewCommand } from '../../../models/command/command';
 
 export class UnpackKbCommand extends ViewCommand {
 	constructor(private config: Configuration, private selectedPackage : ContentTreeBaseItem) {

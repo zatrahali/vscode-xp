@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs';
 
-import { Command, CommandParams } from '../../models/command/command';
+import { Command, RuleCommandParams } from '../../models/command/command';
 import { DialogHelper } from '../../helpers/dialogHelper';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { RegExpHelper } from '../../helpers/regExpHelper';
@@ -13,7 +13,7 @@ import { Log } from '../../extension';
 import { FileSystemException } from '../../models/fileSystemException';
 import { VsCodeApiHelper } from '../../helpers/vsCodeApiHelper';
 
-export interface ShowTestResultsDiffParams extends CommandParams {
+export interface ShowTestResultsDiffParams extends RuleCommandParams {
 	testNumber: number;
 }
 

@@ -1,7 +1,15 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 
 export class ParserHelper {
+
+	public static parseRuleName(ruleCode: string) : string {
+		const result = /rule\s+\b([A-Za-z_0-9]+)\b\s*:/gi.exec(ruleCode);
+		if(result.length != 2) {
+			return null;
+		}
+		return result[1];
+	}
+
 	public static parseTokenWithInsidePosition(line: vscode.TextLine, position: vscode.Position) : string {
 		const firstNonWhitespaceCharacterIndex = line.firstNonWhitespaceCharacterIndex;
 		const mouseOffset = position.character - firstNonWhitespaceCharacterIndex;

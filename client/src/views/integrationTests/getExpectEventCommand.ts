@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs';
 
-import { Command, CommandParams } from '../../models/command/command';
+import { Command, RuleCommandParams } from '../../models/command/command';
 import { DialogHelper } from '../../helpers/dialogHelper';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { RegExpHelper } from '../../helpers/regExpHelper';
@@ -21,7 +21,7 @@ import { Test } from 'mocha';
 import { Correlation } from '../../models/content/correlation';
 import { Enrichment } from '../../models/content/enrichment';
 
-export interface GetExpectedEventParams extends CommandParams {
+export interface GetExpectedEventParams extends RuleCommandParams {
 	test: IntegrationTest;
 }
 

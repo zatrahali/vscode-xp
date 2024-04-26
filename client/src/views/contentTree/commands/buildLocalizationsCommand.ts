@@ -9,7 +9,7 @@ import { Configuration } from '../../../models/configuration';
 import { SiemjConfBuilder } from '../../../models/siemj/siemjConfigBuilder';
 import { XpException } from '../../../models/xpException';
 import { DialogHelper } from '../../../helpers/dialogHelper';
-import { ViewCommand } from './viewCommand';
+import { ViewCommand } from '../../../models/command/command';
 import { Log } from '../../../extension';
 
 /**
