@@ -216,8 +216,7 @@ export class RunIntegrationTestDialog {
 		const result = await DialogHelper.showInfo(
 			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingEnrichmentCompilation", ruleName),
 			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.CurrentPackage"),
-			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.DontCompile"),
-			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.AllPackages")
+			this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingCorrelationCompilation.DontCompile")
 		);
 
 		if(!result) {
