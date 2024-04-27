@@ -16,6 +16,7 @@ import { LocalizationExample } from '../content/localization';
 import { TestHelper } from '../../helpers/testHelper';
 import { RegExpHelper } from '../../helpers/regExpHelper';
 import { OperationCanceledException } from '../operationCanceledException';
+import { Correlation } from '../content/correlation';
 
 export class SiemjManager {
 
@@ -221,7 +222,7 @@ export class SiemjManager {
 	 * @param integrationTestsTmpDirPath директория с файлами интеграционного теста. 
 	 * @returns список примеров локализаций
 	 */
-	public async buildLocalizationExamples(rule: RuleBaseItem, integrationTestsTmpDirPath : string) : Promise<LocalizationExample[]> {
+	public async buildLocalizationExamplesFromIntegrationTestResult(rule: RuleBaseItem, integrationTestsTmpDirPath : string) : Promise<LocalizationExample[]> {
 		const contentFullPath = rule.getPackagePath(this.config);
 		if(!fs.existsSync(contentFullPath)) {
 			throw new FileSystemException(`Директория контента '${contentFullPath}' не существует`);
@@ -242,10 +243,7 @@ export class SiemjManager {
 			throw new XpException("Корреляционные события не найдены");
 		}
 
-		const contentRootPath = rule.getContentRootPath(this.config);
-		const contentRootFolder = path.basename(contentRootPath);
-
-		const correlateEvents = [];
+		const correlateEvents : string[]= [];
 		for(const correlatedEventFilePath of correlatedEventFilePaths) {
 			let correlateEventsFileContent = await FileSystemHelper.readContentFile(correlatedEventFilePath);
 			correlateEventsFileContent = correlateEventsFileContent.trimEnd();
@@ -254,15 +252,31 @@ export class SiemjManager {
 			}
 		}
 
-		// Собираем все коррелированные события вместе.
-		const correlateEventsContent = correlateEvents.join(os.EOL);
+		return this.buildLocalizationExamples(rule, correlateEvents, integrationTestsTmpDirPath);
+	}
+
+	public async buildLocalizationExamples(
+		rule: RuleBaseItem,
+		correlateEvents : string[],
+		tmpDirectoryPath : string
+	) : Promise<LocalizationExample[]> {
+		const contentFullPath = rule.getPackagePath(this.config);
+		if(!fs.existsSync(contentFullPath)) {
+			throw new FileSystemException(`Директория контента '${contentFullPath}' не существует`);
+		}
+
+		if(!fs.existsSync(tmpDirectoryPath)) {
+			throw new FileSystemException(`Файлы интеграционных тестов по пути '${tmpDirectoryPath}' не были получены`);
+		}
 		
-		// Записываем их в файл.
-		const allCorrelateEventsFilePath = path.join(integrationTestsTmpDirPath, this.ALL_CORR_EVENTS_FILENAME);
+		// Собираем все коррелированные события вместе и записываем их в файл.
+		const correlateEventsContent = correlateEvents.filter(j => j).join(os.EOL);
+		const allCorrelateEventsFilePath = path.join(tmpDirectoryPath, this.ALL_CORR_EVENTS_FILENAME);
 		await FileSystemHelper.writeContentFile(allCorrelateEventsFilePath, correlateEventsContent);
 
 		await SiemjConfigHelper.clearArtifacts(this.config);
 
+		const contentRootFolder = rule.getContentRootFolderName(this.config);
 		const outputFolder = this.config.getOutputDirectoryPath(contentRootFolder);
 		if(!fs.existsSync(outputFolder)) {
 			await fs.promises.mkdir(outputFolder, {recursive: true});
@@ -279,7 +293,7 @@ export class SiemjManager {
 			await fs.promises.unlink(enLocalizationFilePath);
 		}
 
-		const configBuilder = new SiemjConfBuilder(this.config, contentRootPath);
+		const configBuilder = new SiemjConfBuilder(this.config, rule.getContentRootPath(this.config));
 		configBuilder.addLocalizationsBuilding({
 				rulesSrcPath: rule.getDirectoryPath(),
 				force: true
@@ -291,11 +305,16 @@ export class SiemjManager {
 		const siemjOutput = await this.executeSiemjConfigForRule(rule, siemjConfContent);
 		this.processOutput(siemjOutput.output);
 
-		const locExamples = await this.readCurrentLocalizationExample(contentRootFolder, rule.getName());
+		// Могут сработать другие корреляции или сабрули, мы их фильтруем.
+		let locExamples = await this.readCurrentLocalizationExample(contentRootFolder);
+		if(rule instanceof Correlation) {
+			locExamples = locExamples.filter(le => le.correlationName == rule.getName());
+		}
+		
 		return locExamples;
 	}
 
-	private async readCurrentLocalizationExample(contentRootFolder : string, correlationName : string) : Promise<LocalizationExample[]> {
+	private async readCurrentLocalizationExample(contentRootFolder : string) : Promise<LocalizationExample[]> {
 
 		// Читаем события с русской локализацией.
 		const ruLocalizationFilePath = this.config.getRuRuleLocalizationFilePath(contentRootFolder);
@@ -318,8 +337,8 @@ export class SiemjManager {
 
 		const locExamples: LocalizationExample[] = [];
 		try {
-			const enEvents = enLocalizationEvents.split(os.EOL);
-			const ruEvents = ruLocalizationEvents.split(os.EOL);
+			const enEvents = enLocalizationEvents.split(os.EOL).filter(s =>s);
+			const ruEvents = ruLocalizationEvents.split(os.EOL).filter(s =>s);
 
 			for (let index = 0; index < ruEvents.length; index++) {
 				// Разделяем несколько корреляционных событий.
@@ -329,30 +348,27 @@ export class SiemjManager {
 				}
 
 				const currRuEventObject = JSON.parse(currRuEventString);
-
-				// Могут отработать другие корреляции
-				if(currRuEventObject?.correlation_name !== correlationName) {
+				if(!currRuEventObject?.text) {
 					continue;
 				}
 
-				if(currRuEventObject?.text) {
-					// Добавляем русскую локализацию.
-					const currLocExample = new LocalizationExample();
-					currLocExample.ruText = currRuEventObject?.text;
+				// Добавляем русскую локализацию.
+				const currLocExample = new LocalizationExample();
+				currLocExample.correlationName = currRuEventObject?.correlation_name;
+				currLocExample.ruText = currRuEventObject?.text;
 
-					// Добавляем соответствующую английскую.
-					const currEnEventString = enEvents?.[index];
-					if(!currEnEventString) {
-						continue;
-					}
-					const currEnEventObject = JSON.parse(currEnEventString);
-					currLocExample.enText = currEnEventObject?.text;
-					
-					// Проверяем наличие дубликатов.
-					const duplicate = locExamples.find(le => le.ruText === currLocExample.ruText && le.enText === currLocExample.enText);
-					if(!duplicate && currLocExample.ruText && currLocExample.enText) {
-						locExamples.push(currLocExample);
-					}
+				// Добавляем соответствующую английскую.
+				const currEnEventString = enEvents?.[index];
+				if(!currEnEventString) {
+					continue;
+				}
+				const currEnEventObject = JSON.parse(currEnEventString);
+				currLocExample.enText = currEnEventObject?.text;
+				
+				// Проверяем наличие дубликатов.
+				const duplicate = locExamples.find(le => le.ruText === currLocExample.ruText && le.enText === currLocExample.enText);
+				if(!duplicate && currLocExample.ruText && currLocExample.enText) {
+					locExamples.push(currLocExample);
 				}
 			}
 		}

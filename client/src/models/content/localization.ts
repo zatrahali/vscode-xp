@@ -15,8 +15,8 @@ export enum LocalizationLanguage{
 export class LocalizationExample {
 	public ruText : string;
 	public enText : string;
+	public correlationName: string;
 }
-
 
 export class Localization {
 

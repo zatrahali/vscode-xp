@@ -251,10 +251,12 @@ export class ContentCheckingCommand extends ViewCommand {
 		runner: IntegrationTestRunner,
 		options: {progress: any, cancellationToken: vscode.CancellationToken}
 	) {
-		const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.CorrelationChecking", rule.getName());
-		Log.info(statusMessage);
-		options.progress.report({ message: statusMessage});
-		this.checkDirectoryNameEqualRuleName(rule);
+		Log.progress(
+			options.progress,
+			this.config.getMessage("View.ObjectTree.Progress.ContentChecking.CorrelationChecking", rule.getName())
+		);
+
+		this.checkRuleDescription(rule);
 
 		if(options.cancellationToken.isCancellationRequested) {
 			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
@@ -311,7 +313,13 @@ export class ContentCheckingCommand extends ViewCommand {
 		runner: IntegrationTestRunner,
 		options: {progress: any, cancellationToken: vscode.CancellationToken}
 	) {
+		Log.progress(
+			options.progress,
+			this.config.getMessage("View.ObjectTree.Progress.ContentChecking.EnrichmentChecking", rule.getName())
+		);
+
 		this.checkDirectoryNameEqualRuleName(rule);
+		this.checkRuleDescription(rule);
 
 		const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.EnrichmentChecking", rule.getName());
 		Log.info(statusMessage);
@@ -334,7 +342,10 @@ export class ContentCheckingCommand extends ViewCommand {
 		}
 	}
 
-	private getChildrenRecursively(parentItem: ContentTreeBaseItem, cancellationToken: vscode.CancellationToken): ContentTreeBaseItem[] {
+	private getChildrenRecursively(
+		parentItem: ContentTreeBaseItem,
+		cancellationToken: vscode.CancellationToken
+	): ContentTreeBaseItem[] {
 		if(cancellationToken.isCancellationRequested) {
 			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 		}
@@ -363,6 +374,12 @@ export class ContentCheckingCommand extends ViewCommand {
 
 		if(!result) {
 			DialogHelper.showWarning(`В правиле ${ruleNameFromCode} имя директории ${directoryName} отличается от имени правила. Исправьте данную ошибку и повторите`);
+		}
+	}
+
+	private async checkRuleDescription(rule: RuleBaseItem) : Promise<void> {
+		if(!rule.getRuDescription() && !rule.getEnDescription()) {
+			DialogHelper.showWarning(`В правиле ${rule.getName()} отсутствует описание на обоих языках. Исправьте и повторите`);
 		}
 	}
 

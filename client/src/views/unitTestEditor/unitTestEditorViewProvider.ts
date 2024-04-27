@@ -25,7 +25,7 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
   public static readonly onTestSelectionChangeCommand =
     "ModularTestContentEditorView.onTestSelectionChange";
 
-  private _test: BaseUnitTest;
+  private test: BaseUnitTest;
 
   public constructor(
     private readonly _config: Configuration,
@@ -82,7 +82,7 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
 
   public async showEditor(unitTest: BaseUnitTest): Promise<void> {
     if (this.getView()) {
-      this._test = null;
+      this.test = null;
       this.getView().dispose();
     }
 
@@ -90,11 +90,11 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
       return;
     }
 
-    this._test = unitTest;
-    const rule = this._test.getRule();
+    this.test = unitTest;
+    const rule = this.test.getRule();
 
     // Создать и показать панель.
-    const viewTitle = `Тест №${this._test.getNumber()} правила '${rule.getName()}'`;
+    const viewTitle = `Тест №${this.test.getNumber()} правила '${rule.getName()}'`;
     const panel = vscode.window.createWebviewPanel(
       UnitTestContentEditorViewProvider.viewId,
       viewTitle,
@@ -117,7 +117,7 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
   }
 
   private async updateView(): Promise<void> {
-    const rule = this._test.getRule();
+    const rule = this.test.getRule();
 
     const resourcesUri = this._config.getExtensionUri();
     const extensionBaseUri = this.getView().webview.asWebviewUri(resourcesUri);
@@ -130,14 +130,14 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
 
     try {
       const formattedTestInput = TestHelper.formatTestCodeAndEvents(
-        this._test.getTestInputData()
+        this.test.getTestInputData()
       );
       const formattedTestExpectation = TestHelper.formatTestCodeAndEvents(
-        this._test.getTestExpectation()
+        this.test.getTestExpectation()
       );
 
       let testStatusStyle: string;
-      const testStatus = this._test.getStatus();
+      const testStatus = this.test.getStatus();
       vscode.commands.executeCommand(UnitTestsListViewProvider.refreshCommand);
       switch (testStatus) {
         case TestStatus.Unknown: {
@@ -155,10 +155,10 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
       }
 
       plain["UnitTest"] = {
-        TestNumber: this._test.getNumber(),
+        TestNumber: this.test.getNumber(),
         TestInput: formattedTestInput,
         TestExpectation: formattedTestExpectation,
-        TestOutput: this._test.getOutput(),
+        TestOutput: this.test.getOutput(),
         TestStatus: testStatusStyle,
       };
 
@@ -180,10 +180,10 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
       }
       case "saveTest": {
         await this.saveTest(message);
-        await this.updateInputDataInView(this._test.getTestInputData());
+        await this.updateInputDataInView(this.test.getTestInputData());
 
         const expectationData = TestHelper.formatTestCodeAndEvents(
-          this._test.getTestExpectation()
+          this.test.getTestExpectation()
         );
         await this.updateExpectationInView(expectationData);
 
@@ -207,7 +207,7 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
   }
 
   private async updateExpectationHandler(): Promise<void> {
-    const actualEvent = this._test.getActualData();
+    const actualEvent = this.test.getActualData();
     if (!actualEvent) {
       DialogHelper.showWarning(
         "Фактическое событие не получено. Запустите тест для получения фактического события, после чего можно заменить ожидаемое событие фактическим"
@@ -215,13 +215,13 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
       return;
     }
 
-    const rule = this._test.getRule();
+    const rule = this.test.getRule();
     let testResult: string;
 
     // В модульных тестах корреляций есть expect и возможны комментарии, поэтому надо заменить события, сохранив остальное.
     if (rule instanceof Correlation) {
       const newTestCode = `expect 1 ${actualEvent}`;
-      const currentTestCode = this._test.getTestExpectation();
+      const currentTestCode = this.test.getTestExpectation();
       testResult = currentTestCode.replace(
         RegExpHelper.getExpectSectionRegExp(),
         // Фикс того, что из newTestCode пропадают доллары
@@ -238,8 +238,8 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
     }
 
     // Обновляем ожидаемое событие на диске и во вьюшке.
-    this._test.setTestExpectation(testResult);
-    await this._test.save();
+    this.test.setTestExpectation(testResult);
+    await this.test.save();
 
     this.updateExpectationInView(testResult);
     DialogHelper.showInfo(
@@ -248,15 +248,15 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
   }
 
   private async documentIsReadyHandler(): Promise<boolean> {
-    const inputEvents = this._test.getTestInputData();
+    const inputEvents = this.test.getTestInputData();
 
     const expectationData = TestHelper.formatTestCodeAndEvents(
-      this._test.getTestExpectation()
+      this.test.getTestExpectation()
     );
 
     let inputType = undefined;
     let expectationLanguage = undefined;
-    const rule = this._test.getRule();
+    const rule = this.test.getRule();
     // Для корреляций на вход всегда json (нормализованное событие)
     // Код теста это xp-test-code (json, expect, default и т.д.)
     if (rule instanceof Correlation) {
@@ -288,7 +288,7 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
     });
 
     // Если в тесте сохранены фактические данные, например, после запуска тестов по списку.
-    const actualData = this._test.getActualData();
+    const actualData = this.test.getActualData();
     if(actualData) {
       return this.updateActualDataInView(actualData);
     }
@@ -299,28 +299,28 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
       const inputData = message?.inputData;
       if (!inputData) {
         throw new XpException(
-          `Не задано сырое событие для теста №${this._test.getNumber()}. Добавьте его и повторите`
+          `Не задано сырое событие для теста №${this.test.getNumber()}. Добавьте его и повторите`
         );
       }
-      this._test.setTestInputData(inputData);
+      this.test.setTestInputData(inputData);
 
       const expectation = message?.expectation;
       if (!expectation) {
         throw new XpException(
-          `Не задано ожидаемое нормализованное событие для теста №${this._test.getNumber()}. Добавьте его и повторите`
+          `Не задано ожидаемое нормализованное событие для теста №${this.test.getNumber()}. Добавьте его и повторите`
         );
       }
 
-      this._test.setTestExpectation(expectation);
-      await this._test.save();
+      this.test.setTestExpectation(expectation);
+      await this.test.save();
 
       DialogHelper.showInfo("Тест успешно сохранен");
     } catch (error) {
       ExceptionHelper.show(
         error,
         `Не удалось сохранить модульный тест №${
-          this._test.label
-        } правила ${this._test.getRule().getName()}`
+          this.test.label
+        } правила ${this.test.getRule().getName()}`
       );
     }
   }
@@ -342,13 +342,13 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
 
     // Обновляем тест и сохраняем
     const expectation = message.expectation;
-    this._test.setTestExpectation(expectation);
+    this.test.setTestExpectation(expectation);
 
     const inputData = message?.inputData;
-    this._test.setTestInputData(inputData);
-    await this._test.save();
+    this.test.setTestInputData(inputData);
+    await this.test.save();
 
-    const rule = this._test.getRule();
+    const rule = this.test.getRule();
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -357,16 +357,16 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
       async (progress) => {
         try {
           progress.report({
-            message: `Выполнение теста №${this._test.getNumber()}`,
+            message: `Выполнение теста №${this.test.getNumber()}`,
           });
           const runner = rule.getUnitTestRunner();
-          this._test = await runner.run(this._test);
+          this.test = await runner.run(this.test);
 
-          const actualData = this._test.getActualData();
+          const actualData = this.test.getActualData();
           this.updateActualDataInView(actualData);
 
         } catch (error) {
-          const outputData = this._test.getOutput();
+          const outputData = this.test.getOutput();
           this.updateActualDataInView(outputData);
           ExceptionHelper.show(
             error,

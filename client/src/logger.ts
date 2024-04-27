@@ -19,6 +19,17 @@ export abstract class ILogger {
 	public abstract warn(message: string, ex?: Error, ...params: any[]): void;
 
 	public abstract info(message: string, ...params: any[]): void;
+	public abstract progress(progress: vscode.Progress<{
+		/**
+		 * A progress message that represents a chunk of work
+		 */
+		message?: string;
+		/**
+		 * An increment for discrete progress. Increments will be summed up until 100% is reached
+		 */
+		increment?: number;
+	}>,
+	message: string): void;
 
 	public abstract setLogLevel(logLevel: LogLevel) : void;
 }
@@ -69,6 +80,23 @@ export class Logger extends ILogger {
 		if (this._level < logLevel) return;
 
 		this.writeLog(logLevel, message, ...params);
+	}
+
+	progress(progress: vscode.Progress<{
+		/**
+		 * A progress message that represents a chunk of work
+		 */
+		message?: string;
+		/**
+		 * An increment for discrete progress. Increments will be summed up until 100% is reached
+		 */
+		increment?: number;
+	}>,
+	message: string): void{
+		this.info(message);
+		if(progress) {
+			progress.report({message: message});
+		}
 	}
 
 	private writeLog(level: LogLevel, message: string, ...params: any[]) {

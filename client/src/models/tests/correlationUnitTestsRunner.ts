@@ -20,7 +20,11 @@ export class CorrelationUnitTestsRunner implements UnitTestRunner {
 	constructor(private _config: Configuration, private _outputParser : UnitTestOutputParser) {
 	}
 
-	public async run(test: BaseUnitTest): Promise<BaseUnitTest> {
+	public async run(
+		test: BaseUnitTest,
+		options?: {
+			useAppendix? : boolean
+		}): Promise<BaseUnitTest> {
 
 		const root = this._config.getRootByPath(test.getRule().getDirectoryPath());
 		const rootFolder = path.basename(root);
@@ -122,7 +126,7 @@ export class CorrelationUnitTestsRunner implements UnitTestRunner {
 			test.setActualEvent(clearedResult);
 
 			// Добавляем отформатированный результат в окно вывода.				
-			this._config.getOutputChannel().append("\n\nFormatted result:\n" + clearedResult);
+			Log.debug("\n\nFormatted result:\n" + clearedResult);
 
 			// Очищаем ранее выявленные ошибки, если такие были.
 			this._config.getDiagnosticCollection().set(ruleFileUri, []);

@@ -29,7 +29,7 @@ export class LocalizationEditorViewProvider {
 	public static readonly viewId = 'LocalizationView';
 	public static provider: LocalizationEditorViewProvider;
 
-	private _view?: vscode.WebviewPanel;
+	private view?: vscode.WebviewPanel;
 	private rule: RuleBaseItem;
 
 	constructor(
@@ -58,22 +58,23 @@ export class LocalizationEditorViewProvider {
 	public async showLocalizationEditor(rule: RuleBaseItem, keepTmpFiles = false) : Promise<void> {
 
 		// Если открыта еще одна локализация, то закрываем ее перед открытием новой.
-		if (this._view) {
-			this._view.dispose();
-			this._view = undefined;
+		if (this.view) {
+			this.view.dispose();
+			this.view = undefined;
 		}
 
 		this.rule = rule;
 
 		// Сохраняем директорию для временных файлов, которая будет единая для вьюшки.
 		if(!keepTmpFiles) {
-			this.integrationTestTmpFilesPath = this.config.getRandTmpSubDirectoryPath();
+			this.tmpFilesPath = this.config.getRandTmpSubDirectoryPath();
+			await fs.promises.mkdir(this.tmpFilesPath, {recursive: true});
 		}
 
 		try {
 			// Создать и показать панель.
 			const title = this.config.getMessage("View.Localization.Title", rule.getName());
-			this._view = vscode.window.createWebviewPanel(
+			this.view = vscode.window.createWebviewPanel(
 				LocalizationEditorViewProvider.viewId,
 				title,
 				vscode.ViewColumn.One,
@@ -82,16 +83,16 @@ export class LocalizationEditorViewProvider {
 					enableFindWidget: true
 				});
 
-			this._view.onDidDispose(async (e: void) => {
-				this._view = undefined;
+			this.view.onDidDispose(async (e: void) => {
+				this.view = undefined;
 			},
 			this);
 
-			this._view.webview.options = {
+			this.view.webview.options = {
 				enableScripts: true
 			};
 
-			this._view.webview.onDidReceiveMessage(
+			this.view.webview.onDidReceiveMessage(
 				this.receiveMessageFromWebView,
 				this
 			);
@@ -109,7 +110,7 @@ export class LocalizationEditorViewProvider {
 	 * @returns было ли обновлено правило
 	 */
 	public async updateRule(newRule: RuleBaseItem): Promise<boolean> {
-		if(this._view && this.rule && this.rule.getName() === newRule.getName()) {
+		if(this.view && this.rule && this.rule.getName() === newRule.getName()) {
 			// Сохраняем текущий статус правила
 			const prevIcon = this.rule.iconPath;
 			newRule.iconPath = prevIcon;
@@ -119,7 +120,7 @@ export class LocalizationEditorViewProvider {
 			newRule.setLocalizationExamples(localizationExamples);
 
 			this.rule = newRule;
-			if(this._view) {
+			if(this.view) {
 				this.updateView();
 			}
 			return true;
@@ -163,7 +164,7 @@ export class LocalizationEditorViewProvider {
 		});
 
 		const resourcesUri = this.config.getExtensionUri();
-		const extensionBaseUri = this._view.webview.asWebviewUri(resourcesUri);
+		const extensionBaseUri = this.view.webview.asWebviewUri(resourcesUri);
 
 		const locExamples = this.rule.getLocalizationExamples();
 		const templatePlainObject = {
@@ -192,7 +193,7 @@ export class LocalizationEditorViewProvider {
 		const formatter = new MustacheFormatter(template);
 		const htmlContent = formatter.format(templatePlainObject);
 
-		this._view.webview.html = htmlContent;
+		this.view.webview.html = htmlContent;
 	}
 
 	async receiveMessageFromWebView(message: any) : Promise<void> {
@@ -201,7 +202,7 @@ export class LocalizationEditorViewProvider {
 				const command = new CheckLocalizationCommand(this, {
 					config: this.config,
 					rule: this.rule,
-					tmpDirPath: this.integrationTestTmpFilesPath,
+					tmpDirPath: this.tmpFilesPath,
 					message: message
 				});
 				await CommandHelper.singleExecutionCommand(command);
@@ -268,5 +269,5 @@ export class LocalizationEditorViewProvider {
 		}
 	}
 
-	private integrationTestTmpFilesPath: string;
+	private tmpFilesPath: string;
 }

@@ -15,6 +15,7 @@ import { FileSystemHelper } from './fileSystemHelper';
 import { Correlation, CorrelationEvent } from '../models/content/correlation';
 import { ArgumentException } from '../models/argumentException';
 import { JsHelper } from './jsHelper';
+import { Normalization } from '../models/content/normalization';
 
 export type EventMimeType = "application/x-pt-eventlog" | "application/json" | "text/plain" | "text/csv" | "text/xml"
 
@@ -26,7 +27,7 @@ export class TestHelper {
 	 * @returns может быть проверена локализация у правила
 	 */
 	public static isTestedLocalizationsRule(rule: RuleBaseItem): boolean {
-		return rule instanceof Correlation;
+		return (rule instanceof Correlation) || (rule instanceof Normalization);
 	}
 
 	public static isNegativeTest(testCode: string) : boolean {

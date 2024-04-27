@@ -26,7 +26,7 @@ import { XpException } from '../models/xpException';
  * 
  */
 export class SDKUtilitiesWrappers {
-	constructor(private _config: Configuration) {}
+	constructor(private config: Configuration) {}
 	
 	/** Функция запуска утилиты создания графов формул нормализации
 	 * 
@@ -34,7 +34,16 @@ export class SDKUtilitiesWrappers {
 	 * @returns true - успех, продолжаем цепочку выполнения
 	 * 			false - ошибка, прерываем цепочку выполнения
 	 */
-	public async testNormalization(unitTest: NormalizationUnitTest): Promise<string> {
+	public async testNormalization(
+		unitTest: NormalizationUnitTest, 
+		options?: {
+			useAppendix? : boolean
+		}): Promise<string> {
+
+		// Значение по умолчанию.
+		if(!options?.useAppendix) {
+			options.useAppendix = false;
+		}
 		const rule = unitTest.getRule();
 		Log.info(`Запуск теста №${unitTest.getNumber()} формулы нормализации '${rule.getName()}'`);
 
@@ -50,34 +59,39 @@ export class SDKUtilitiesWrappers {
 		 */
 
 		// Формируем параметры запуска утилиты
-		const normalizeExePath = this._config.getNormalizer();
-		const sdkPath = this._config.getSiemSdkDirectoryPath();
-		const rootPath = rule.getContentRootPath(this._config);
+		const normalizeExePath = this.config.getNormalizer();
+		const sdkPath = this.config.getSiemSdkDirectoryPath();
+		const rootPath = rule.getContentRootPath(this.config);
 		const rootFolder = path.basename(rootPath);
-		const tempPath = this._config.getTmpDirectoryPath(rootFolder);				
-		const taxonomyPath = this._config.getTaxonomyFullPath();
+		const tempPath = this.config.getTmpDirectoryPath(rootFolder);				
+		const taxonomyPath = this.config.getTaxonomyFullPath();
+		const appendixPath = this.config.getAppendixFullPath();
 
 		const formulaPath = rule.getFilePath();
 
 		const rawEventPath = unitTest.getTestInputDataPath();
-		process.env.PTSIEM_SDK_ROOT = this._config.getSiemSdkDirectoryPath();
+		process.env.PTSIEM_SDK_ROOT = this.config.getSiemSdkDirectoryPath();
 
 		// Запускаем утилиту с параметрами
+		let normalizerParams = [
+			"--sdk", sdkPath,
+			"--temp", tempPath,
+			"-t", taxonomyPath,
+			"-s", formulaPath,
+			"-r", rawEventPath			
+		];
+
+		// Параметр опциональный. Отключили для совместимости с системными тестами
+		if(options.useAppendix) {
+			normalizerParams = normalizerParams.concat(["-x", appendixPath]);
+		}
+
+		normalizerParams.push("-e");
+
 		const executeResult = await ProcessHelper.execute(
 			normalizeExePath,
-			[
-				"--sdk", sdkPath,
-				"--temp", tempPath,
-				"-t", taxonomyPath,
-				"-s", formulaPath,
-				"-r", rawEventPath,
-				// Параметр опциональный. 
-				// Отключили для совместимости с системными тестами
-				// "-x", appendixPath,
-				"-e"
-			],
-			{	
-				outputChannel: this._config.getOutputChannel()
+			normalizerParams, {	
+				outputChannel: this.config.getOutputChannel()
 			}
 		);
 

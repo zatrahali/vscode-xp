@@ -156,7 +156,7 @@ export class UnitTestsListViewProvider implements vscode.TreeDataProvider<BaseUn
 		return testsListViewProvider;
 	}
 
-	private constructor(private _config : Configuration) {
+	private constructor(private config : Configuration) {
 	}
 
 	public async runTests(rule: RuleBaseItem | Table | Macros) : Promise<void> {
@@ -175,7 +175,8 @@ export class UnitTestsListViewProvider implements vscode.TreeDataProvider<BaseUn
 			location: vscode.ProgressLocation.Notification,
 			cancellable: false,
 		}, async (progress) => {
-			progress.report( {message : `Выполняются модульные тесты правила ${rule.getName()}`});
+			Log.progress(progress, `Выполняются модульные тесты правила ${rule.getName()}`);
+			
 			for (const test of tests) {
 				try {
 					await testHandler(test);
@@ -199,6 +200,7 @@ export class UnitTestsListViewProvider implements vscode.TreeDataProvider<BaseUn
 		return element;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	getChildren(element?: BaseUnitTest): Thenable<(BaseUnitTest)[]> {
 		const selectedRule = ContentTreeProvider.getSelectedItem();
 

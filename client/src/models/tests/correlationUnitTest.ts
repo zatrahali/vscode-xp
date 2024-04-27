@@ -20,7 +20,7 @@ export class CorrelationUnitTest extends BaseUnitTest {
 		return `# Здесь укажи какие нормализованные события (одно или несколько) ты подаешь на вход правилу корреляции.\n# События отделяются друг от друга символом новой строки. Каждое их них должно быть записано в строку.\n`;
 	}
 
-	public static containsInputData(fileContent) : boolean {
+	public static containsInputData(fileContent: string) : boolean {
 		const inputData = /(?:^\{.*?\}$)/gms.exec(fileContent);
 		if (!inputData || inputData.length === 0) {
 			return false;
@@ -28,7 +28,7 @@ export class CorrelationUnitTest extends BaseUnitTest {
 		return true;
 	}
 
-	public static containsExpectation(fileContent) : boolean {
+	public static containsExpectation(fileContent: string) : boolean {
 		const expectation = /(?:^expect\s+(?:\d+|not)\s+\{.*?\}$)/gms.exec(fileContent);
 		if (!expectation || expectation.length === 0){
 			return false;
@@ -156,10 +156,10 @@ export class CorrelationUnitTest extends BaseUnitTest {
 		// Модульные тесты корреляций содержат условия и начальные данные в одном файле
 		const minifiedTestInput = TestHelper.compressTestCode(this.getTestInputData());
 		this.setTestInputData(minifiedTestInput);
-		const mitifiedTestExpectation = TestHelper.compressTestCode(this.getTestExpectation());
-		this.setTestExpectation(mitifiedTestExpectation);
+		const minifiedTestExpectation = TestHelper.compressTestCode(this.getTestExpectation());
+		this.setTestExpectation(minifiedTestExpectation);
 
-		const fileContent = minifiedTestInput + '\n\n' + mitifiedTestExpectation;
+		const fileContent = minifiedTestInput + '\n\n' + minifiedTestExpectation;
 		const filePath = this.getTestExpectationPath();
 		
 		return fs.writeFileSync(filePath, fileContent, FileSystemHelper._fileEncoding);

@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.15.8 (Pre-Release)
+
+- PoC фичи [#144](https://github.com/Security-Experts-Community/vscode-xp/issues/144) - индивидуальная проверка локализаций для правил нормализации в редакторе локализации.
+
 ## 3.15.7 (Pre-Release)
 
 - из сравнения ожидаемого и фактического событий полностью исключены поля \_rule, \_objects;

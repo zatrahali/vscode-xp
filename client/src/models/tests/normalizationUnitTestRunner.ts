@@ -13,28 +13,31 @@ import { JsHelper } from '../../helpers/jsHelper';
 
 export class NormalizationUnitTestsRunner implements UnitTestRunner {
 
-	constructor(private _config: Configuration, private _outputParser : UnitTestOutputParser) {
+	constructor(
+		private config: Configuration,
+		private outputParser : UnitTestOutputParser) {
 	}
 
-	public async run(unitTest: BaseUnitTest): Promise<BaseUnitTest> {
-
-		const rule = unitTest.getRule();
-
+	public async run(
+		unitTest: BaseUnitTest,
+		options?: {
+			useAppendix? : boolean
+		}): Promise<BaseUnitTest> {
 		// Парсим ошибки из вывода.
-		const wrapper = new SDKUtilitiesWrappers(this._config);
-		const utilityOutput = await wrapper.testNormalization(unitTest);
+		const SDKTools = new SDKUtilitiesWrappers(this.config);
+		const utilityOutput = await SDKTools.testNormalization(unitTest, options);
 		if(!utilityOutput) {
 			throw new XpException("Нормализатор не вернул никакого события. Исправьте правило нормализации и повторите");
 		}
 		
 		unitTest.setOutput(utilityOutput);
-		const diagnostics = this._outputParser.parse(utilityOutput);
+		const diagnostics = this.outputParser.parse(utilityOutput);
 
 		// Выводим ошибки в нативной для VsCode форме.
+		const rule = unitTest.getRule();
 		const ruleFileUri = vscode.Uri.file(rule.getFilePath());
-		this._config.getDiagnosticCollection().set(ruleFileUri, diagnostics);			
+		this.config.getDiagnosticCollection().set(ruleFileUri, diagnostics);			
 		
-		unitTest.setStatus(TestStatus.Failed);
 		if (diagnostics && diagnostics.length > 0) {
 			return unitTest;
 		}
@@ -84,6 +87,8 @@ export class NormalizationUnitTestsRunner implements UnitTestRunner {
 		if(equalFieldCounter === Object.keys(expectationObject).length) {
 			unitTest.setStatus(TestStatus.Success);
 			return unitTest;
+		} else {
+			unitTest.setStatus(TestStatus.Failed);
 		}
 		
 		const difference = diffJson(expectationObject, clearActualEventObject);

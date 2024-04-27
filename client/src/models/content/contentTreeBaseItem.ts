@@ -41,6 +41,12 @@ export abstract class ContentTreeBaseItem extends vscode.TreeItem {
 		return this.command;
 	}
 
+	public getContentRootFolderName(config: Configuration): string{
+		const contentRootPath = this.getContentRootPath(config);
+		const contentRootFolder = path.basename(contentRootPath);
+		return contentRootFolder;
+	}
+
 	public getContentRootPath(config: Configuration): string{
 		if(!this._parentPath) {
 			throw new ArgumentException(`Не задан путь к директории правила '${this.getName()}'.`);
