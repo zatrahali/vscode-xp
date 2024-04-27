@@ -2,7 +2,7 @@
 
 ## 3.15.8 (Pre-Release)
 
-- PoC фичи [#144](https://github.com/Security-Experts-Community/vscode-xp/issues/144) - индивидуальная проверка локализаций для правил нормализации в редакторе локализации.
+- PoC фичи [#144](https://github.com/Security-Experts-Community/vscode-xp/issues/144) - индивидуальная проверка локализации для правил нормализации в редакторе локализации.
 
 ## 3.15.7 (Pre-Release)
 
