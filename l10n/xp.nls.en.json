@@ -6,6 +6,7 @@
     "Create": "Create",
 
     "OperationWasAbortedByUser": "The operation was aborted by the user",
+    "WaitForCommandToFinishExecuting": "Wait for the end of the running processes and repeat. If the error remains, then restart VSCode",
 
     "NameOfNewRule": "Name of the new rule",
 

@@ -70,7 +70,7 @@ export class CheckLocalizationCommand extends ViewCommand {
 				DialogHelper.showError("Обнаружена локализация по умолчанию. Исправьте/добавьте нужные критерии локализаций и повторите");
 				this.params.rule.setStatus(ContentItemStatus.Unverified, "Локализация не прошла проверку, обнаружен пример локализации по умолчанию");
 			} else {
-				this.params.rule.setStatus(ContentItemStatus.Verified, "Интеграционные тесты и локализации прошли проверку");
+				this.params.rule.setStatus(ContentItemStatus.Verified, "Тесты и локализации прошли проверку");
 			}
 
 			await ContentTreeProvider.refresh(this.params.rule);

@@ -9,7 +9,7 @@ import { Configuration } from '../configuration';
 import { TestStatus } from './testStatus';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { BaseUnitTest } from './baseUnitTest';
-import { UnitTestRunner } from './unitTestsRunner';
+import { UnitTestOptions, UnitTestRunner } from './unitTestsRunner';
 import { UnitTestOutputParser } from './unitTestOutputParser';
 import { SiemjManager } from '../siemj/siemjManager';
 import { Log } from '../../extension';
@@ -17,40 +17,39 @@ import { XpException } from '../xpException';
 
 export class CorrelationUnitTestsRunner implements UnitTestRunner {
 
-	constructor(private _config: Configuration, private _outputParser : UnitTestOutputParser) {
+	constructor(private config: Configuration, private _outputParser : UnitTestOutputParser) {
 	}
 
 	public async run(
 		test: BaseUnitTest,
-		options?: {
-			useAppendix? : boolean
-		}): Promise<BaseUnitTest> {
+		options?: UnitTestOptions
+	): Promise<BaseUnitTest> {
 
-		const root = this._config.getRootByPath(test.getRule().getDirectoryPath());
+		const root = this.config.getRootByPath(test.getRule().getDirectoryPath());
 		const rootFolder = path.basename(root);
-		const outputFolder = this._config.getOutputDirectoryPath(rootFolder);
+		const outputFolder = this.config.getOutputDirectoryPath(rootFolder);
 		if(!fs.existsSync(outputFolder)) {
 			fs.mkdirSync(outputFolder, {recursive: true});
 		}
 		
-		const tmpDirPath = this._config.getTmpDirectoryPath(rootFolder);
+		const tmpDirPath = this.config.getTmpDirectoryPath(rootFolder);
 		if(!fs.existsSync(tmpDirPath)) {
 			fs.mkdirSync(tmpDirPath, {recursive: true});
 		}
 
-		if(!this._config.isKbOpened()) {
+		if(!this.config.isKbOpened()) {
 			DialogHelper.showError("Не выбрана база знаний");
 			return;
 		}
 
 		const rule = test.getRule();
-		const schemaFullPath = this._config.getSchemaFullPath(rootFolder);
+		const schemaFullPath = this.config.getSchemaFullPath(rootFolder);
 		
 		// Схема БД необходима для запуска юнит-тестов.
 		if(!fs.existsSync(schemaFullPath)) {
 			Log.info("Сборка схемы базы данных табличных списков, которая необходима для запуска тестов");
 			
-			const siemjManager = new SiemjManager(this._config);
+			const siemjManager = new SiemjManager(this.config);
 			await siemjManager.buildSchema(rule);
 		}
 
@@ -68,13 +67,13 @@ export class CorrelationUnitTestsRunner implements UnitTestRunner {
 		const ruleFilePath = test.getRuleFullPath();
 
 		// const ecaTestParam = `C:\\Tools\\0.22.774\\any\\any\\win\\ecatest.exe`;
-		const ecaTestParam = this._config.getEcatestFullPath();
-		const sdkDirPath = this._config.getSiemSdkDirectoryPath();
-		const taxonomyFilePath= this._config.getTaxonomyFullPath();
+		const ecaTestParam = this.config.getEcatestFullPath();
+		const sdkDirPath = this.config.getSiemSdkDirectoryPath();
+		const taxonomyFilePath= this.config.getTaxonomyFullPath();
 		const testFilepath = test.getTestExpectationPath();
-		const fptDefaults = this._config.getCorrelationDefaultsFilePath(rootFolder);
-		const schemaFilePath = this._config.getSchemaFullPath(rootFolder);
-		const ruleFiltersDirPath = this._config.getRulesDirFilters();
+		const fptDefaults = this.config.getCorrelationDefaultsFilePath(rootFolder);
+		const schemaFilePath = this.config.getSchemaFullPath(rootFolder);
+		const ruleFiltersDirPath = this.config.getRulesDirFilters();
 
 		const output = await ProcessHelper.execute(ecaTestParam,
 			[
@@ -89,7 +88,7 @@ export class CorrelationUnitTestsRunner implements UnitTestRunner {
 			],
 			{
 				encoding : "utf-8",
-				outputChannel : this._config.getOutputChannel()
+				outputChannel : this.config.getOutputChannel()
 			}
 		);
 
@@ -129,7 +128,7 @@ export class CorrelationUnitTestsRunner implements UnitTestRunner {
 			Log.debug("\n\nFormatted result:\n" + clearedResult);
 
 			// Очищаем ранее выявленные ошибки, если такие были.
-			this._config.getDiagnosticCollection().set(ruleFileUri, []);
+			this.config.getDiagnosticCollection().set(ruleFileUri, []);
 			return test;
 		}
 
@@ -149,7 +148,7 @@ export class CorrelationUnitTestsRunner implements UnitTestRunner {
 		diagnostics = TestHelper.correctWhitespaceCharacterFromErrorLines(ruleContent, diagnostics);
 
 		// Выводим ошибки в нативной для VsCode форме.
-		this._config.getDiagnosticCollection().set(ruleFileUri, diagnostics);
+		this.config.getDiagnosticCollection().set(ruleFileUri, diagnostics);
 		
 		return test;
 	}

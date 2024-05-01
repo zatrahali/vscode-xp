@@ -269,7 +269,9 @@ export class IntegrationTestEditorViewProvider {
 	private async receiveMessageFromWebView(message: any) {
 
 		if (ExtensionState.get().isExecutedState()) {
-			DialogHelper.showError("Дождитесь окончания выполняющихся процессов и повторите. Если ошибка остается, то перезапустите VSCode");
+			DialogHelper.showWarning(
+				Configuration.get().getMessage("WaitForCommandToFinishExecuting")
+			);
 			return true;
 		}
 

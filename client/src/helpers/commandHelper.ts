@@ -1,5 +1,6 @@
 import { ExtensionState } from '../models/applicationState';
 import { ViewCommand } from '../models/command/command';
+import { Configuration } from '../models/configuration';
 import { DialogHelper } from './dialogHelper';
 import { ExceptionHelper } from './exceptionHelper';
 
@@ -12,7 +13,9 @@ export class CommandHelper {
 	 */
 	public static async singleExecutionCommand(command: ViewCommand, defaultError?: string): Promise<void> {
 		if (ExtensionState.get().isExecutedState()) {
-			DialogHelper.showWarning("Дождитесь окончания выполняющихся процессов и повторите. Если ошибка остается, то перезапустите VSCode");
+			DialogHelper.showWarning(
+				Configuration.get().getMessage("WaitForCommandToFinishExecuting")
+			);
 			return;
 		}
 

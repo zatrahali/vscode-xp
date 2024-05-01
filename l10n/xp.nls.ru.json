@@ -6,6 +6,7 @@
     "Create": "Создать",
 
     "OperationWasAbortedByUser": "Операция была прервана пользователем",
+    "WaitForCommandToFinishExecuting": "Дождитесь окончания выполняющихся процессов и повторите. Если ошибка остается, то перезапустите VSCode",
 
     "NameOfNewRule": "Название нового правила",
 

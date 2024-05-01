@@ -53,8 +53,7 @@ export class ContentCheckingCommand extends ViewCommand {
 				return;
 			}
 
-			const testRunner = await this.buildAllArtifacts(rules,
-				{
+			const testRunner = await this.buildAllArtifacts(rules, {
 					progress: progress,
 					cancellationToken: token
 				}

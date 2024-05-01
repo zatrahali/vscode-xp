@@ -36,14 +36,8 @@ export class SDKUtilitiesWrappers {
 	 */
 	public async testNormalization(
 		unitTest: NormalizationUnitTest, 
-		options?: {
-			useAppendix? : boolean
-		}): Promise<string> {
+		{useAppendix = false}: {useAppendix: boolean }): Promise<string> {
 
-		// Значение по умолчанию.
-		if(!options?.useAppendix) {
-			options.useAppendix = false;
-		}
 		const rule = unitTest.getRule();
 		Log.info(`Запуск теста №${unitTest.getNumber()} формулы нормализации '${rule.getName()}'`);
 
@@ -82,7 +76,7 @@ export class SDKUtilitiesWrappers {
 		];
 
 		// Параметр опциональный. Отключили для совместимости с системными тестами
-		if(options.useAppendix) {
+		if(useAppendix) {
 			normalizerParams = normalizerParams.concat(["-x", appendixPath]);
 		}
 

@@ -5,7 +5,7 @@ import { TestStatus } from './testStatus';
 import { BaseUnitTest } from './baseUnitTest';
 import { SDKUtilitiesWrappers } from '../../tools/sdkUtilitiesWrappers';
 import { diffJson } from 'diff';
-import { UnitTestRunner } from './unitTestsRunner';
+import { UnitTestOptions, UnitTestRunner } from './unitTestsRunner';
 import { UnitTestOutputParser } from './unitTestOutputParser';
 import { XpException } from '../xpException';
 import { RegExpHelper } from '../../helpers/regExpHelper';
@@ -20,12 +20,11 @@ export class NormalizationUnitTestsRunner implements UnitTestRunner {
 
 	public async run(
 		unitTest: BaseUnitTest,
-		options?: {
-			useAppendix? : boolean
-		}): Promise<BaseUnitTest> {
+		options?: UnitTestOptions
+	): Promise<BaseUnitTest> {
 		// Парсим ошибки из вывода.
 		const SDKTools = new SDKUtilitiesWrappers(this.config);
-		const utilityOutput = await SDKTools.testNormalization(unitTest, options);
+		const utilityOutput = await SDKTools.testNormalization(unitTest, {useAppendix:options?.useAppendix});
 		if(!utilityOutput) {
 			throw new XpException("Нормализатор не вернул никакого события. Исправьте правило нормализации и повторите");
 		}
