@@ -61,16 +61,17 @@ export class CheckLocalizationCommand extends ViewCommand {
 
 			if (locExamples.length === 0) {
 				DialogHelper.showInfo(
-					"По имеющимся событиям не отработала ни одна локализация. Проверьте, что интеграционные тесты проходят, корректны критерии локализации. После исправлений повторите.");
-				return;
-			}
-
-			const isDefaultLocalization = locExamples.some(le => TestHelper.isDefaultLocalization(le.ruText));
-			if(isDefaultLocalization) {
-				DialogHelper.showError("Обнаружена локализация по умолчанию. Исправьте/добавьте нужные критерии локализаций и повторите");
-				this.params.rule.setStatus(ContentItemStatus.Unverified, "Локализация не прошла проверку, обнаружен пример локализации по умолчанию");
+					"По имеющимся событиям не отработала ни одна локализация. Проверьте, что тесты проходят, корректны критерии локализации. После исправлений повторите");
+			
+				this.params.rule.setStatus(ContentItemStatus.Unverified, "Локализация не прошла проверку, не была сгенерирована ни одна локализация");
 			} else {
-				this.params.rule.setStatus(ContentItemStatus.Verified, "Тесты и локализации прошли проверку");
+				const isDefaultLocalization = locExamples.some(le => TestHelper.isDefaultLocalization(le.ruText));
+				if(isDefaultLocalization) {
+					DialogHelper.showError("Обнаружена локализация по умолчанию. Исправьте/добавьте нужные критерии локализаций и повторите");
+					this.params.rule.setStatus(ContentItemStatus.Unverified, "Локализация не прошла проверку, обнаружен пример локализации по умолчанию");
+				} else {
+					this.params.rule.setStatus(ContentItemStatus.Verified, "Тесты и локализации прошли проверку");
+				}
 			}
 
 			await ContentTreeProvider.refresh(this.params.rule);
