@@ -12,10 +12,16 @@ export class FileSystemException extends XpException {
 
 	private _path: string;
 
-	public static kbtToolNotFoundException(path: string) : FileSystemException {
+	public static kbtDirectoryToolNotFoundException(filePath: string) : FileSystemException {
 		return new FileSystemException(
-			`По пути [${path}](file:///${path}) не найдена необходимая утилита из Knowledge Base Toolkit (KBT). Проверьте корректность [пути к KBT](command:workbench.action.openSettings?["xpConfig.kbtBaseDirectory"]) или загрузите актуальную версию [отсюда](https://github.com/vxcontrol/xp-kbt/releases), распакуйте и задайте путь к директории [в настройках](command:workbench.action.openSettings?["xpConfig.kbtBaseDirectory"])`,
-			path
+			`По пути [${filePath}](file:///${filePath}) не найдена директория для Knowledge Base Toolkit (KBT). Проверьте корректность [пути к KBT](command:workbench.action.openSettings?["xpConfig.kbtBaseDirectory"]) или загрузите актуальную версию [отсюда](https://github.com/vxcontrol/xp-kbt/releases), распакуйте и задайте путь к директории [в настройках](command:workbench.action.openSettings?["xpConfig.kbtBaseDirectory"])`,
 		);
 	}
+
+	public static kbtToolNotFoundException(filePath: string, name: string) : FileSystemException {
+		return new FileSystemException(
+			`По пути [${filePath}](file:///${filePath}) не найдена утилита ${name} из Knowledge Base Toolkit (KBT). Проверьте корректность [пути к KBT](command:workbench.action.openSettings?["xpConfig.kbtBaseDirectory"]) или загрузите актуальную версию [отсюда](https://github.com/vxcontrol/xp-kbt/releases), распакуйте и задайте путь к директории [в настройках](command:workbench.action.openSettings?["xpConfig.kbtBaseDirectory"])`,
+		);
+	}
+	
 }

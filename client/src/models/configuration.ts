@@ -722,14 +722,12 @@ export class Configuration {
 	}
 
 	private checkKbtToolPath(name : string, fullPath : string) : void {
-		if (!fullPath || fullPath === "") {
-			throw new FileSystemException(
-				`Путь к '${name}' не найден. Проверьте [настройки]${this.KBT_BASE_DIR_SHOW_SETTING_COMMAND}`,
-				fullPath);
+		if (!fs.existsSync(fullPath)) {
+			throw FileSystemException.kbtDirectoryToolNotFoundException(fullPath);
 		}
 
-		if (!fs.existsSync(fullPath)) {
-			throw FileSystemException.kbtToolNotFoundException(fullPath);
+		if (!fullPath || fullPath === "") {
+			throw FileSystemException.kbtToolNotFoundException(fullPath, name);
 		}
 	}
 

@@ -451,9 +451,9 @@ export class MetaInfo {
 			}
 			metaInfoObject["ContentRelations"]["Implements"]["ATTACK"] = attackPlain;
 		}
-		else {
-			delete metaInfoObject["ContentRelations"];
-		}
+		// else {
+		// 	delete metaInfoObject["ContentRelations"];
+		// }
 
 		if (this.DataSources.length != 0) {
 			metaInfoObject["ExpertContext"]["DataSources"] = this.DataSources;
