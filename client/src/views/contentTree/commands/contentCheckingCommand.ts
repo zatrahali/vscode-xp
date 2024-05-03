@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
 
 import { DialogHelper } from '../../../helpers/dialogHelper';
 import { Correlation } from '../../../models/content/correlation';
@@ -19,6 +20,9 @@ import { OperationCanceledException } from '../../../models/operationCanceledExc
 import { StringHelper } from '../../../helpers/stringHelper';
 import { ParserHelper } from '../../../helpers/parserHelper';
 import { ViewCommand } from '../../../models/command/command';
+import { XpException } from '../../../models/xpException';
+import { SiemjManager } from '../../../models/siemj/siemjManager';
+import { TestHelper } from '../../../helpers/testHelper';
 
 /**
  * Проверяет контент по требованиям. В настоящий момент реализована только проверка интеграционных тестов и локализаций.
@@ -275,16 +279,17 @@ export class ContentCheckingCommand extends ViewCommand {
 		// TODO: временно отключены тесты локализаций, так как siemkb_tests.exe падает со следующей ошибкой:
 		// TEST_RULES :: log4cplus:ERROR Unable to open file: C:\Users\user\AppData\Local\Temp\eXtraction and Processing\tmp\5239e794-c14a-7526-113c-52479c1694d6\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\2024-04-18_19-06-45_unknown_sdk_227gsqqu\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\tests\raw_events_4_norm_enr.log
 		// TEST_RULES :: Error: SDK: Cannot open fpta db C:\Users\user\AppData\Local\Temp\eXtraction and Processing\tmp\5239e794-c14a-7526-113c-52479c1694d6\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\2024-04-18_19-06-45_unknown_sdk_227gsqqu\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\tests\raw_events_4_fpta.db : it's not exists
-		// const testTmpDirectory = path.join(this.options.tmpFilesPath, rule.getName());
+		// const testTmpDirectory = path.join(this.integrationTestTmpFilesPath, rule.getName());
 
-		// options.progress.report({ message: `Проверка локализации правила ${rule.getName()}`});
+		// Log.progress(options.progress, `Проверка локализации правила ${rule.getName()}`);
 		// const ruleTmpFilesRuleName = path.join(this.integrationTestTmpFilesPath, rule.getName());
+		// // TODO: файл не удается найти, скорее всего отключил генерацию временных файлов через keepTemp
 		// if(!fs.existsSync(ruleTmpFilesRuleName)) {
 		// 	throw new XpException("Не найдены результаты выполнения интеграционных тестов");
 		// }
 
 		// const siemjManager = new SiemjManager(this.config, options.cancellationToken);
-		// const locExamples = await siemjManager.buildLocalizationExamples(rule, ruleTmpFilesRuleName);
+		// const locExamples = await siemjManager.buildLocalizationExamplesFromIntegrationTestResult(rule, ruleTmpFilesRuleName);
 
 		// if (locExamples.length === 0) {
 		// 	rule.setStatus(ContentItemStatus.Unverified, "Локализации не были получены");

@@ -164,27 +164,20 @@ export class CheckLocalizationCommand extends ViewCommand {
 			
 			const testActualResultStrings: string[] = [];
 			for (const test of tests) {
-				try {
-					if(token.isCancellationRequested) {
-						return [];
-					}
-					const testResult = await testHandler(test);
-					if(testResult.getStatus() !== TestStatus.Success) {
-						continue;
-					}
+				if(token.isCancellationRequested) {
+					throw new OperationCanceledException(this.params.config.getMessage("OperationWasAbortedByUser"));
+				}
+				const testResult = await testHandler(test);
+				if(testResult.getStatus() !== TestStatus.Success) {
+					throw new XpException(`Тест №${test.getNumber()} не прошёл. Для тестирования локализаций необходимо, чтобы все тесты проходили. Исправьте все тесты и повторите`);
+				}
 
-					const actualDataString = testResult.getActualData();
-					const actualDataObject = JSON.parse(actualDataString);
-					const actualDataOneLine = JSON.stringify(actualDataObject);
-					testActualResultStrings.push(actualDataOneLine);
-				}
-				catch(error) {
-					test.setStatus(TestStatus.Failed);
-					Log.error(error);
-				} 
-				finally {
-					vscode.commands.executeCommand(UnitTestsListViewProvider.refreshCommand);
-				}
+				const actualDataString = testResult.getActualData();
+				const actualDataObject = JSON.parse(actualDataString);
+				const actualDataOneLine = JSON.stringify(actualDataObject);
+				testActualResultStrings.push(actualDataOneLine);
+
+				vscode.commands.executeCommand(UnitTestsListViewProvider.refreshCommand);
 			}
 
 			Log.progress(progress, `Генерируются примеры локализаций правила ${this.params.rule.getName()}`);
