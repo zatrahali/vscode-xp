@@ -70,7 +70,7 @@
     "View.IntegrationTests.ClearExpectedEvent": "Очистить ожидаемое событие",
 
     "View.IntegrationTests.Progress.RunAllTests": "Выполняются интеграционные тесты для правила {0}",
-    "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Выполняются интеграционные тесты для правила {0} со вспомогательными правилами (correlation_type = 'subrule')",
+    "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Выполняются интеграционные тесты для правила {0} со вспомогательными правилами",
     "View.IntegrationTests.Progress.Normalization": "Нормализация необработанных событий для теста №{0}",
     "View.IntegrationTests.Progress.NormalizationAndEnrichment": "Нормализация и обогащение необработанных событий для теста №{0}",
 

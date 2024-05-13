@@ -68,7 +68,7 @@
     "View.IntegrationTests.ClearExpectedEvent": "Clear expected event", 
 
     "View.IntegrationTests.Progress.RunAllTests": "Integration tests for rule {0}",
-    "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Integration tests for rule {0} with subrules",
+    "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Integration tests are performed for rule {0} with auxiliary rules",
     "View.IntegrationTests.Progress.Normalization": "Normalization of raw events for test №{0}",
     "View.IntegrationTests.Progress.NormalizationAndEnrichment": "Normalization and enrichment of raw events for test №{0}",
 

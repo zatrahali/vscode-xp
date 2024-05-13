@@ -57,9 +57,9 @@ export class NormalizeRawEventsCommand extends Command {
 			// Выводим статус.
 			let statusMessage: string;
 			if (this.params.isEnrichmentRequired) {
-				statusMessage = this.params.config.getMessage("View.IntegrationTests.Progress.SuccessfulNormalizationAndEnrichment", this.params.test.getNumber());
+				statusMessage = this.params.config.getMessage("View.IntegrationTests.Message.SuccessfulNormalizationAndEnrichment", this.params.test.getNumber());
 			} else {
-				statusMessage = this.params.config.getMessage("View.IntegrationTests.Progress.SuccessfulNormalization", this.params.test.getNumber());
+				statusMessage = this.params.config.getMessage("View.IntegrationTests.Message.SuccessfulNormalization", this.params.test.getNumber());
 			}
 
 			progress.report({message: statusMessage});
