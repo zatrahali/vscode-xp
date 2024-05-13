@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { XpException } from '../models/xpException';
 import { Log } from '../extension';
 import { Configuration } from '../models/configuration';
+import { StringHelper } from './stringHelper';
 
 export class ExceptionHelper {
 	public static async show(error: Error, defaultMessage?: string) : Promise<void> {
@@ -28,26 +29,28 @@ export class ExceptionHelper {
 				break;
 			}
 			default: {
-				const uncaughtExceptionMessage = configuration.getMessage("UncaughtExceptionMessage");
+				// get the resulting message
+				let resultDefaultMessage: string;
 				if(defaultMessage) {
-					if(defaultMessage.endsWith(".")) {
-						vscode.window.showErrorMessage(`${defaultMessage} ${uncaughtExceptionMessage}`);
-					}
-					else {
-						vscode.window.showErrorMessage(`${defaultMessage}. ${uncaughtExceptionMessage}`);
-					}
-					
+					resultDefaultMessage = defaultMessage;
 				} else {
-					const unexpectedError = configuration.getMessage("UnexpectedError");
-					vscode.window.showErrorMessage(`${unexpectedError}. ${uncaughtExceptionMessage}`);
+					resultDefaultMessage = configuration.getMessage("UnexpectedError");
 				}
 
+				// prepare user message
+				const uncaughtExceptionMessage = configuration.getMessage("UncaughtExceptionMessage");
+				const userMessage = StringHelper.combiningMessages(resultDefaultMessage, uncaughtExceptionMessage);
+				vscode.window.showErrorMessage(userMessage);
+
 				// Пишем stack в output.
+				Log.error(resultDefaultMessage);
 				Log.error(error.message, error);
 				outputChannel.show();
 			}
 		}
 	}
+
+
 
 	private static recursiveWriteXpExceptionToOutput(error: XpException|Error, outputChannel: vscode.OutputChannel) {
 

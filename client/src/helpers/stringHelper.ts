@@ -16,6 +16,20 @@ export class StringHelper {
 		);
 	}
 
+	/**
+	 * Объединяет сообщения на уровне предложений, то есть добавляет если необходимо точку.
+	 * @param first 
+	 * @param second 
+	 * @returns 
+	 */
+	public static combiningMessages(first: string, second: string) : string {
+		if(first.endsWith(".")) {
+			return `${first} ${second}`;
+		} else {
+			return `${first}. ${second}`;
+		}
+	}
+
 	public static crossPlatformPathCompare(left: string, right: string, osType: OsType) : boolean {
 		switch (osType) {
 			case OsType.Windows: {

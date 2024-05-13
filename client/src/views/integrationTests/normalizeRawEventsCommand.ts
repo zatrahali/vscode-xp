@@ -25,6 +25,7 @@ export class NormalizeRawEventsCommand extends Command {
 		}, async (progress, cancellationToken: vscode.CancellationToken) => {
 
 			try {
+				
 				const siemjManager = new SiemjManager(this.params.config, cancellationToken);
 				let normEvents: string;
 				if (this.params.isEnrichmentRequired) {

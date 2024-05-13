@@ -6,13 +6,13 @@
     "Create": "Create",
 
     "OperationWasAbortedByUser": "The operation was aborted by the user",
-    "WaitForCommandToFinishExecuting": "Wait for the end of the running processes and repeat. If the error remains, then restart VSCode",
+    "WaitForCommandToFinishExecuting": "Wait for the operation to finish or abort it, and then try again. If that doesn't help, restart VSCode",
 
     "NameOfNewRule": "Name of the new rule",
 
     "CouldNotGenerateSiemjConf": "Could not generate siemj.conf",
-    "UnexpectedError": "An unexpected error was encountered",
-    "UncaughtExceptionMessage": "If this error [hasn't occurred before](https://github.com/Security-Experts-Community/vscode-xp/issues/), create a [bug](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) and attach [logs](command:xp.commonCommands.showOutputChannel). In addition, questions can be asked [in Telegram chat](https://t.me/s3curity_experts_community/75)",
+    "UnexpectedError": "Unexpected error",
+    "UncaughtExceptionMessage": "If she [hasn't met before](https://github.com/Security-Experts-Community/vscode-xp/issues/), get started [баг](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) and attach [logs](command:xp.commonCommands.showOutputChannel). In addition, you can ask questions [in Telegram chat](https://t.me/s3curity_experts_community/75).",
 
     "View.ObjectTree.Message.TheKnowledgeBaseIsNotInitialized": "The knowledge base is not initialized. Create required folders for {0} format?",
     "View.ObjectTree.Message.NeedToOpenKnowledgeBase": "To execute the command you need to [open the knowledge base](command:xp.contentTree.openKnowledgebaseCommand)",

@@ -47,8 +47,8 @@
 	"xp.views.modularTestsListView.remove": "Удалить",
 	"xp.views.modularTestsListView.refresh": "Обновить",
 
-	"xp.xpConfig.kbtBaseDirectoryDescription": "Путь к директории c [Knowledge Base Toolkit](https://github.com/vxcontrol/xp-kbt/releases)",
-	"xpConfig.outputDirectoryPathDescription": "Путь к выходной директории, в которую компилируются все артефакты контента: графы, табличные списки, базы данных табличных список и другие. Данная директория очищает при запуске расширения",
+	"xp.xpConfig.kbtBaseDirectoryDescription": "Путь к папке c [Knowledge Base Toolkit](https://github.com/vxcontrol/xp-kbt/releases)",
+	"xp.xpConfig.outputDirectoryPathDescription": "Путь к папке, в которой сохраняются временные объекты. Эта папка очищается автоматически при каждом запуске расширения",
 	"xp.xpConfig.correlatorTimeoutDescription": "Таймаут работы коррелятора в секундах",
 
 	"xp.xpConfig.originDescription": "Информация о поставщике. Используется при упаковке контента в KB-файл",

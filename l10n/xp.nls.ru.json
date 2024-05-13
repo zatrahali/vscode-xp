@@ -6,13 +6,13 @@
     "Create": "Создать",
 
     "OperationWasAbortedByUser": "Операция была прервана пользователем",
-    "WaitForCommandToFinishExecuting": "Дождитесь окончания выполняющихся процессов и повторите. Если ошибка остается, то перезапустите VSCode",
+    "WaitForCommandToFinishExecuting": "Подождите окончания операции или прервите ее, а затем повторите попытку. Если это не помогло, перезапустите VSCode",
 
     "NameOfNewRule": "Название нового правила",
 
     "CouldNotGenerateSiemjConf": "Не удалось создать файл siemj.conf",
-    "UnexpectedError": "Обнаружена неожиданная ошибка",
-    "UncaughtExceptionMessage": "Если эта ошибка [раньше не встречалась](https://github.com/Security-Experts-Community/vscode-xp/issues/), заведите [баг](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) и приложите [логи](command:xp.commonCommands.showOutputChannel). Кроме того, вопросы можно задать [в Telegram-чате](https://t.me/s3curity_experts_community/75)",
+    "UnexpectedError": "Непредвиденная ошибка",
+    "UncaughtExceptionMessage": "Если она [не встречалась раньше](https://github.com/Security-Experts-Community/vscode-xp/issues/), заведите [баг](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) и приложите [логи](command:xp.commonCommands.showOutputChannel). Кроме того, можно задать вопросы [в Telegram-чате](https://t.me/s3curity_experts_community/75)",
 
     "View.ObjectTree.Message.TheKnowledgeBaseIsNotInitialized": "База знаний не найдена. Создать стандартные папки для продукта {0}?",
     "View.ObjectTree.Message.NeedToOpenKnowledgeBase": "Для выполнения команды нужно [открыть базу знаний](command:xp.contentTree.openKnowledgebaseCommand)",
