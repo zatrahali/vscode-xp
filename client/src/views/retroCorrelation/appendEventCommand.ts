@@ -46,18 +46,23 @@ export class AppendEventsCommand extends WebViewCommand<AppendEventMessage> {
             canSelectFiles: true
 		});
 
-		if(!showOpenDialogUris || showOpenDialogUris.length != 1) {
-			return;
+		if(!showOpenDialogUris || showOpenDialogUris.length == 0) {
+            DialogHelper.showWarning(`Не была выбрана ни одна папка. Выберете одну или несколько и повторите`);
+            return;
 		}
 
-        // Либо один выбранный путь это путь к файлу, либо директории.        
-        const selectedPath = showOpenDialogUris[0].fsPath;
-        const lstat = await fs.promises.lstat(selectedPath);
-        const isFile = lstat.isFile();
+        // Либо один выбранный путь это путь к файлу, либо одна директория.
+        let isFile: boolean;
+        let selectedPath: string;
+        if(showOpenDialogUris.length === 1) {
+            selectedPath = showOpenDialogUris[0].fsPath;
+            const lstat = await fs.promises.lstat(selectedPath);
+            isFile = lstat.isFile();
+        }   
 
-		const openEventsDirectoryPath = showOpenDialogUris[0].fsPath;
-        if(!fs.existsSync(openEventsDirectoryPath)) {
-            DialogHelper.showWarning(`Не удалось открыть директорию ${openEventsDirectoryPath}`);
+		const openEventsDirectoryPaths = showOpenDialogUris.map(u => u.fsPath);
+        if(!openEventsDirectoryPaths.some(p => fs.existsSync(p))) {
+            DialogHelper.showWarning(`Не удалось открыть одну из выбранных папок. Выберете папки заново и повторите`);
             return;
         }
 
@@ -69,7 +74,7 @@ export class AppendEventsCommand extends WebViewCommand<AppendEventMessage> {
 
         const evtxToJsonToolFullPath = Configuration.get().getEvtxToJsonToolFullPath();
         if(!fs.existsSync(evtxToJsonToolFullPath)) {
-            DialogHelper.showError(`Утилита для конвертации evtx файлов в json не найдена по пути '${evtxToJsonToolFullPath}'`);
+            DialogHelper.showError(`Утилита для конвертации EVTX-файлов в json не найдена по пути '${evtxToJsonToolFullPath}'`);
             return;
         }
 
@@ -79,7 +84,7 @@ export class AppendEventsCommand extends WebViewCommand<AppendEventMessage> {
         let userDecision = "";
         if(jsonFiles.length !== 0) {
             userDecision = await DialogHelper.showInfo(
-                "Добавить новые evtx-файлы к старым или удалить все старые", 
+                "Добавить новые EVTX-файлы к старым или удалить все старые", 
                 AppendEventsCommand.ADD,
                 AppendEventsCommand.REMOVE);
         }
@@ -88,28 +93,33 @@ export class AppendEventsCommand extends WebViewCommand<AppendEventMessage> {
 			location: vscode.ProgressLocation.Notification,
 			cancellable: true,
 		}, async (progress, cancellationToken) => {
-
             if(userDecision === AppendEventsCommand.REMOVE) {
                 await FileSystemHelper.deleteAllSubDirectoriesAndFiles(tmpDirPath);
             }
 
-            progress.report({message: `Предварительная обработка evtx-файлов`});
+            progress.report({message: `Предварительная обработка EVTX-файлов`});
             const start = moment();
             let evtxFilePaths: string [] = [];
 
             // Либо один выбранный путь это путь к файлу, либо директории.
-            if(!isFile) {
-                evtxFilePaths = FileSystemHelper
-                .getRecursiveFilesSync(openEventsDirectoryPath)
-                .filter(fp => fp.toLocaleLowerCase().endsWith(".evtx"));
-                progress.report({message: `Предварительная обработка ${evtxFilePaths.length} evtx-файлов`});
-            } else {
+            if(isFile) {
                 evtxFilePaths = [selectedPath];
-                progress.report({message: `Предварительная обработка evtx-файла`});
+                progress.report({message: `Предварительная обработка EVTX-файла`});
+            } else {
+                // Рекурсивно получаем все файлы для всех входных директорий
+                for(const openEventsDirectoryPath of openEventsDirectoryPaths) {
+                    const evtxFilePathsFromCurrDir = FileSystemHelper
+                        .getRecursiveFilesSync(openEventsDirectoryPath)
+                        .filter(fp => fp.toLocaleLowerCase().endsWith(".evtx"));
+
+                    evtxFilePaths.push(...evtxFilePathsFromCurrDir);
+                }
+
+                progress.report({message: `Предварительная обработка ${evtxFilePaths.length} EVTX-файлов`});                
             }
     
             const cpuCores = os.cpus().length;
-            Log.info(`Запущен пул обработки событий из evtx-файлов на ${cpuCores} параллельных задач для ${evtxFilePaths.length} файлов`);
+            Log.info(`Запущен пул обработки событий из EVTX-файлов на ${cpuCores} параллельных задач для ${evtxFilePaths.length} файлов`);
             
             const { results, errors } = await PromisePool
                 .withConcurrency(cpuCores)

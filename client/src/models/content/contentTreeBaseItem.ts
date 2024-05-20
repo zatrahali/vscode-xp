@@ -56,7 +56,7 @@ export abstract class ContentTreeBaseItem extends vscode.TreeItem {
 		const rootPaths = config.getContentRoots().map(folder => {return path.basename(folder);});
 		for (const rootPath of rootPaths){
 			const  packagesDirectoryIndex = pathEntities.findIndex( pe => pe.toLocaleLowerCase() === rootPath);
-			if(packagesDirectoryIndex === -1){
+			if(packagesDirectoryIndex === -1) {
 				continue;
 			}
 
