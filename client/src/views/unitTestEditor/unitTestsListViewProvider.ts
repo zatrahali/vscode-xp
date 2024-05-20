@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 
+import { XpException } from '../../models/xpException';
 import { DialogHelper } from '../../helpers/dialogHelper';
 import { Configuration } from '../../models/configuration';
 import { RuleBaseItem } from '../../models/content/ruleBaseItem';
@@ -12,6 +13,7 @@ import { Macros } from '../../models/content/macros';
 import { Correlation } from '../../models/content/correlation';
 import { Normalization } from '../../models/content/normalization';
 import { Log } from '../../extension';
+import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 
 /**
  * Список тестов в отдельной вьюшке.
@@ -160,6 +162,17 @@ export class UnitTestsListViewProvider implements vscode.TreeDataProvider<BaseUn
 	}
 
 	public async runTests(rule: RuleBaseItem | Table | Macros) : Promise<void> {
+
+		// Нормализатор не переваривает кириллицу в пути
+		// 20 May 2024 - 16:36:53.900 | ERROR | normalize | normalizer-cli returned code 1:
+		// Terminated due to exception, what(): Can't cast from NIL to DICTIONARY
+		// 20 May 2024 - 16:36:53.900 | ERROR | repo_tools | Must exit due to some critical errors!
+		// 20 May 2024 - 16:36:53.900 | INFO | repo_tools | Removing temp directory C:\Users\User\AppData\Local\Temp\eXtractionAndProcessing\tmp\packages\240520163653_h_8qhmn5
+		const ruleDirPath = rule.getDirectoryPath();
+		if(!FileSystemHelper.isValidPath(ruleDirPath)) {
+			DialogHelper.showError(`Путь к правилу '${ruleDirPath}' содержит недопустимые символы. Для корректной работы необходимо использовать только латинские буквы, цифры и другие корректные для путей символы`);
+			return;
+		}
 
 		const tests = await this.getChildren();
 

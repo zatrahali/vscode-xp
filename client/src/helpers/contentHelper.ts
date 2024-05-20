@@ -90,6 +90,7 @@ export class ContentHelper {
             return "Используйте только английские буквы, цифры и символ подчеркивания";
         }
     }
+
     private static getStringColumns(parsedFields: any){
         return parsedFields.reduce((acc, currentColumn) => {
             const name = Object.getOwnPropertyNames(currentColumn)[0];
@@ -100,7 +101,7 @@ export class ContentHelper {
         }, []);
     }
 
-    static fixTableYaml(parsedYaml: any) {
+    static fixTableYaml(parsedYaml: any): string {
         const stringColumns = this.getStringColumns(parsedYaml['fields']);
 
         const defaults = parsedYaml['defaults'];

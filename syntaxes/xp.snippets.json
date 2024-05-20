@@ -1094,6 +1094,14 @@
 			"\\$category.low = \"$2\""
 		]
 	},
+	"Поля категорий инцидентов": {
+		"prefix": [
+			"$incident.category"
+		],
+		"body": [
+			"\\$incident.category = \"${1|BackupMalfunction,BotNetCC,BotNetNode,BruteForce,CriticalVulnerabilityDetection,DOSAttack,DataLeakage,DoSDDoS,ForbiddenServiceUsage,HackToolsDetection,HostOrSoftCompromising,MaliciousResources,NetworkScan,PatchPolicyViolation,PermissionViolation,Phishing,ProtectionBypassing,ProtectionMalfunction,SecurityBackdoorDetection,SecurityPerimeterBreach,ServiceMalfunction,SoftwareInstallationPolicyViolation,SoftwareMalfunction,SoftwareSuspiciousActivity,Spam,TrojanHorseDetection,UnauthorizedAccess,UnauthorizedDataChange,UnauthorizedDataDeletion,Undefined,UserCompromising,VirusDetection,VulnerabilityExploitation,WormDetection|}\""
+		]
+	},
 	"Тактика": {
 		"prefix": [
 			"$category.high"

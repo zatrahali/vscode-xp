@@ -18,6 +18,35 @@ export class LocalizationsBuildingOptions {
 export class SiemjConfBuilder {
 
 	constructor(private config : Configuration, private _contentRootPath: string) {
+		// BUILD_TABLES_DATABASE [Err] :: [412] Failed to execute script 'fpta_filler' due to unhandled exception!
+		// BUILD_TABLES_DATABASE [Err] :: Traceback (most recent call last):
+		// BUILD_TABLES_DATABASE [Err] ::   File "fpta_filler.py", line 1089, in <module>
+		// BUILD_TABLES_DATABASE [Err] ::   File "click\core.py", line 1130, in __call__
+		// BUILD_TABLES_DATABASE [Err] ::   File "click\core.py", line 1055, in main
+		// BUILD_TABLES_DATABASE [Err] ::   File "click\core.py", line 1657, in invoke
+		// BUILD_TABLES_DATABASE [Err] ::   File "click\core.py", line 1404, in invoke
+		// BUILD_TABLES_DATABASE [Err] ::   File "click\core.py", line 760, in invoke
+		// BUILD_TABLES_DATABASE [Err] ::   File "fpta_filler.py", line 1024, in fill
+		// BUILD_TABLES_DATABASE [Err] ::   File "fpta_filler.py", line 800, in single_op
+		// BUILD_TABLES_DATABASE [Err] ::   File "amnesia\hl\database.py", line 1314, in __init__
+		// BUILD_TABLES_DATABASE [Err] ::   File "contextlib.py", line 112, in __enter__
+		// BUILD_TABLES_DATABASE [Err] ::   File "amnesia\hl\database.py", line 1381, in transaction_schema
+		// BUILD_TABLES_DATABASE [Err] ::   File "contextlib.py", line 112, in __enter__
+		// BUILD_TABLES_DATABASE [Err] ::   File "amnesia\hl\database.py", line 1216, in ll_connection
+		// BUILD_TABLES_DATABASE [Err] ::   File "contextlib.py", line 112, in __enter__
+		// BUILD_TABLES_DATABASE [Err] ::   File "amnesia\hl\database.py", line 1204, in _ll_alterable_connection
+		// BUILD_TABLES_DATABASE [Err] ::   File "amnesia\hl\database.py", line 1197, in _refresh_connection
+		// BUILD_TABLES_DATABASE [Err] ::   File "amnesia\ll\database\__init__.py", line 21, in db_open
+		// BUILD_TABLES_DATABASE [Err] ::   File "amnesia\ll\database\types.py", line 113, in __init__
+		// BUILD_TABLES_DATABASE [Err] ::   File "amnesia\ll\exception\__init__.py", line 134, in check_return_code
+		// BUILD_TABLES_DATABASE [Err] :: amnesia.ll.exception.FptaError:  : Системе не удается найти указанный путь.
+
+		// Падает сборка БД табличных списков
+		const baseOutputDirPath = config.getBaseOutputDirectoryPath();
+		if(!FileSystemHelper.isValidPath(baseOutputDirPath)) {
+			throw new XpException(`Путь к выходной директории '${baseOutputDirPath}' содержит недопустимые символы. Для корректной работы необходимо использовать только латинские буквы, цифры и другие корректные для путей символы`);
+		}
+
 		this._contentRootFolder = path.basename(this._contentRootPath);
 		this._outputFolder = this.config.getOutputDirectoryPath(this._contentRootFolder);
 

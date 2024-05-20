@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
 
 import { DialogHelper } from '../../../helpers/dialogHelper';
 import { Correlation } from '../../../models/content/correlation';
@@ -258,6 +259,10 @@ export class ContentCheckingCommand extends ViewCommand {
 			this.config.getMessage("View.ObjectTree.Progress.ContentChecking.CorrelationChecking", rule.getName())
 		);
 
+		if(!await this.checkDirectoryNameEqualRuleName(rule)) {
+			return;
+		}
+
 		this.checkRuleDescription(rule);
 
 		if(options.cancellationToken.isCancellationRequested) {
@@ -272,7 +277,7 @@ export class ContentCheckingCommand extends ViewCommand {
 		} else {
 			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsFailed");
 			Log.debug(message);
-			rule.setStatus(ContentItemStatus.Unverified, message);	
+			rule.setStatus(ContentItemStatus.Unverified, message);
 		}
 
 		// TODO: временно отключены тесты локализаций, так как siemkb_tests.exe падает со следующей ошибкой:
@@ -280,35 +285,35 @@ export class ContentCheckingCommand extends ViewCommand {
 		// TEST_RULES :: Error: SDK: Cannot open fpta db C:\Users\user\AppData\Local\Temp\eXtraction and Processing\tmp\5239e794-c14a-7526-113c-52479c1694d6\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\2024-04-18_19-06-45_unknown_sdk_227gsqqu\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\tests\raw_events_4_fpta.db : it's not exists
 		// const testTmpDirectory = path.join(this.integrationTestTmpFilesPath, rule.getName());
 
-		// Log.progress(options.progress, `Проверка локализации правила ${rule.getName()}`);
-		// const ruleTmpFilesRuleName = path.join(this.integrationTestTmpFilesPath, rule.getName());
-		// // TODO: файл не удается найти, скорее всего отключил генерацию временных файлов через keepTemp
-		// if(!fs.existsSync(ruleTmpFilesRuleName)) {
-		// 	throw new XpException("Не найдены результаты выполнения интеграционных тестов");
-		// }
+		Log.progress(options.progress, `Проверка локализации правила ${rule.getName()}`);
+		const ruleTmpFilesRuleName = path.join(this.integrationTestTmpFilesPath, rule.getName());
+		// TODO: файл не удается найти, скорее всего отключил генерацию временных файлов через keepTemp
+		if(!fs.existsSync(ruleTmpFilesRuleName)) {
+			throw new XpException("Не найдены результаты выполнения интеграционных тестов");
+		}
 
-		// const siemjManager = new SiemjManager(this.config, options.cancellationToken);
-		// const locExamples = await siemjManager.buildLocalizationExamplesFromIntegrationTestResult(rule, ruleTmpFilesRuleName);
+		const siemjManager = new SiemjManager(this.config, options.cancellationToken);
+		const locExamples = await siemjManager.buildLocalizationExamplesFromIntegrationTestResult(rule, ruleTmpFilesRuleName);
 
-		// if (locExamples.length === 0) {
-		// 	rule.setStatus(ContentItemStatus.Unverified, "Локализации не были получены");
-		// 	return;
-		// }
+		if (locExamples.length === 0) {
+			rule.setStatus(ContentItemStatus.Unverified, "Локализации не были получены");
+			return;
+		}
 
-		// const verifiedLocalization = locExamples.some(le => TestHelper.isDefaultLocalization(le.ruText));
-		// if(verifiedLocalization) {
-		// 	rule.setStatus(
-		// 		ContentItemStatus.Unverified,
-		// 		"Локализация не прошла проверку, обнаружен пример локализации по умолчанию"
-		// 	);
-		// } else {
-		// 	rule.setStatus(
-		// 		ContentItemStatus.Verified,
-		// 		"Интеграционные тесты и локализации прошли проверку"
-		// 	);
-		// }
+		const verifiedLocalization = locExamples.some(le => TestHelper.isDefaultLocalization(le.ruText));
+		if(verifiedLocalization) {
+			rule.setStatus(
+				ContentItemStatus.Unverified,
+				"Локализация не прошла проверку, обнаружен пример локализации по умолчанию"
+			);
+		} else {
+			rule.setStatus(
+				ContentItemStatus.Verified,
+				"Интеграционные тесты и локализации прошли проверку"
+			);
+		}
 
-		// rule.setLocalizationExamples(locExamples);
+		rule.setLocalizationExamples(locExamples);
 	}
 
 	private async checkEnrichment(
@@ -321,7 +326,10 @@ export class ContentCheckingCommand extends ViewCommand {
 			this.config.getMessage("View.ObjectTree.Progress.ContentChecking.EnrichmentChecking", rule.getName())
 		);
 
-		this.checkDirectoryNameEqualRuleName(rule);
+		if(!await this.checkDirectoryNameEqualRuleName(rule)) {
+			return;
+		}
+
 		this.checkRuleDescription(rule);
 
 		const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.EnrichmentChecking", rule.getName());
@@ -364,7 +372,7 @@ export class ContentCheckingCommand extends ViewCommand {
 		return totalItems;
 	}
 
-	private async checkDirectoryNameEqualRuleName(rule: RuleBaseItem) : Promise<void> {
+	private async checkDirectoryNameEqualRuleName(rule: RuleBaseItem) : Promise<boolean> {
 		const parentPath = rule.getDirectoryPath();
 		const directoryName = path.basename(parentPath);
 		const ruleNameFromCode = ParserHelper.parseRuleName(await rule.getRuleCode());
@@ -376,8 +384,13 @@ export class ContentCheckingCommand extends ViewCommand {
 		);
 
 		if(!result) {
-			DialogHelper.showWarning(`В правиле ${ruleNameFromCode} имя директории ${directoryName} отличается от имени правила. Исправьте данную ошибку и повторите`);
+			const message = `В правиле ${ruleNameFromCode} имя директории ${directoryName} отличается от имени правила. Исправьте данную ошибку и повторите`;
+			Log.debug(message);
+			rule.setStatus(ContentItemStatus.Unverified, message);
+			return false;
 		}
+
+		return true;
 	}
 
 	private async checkRuleDescription(rule: RuleBaseItem) : Promise<void> {

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 
+import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { Configuration } from '../configuration';
 import { TestStatus } from './testStatus';
 import { BaseUnitTest } from './baseUnitTest';
@@ -22,6 +23,16 @@ export class NormalizationUnitTestsRunner implements UnitTestRunner {
 		unitTest: BaseUnitTest,
 		options?: UnitTestOptions
 	): Promise<BaseUnitTest> {
+		// Нормализатор не переваривает кириллицу в пути
+		// 20 May 2024 - 16:36:53.900 | ERROR | normalize | normalizer-cli returned code 1:
+		// Terminated due to exception, what(): Can't cast from NIL to DICTIONARY
+		// 20 May 2024 - 16:36:53.900 | ERROR | repo_tools | Must exit due to some critical errors!
+		// 20 May 2024 - 16:36:53.900 | INFO | repo_tools | Removing temp directory C:\Users\User\AppData\Local\Temp\eXtractionAndProcessing\tmp\packages\240520163653_h_8qhmn5
+		const testsDirPath = unitTest.getTestsDirPath();
+		if(!FileSystemHelper.isValidPath(unitTest.getTestsDirPath())) {
+			throw new XpException(`Путь к тесту '${testsDirPath}' содержит недопустимые символы. Для корректной работы необходимо использовать только латинские буквы, цифры и другие корректные для путей символы`);
+		}
+
 		// Парсим ошибки из вывода.
 		const SDKTools = new SDKUtilitiesWrappers(this.config);
 		const utilityOutput = await SDKTools.testNormalization(unitTest, {useAppendix:options?.useAppendix});
