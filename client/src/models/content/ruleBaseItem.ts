@@ -86,7 +86,7 @@ export abstract class RuleBaseItem extends ContentTreeBaseItem {
 			return packageDirectoryPath;
 		}
 
-		throw new XpException(`Путь к правилу '${this.getName()}' не содержит ни одну из корневых директорий: [${roots.join(", ")}].`);
+		throw new XpException(`Путь к правилу ${this.getName()} не содержит ни одну из корневых директорий: [${roots.join(", ")}]. Приведите структуру в соответствие ([пример](https://github.com/Security-Experts-Community/open-xp-rules)) и повторите`);
 	}
 
 

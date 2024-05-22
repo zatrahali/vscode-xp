@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 import { PathLocator } from './pathLocator';
+import { XpException } from '../xpException';
 
 export class SIEMPathHelper extends PathLocator {
 
@@ -51,7 +52,7 @@ export class SIEMPathHelper extends PathLocator {
 			return packageDirectoryPath;
 		}
 
-		throw new Error(`Путь '${directory}' не содержит ни одну из корневых директорий: [${roots.join(", ")}].`);
+		throw new XpException(`Путь к правилу ${directory} не содержит ни одну из корневых директорий: [${roots.join(", ")}]. Приведите структуру в соответствие ([пример](https://github.com/Security-Experts-Community/open-xp-rules)) и повторите`);
 	}
 
 	public getNormalizationsGraphFileName() : string {

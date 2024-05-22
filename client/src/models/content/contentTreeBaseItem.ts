@@ -66,7 +66,7 @@ export abstract class ContentTreeBaseItem extends vscode.TreeItem {
 			return packageDirectoryPath;
 		}
 
-		throw new XpException(`Путь к правилу '${this.getName()}' не содержит ни одну из корневых директорий: [${rootPaths.join(", ")}].`);
+		throw new XpException(`Путь к правилу ${this.getName()} не содержит ни одну из корневых директорий: [${rootPaths.join(", ")}]. Приведите структуру в соответствие ([пример](https://github.com/Security-Experts-Community/open-xp-rules)) и повторите`);
 	}
 
 	/**

@@ -240,7 +240,8 @@ export class SiemjManager {
 		});
 
 		if(correlatedEventFilePaths.length === 0) {
-			throw new XpException("Корреляционные события не найдены");
+			// Возникли ошибки при генерации локализаций.
+			return [];
 		}
 
 		const correlateEvents : string[]= [];

@@ -50,7 +50,7 @@ export class EDRPathHelper extends PathLocator {
 			return packageDirectoryPath;
 		}
 
-		throw new XpException(`Путь '${contentPath}' не содержит ни одну из корневых директорий: [${roots.join(", ")}].`);
+		throw new XpException(`Путь к правилу ${contentPath} не содержит ни одну из корневых директорий: [${roots.join(", ")}]. Приведите структуру в соответствие ([пример](https://github.com/Security-Experts-Community/open-xp-rules)) и повторите`);
 	}
 
 	public getNormalizationsGraphFileName() : string {
