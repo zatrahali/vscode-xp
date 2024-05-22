@@ -157,6 +157,7 @@ export class TestHelper {
 
 					"time",
 
+					"taxonomy_version",
 					"generator.version",
 					"generator.type",
 

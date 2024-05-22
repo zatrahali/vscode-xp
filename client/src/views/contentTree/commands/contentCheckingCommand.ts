@@ -23,6 +23,7 @@ import { ViewCommand } from '../../../models/command/command';
 import { XpException } from '../../../models/xpException';
 import { SiemjManager } from '../../../models/siemj/siemjManager';
 import { TestHelper } from '../../../helpers/testHelper';
+import { BuildLocalizationsCommand } from './buildLocalizationsCommand';
 
 /**
  * Проверяет контент по требованиям. В настоящий момент реализована только проверка интеграционных тестов и локализаций.
@@ -41,7 +42,6 @@ export class ContentCheckingCommand extends ViewCommand {
 			location: vscode.ProgressLocation.Notification,
 			cancellable: true,
 		}, async (progress, token) => {
-
 			let totalChildItems: ContentTreeBaseItem[] = [];
 
 			// Либо выбрана директория, либо конкретное правило.
@@ -104,7 +104,15 @@ export class ContentCheckingCommand extends ViewCommand {
 				await ContentTreeProvider.refresh(rule);
 			}
 
-			DialogHelper.showInfo(this.config.getMessage("View.ObjectTree.Message.ContentChecking.CompletedSuccessfully", this.selectedItem.getName()));
+			// Проверка локализаций
+			const parser = new SiemJOutputParser();
+			const command = new BuildLocalizationsCommand(this.config, {
+				outputParser: parser,
+				localizationsPath: this.selectedItem.getDirectoryPath()
+			});
+			await command.execute();
+			
+			// DialogHelper.showInfo(this.config.getMessage("View.ObjectTree.Message.ContentChecking.CompletedSuccessfully", this.selectedItem.getName()));
 		});
 	}
 

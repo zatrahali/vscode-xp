@@ -12,11 +12,19 @@ import { DialogHelper } from '../../../helpers/dialogHelper';
 import { ViewCommand } from '../../../models/command/command';
 import { Log } from '../../../extension';
 
+
+export class BuildLocalizationsParams {
+	outputParser: SiemJOutputParser;
+	localizationsPath?: string;
+}
+
 /**
  * Команда выполняющая сборку локализаций
  */
 export class BuildLocalizationsCommand extends ViewCommand {
-	constructor(private config: Configuration, private outputParser: SiemJOutputParser) {
+	constructor(
+		private config: Configuration,
+		private params: BuildLocalizationsParams) {
 		super();
 	}
 
@@ -71,7 +79,7 @@ export class BuildLocalizationsCommand extends ViewCommand {
 				this.config.getOutputChannel().append('\n\n');
 
 				// Разбираем вывод siemJ и корректируем начало строки с диагностикой (исключаем пробельные символы)
-				const result = await this.outputParser.parse(siemJOutput.output);
+				const result = await this.params.outputParser.parse(siemJOutput.output);
 
 				// Выводим ошибки и замечания для тестируемого правила.
 				for (const rfd of result.fileDiagnostics) {
@@ -79,7 +87,8 @@ export class BuildLocalizationsCommand extends ViewCommand {
 				}
 
 				if(result.statusMessage) {
-					DialogHelper.showError(result.statusMessage);
+					Log.error(result.statusMessage);
+					DialogHelper.showError("Ошибка компиляции локализаций. [Смотри Output](command:xp.commonCommands.showOutputChannel)");
 					return;
 				}
 
@@ -104,7 +113,14 @@ export class BuildLocalizationsCommand extends ViewCommand {
 			}
 
 			const configBuilder = new SiemjConfBuilder(config, rootPath);
-			configBuilder.addLocalizationsBuilding();
+			if(this.params.localizationsPath) {
+				configBuilder.addLocalizationsBuilding( {
+						rulesSrcPath: this.params.localizationsPath,
+						force: true
+				});	
+			} else {
+				configBuilder.addLocalizationsBuilding();
+			}
 	
 			const siemjConfContent = configBuilder.build();
 			return {'packagesRoot': rootFolder, 'configContent': siemjConfContent};

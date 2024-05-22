@@ -268,7 +268,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 				ContentTreeProvider.buildLocalizationsCommand,
 				async () => {
 					const parser = new SiemJOutputParser();
-					const command = new BuildLocalizationsCommand(config, parser);
+					const command = new BuildLocalizationsCommand(config, {outputParser: parser});
 					await CommandHelper.singleExecutionCommand(command);
 				}
 			)

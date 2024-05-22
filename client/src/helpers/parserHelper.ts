@@ -3,8 +3,8 @@ import * as vscode from 'vscode';
 export class ParserHelper {
 
 	public static parseRuleName(ruleCode: string) : string {
-		const result = /rule\s+\b([A-Za-z_0-9]+)\b\s*:/gi.exec(ruleCode);
-		if(result.length != 2) {
+		const result = /(?:rule|enrichment)\b\s+\b([A-Za-z_0-9]+)\b\s*:/gi.exec(ruleCode);
+		if(!result || result.length != 2) {
 			return null;
 		}
 		return result[1];
