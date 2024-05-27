@@ -16,6 +16,8 @@ import { Log } from '../../../extension';
 export class BuildLocalizationsParams {
 	outputParser: SiemJOutputParser;
 	localizationsPath?: string;
+	// TODO: добавить использования прогресса как параметра
+	progress?: any;
 }
 
 /**

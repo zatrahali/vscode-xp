@@ -3,11 +3,22 @@ import * as vscode from 'vscode';
 export class ParserHelper {
 
 	public static parseRuleName(ruleCode: string) : string {
-		const result = /(?:rule|enrichment)\b\s+\b([A-Za-z_0-9]+)\b\s*:/gi.exec(ruleCode);
-		if(!result || result.length != 2) {
+		const ruleNameRegExpResult = /\brule\b\s+\b([a-z_0-9]+)\b\s*:/gi.exec(ruleCode);
+		const enrichmentNameRegExpResult = /\benrichment\b\s+([a-z_0-9]+)/gi.exec(ruleCode);
+
+		if(!ruleNameRegExpResult && !enrichmentNameRegExpResult) {
 			return null;
 		}
-		return result[1];
+
+		if(ruleNameRegExpResult && ruleNameRegExpResult.length == 2) {
+			return ruleNameRegExpResult[1];
+		}
+
+		if(enrichmentNameRegExpResult && enrichmentNameRegExpResult.length == 2) {
+			return enrichmentNameRegExpResult[1];
+		}
+
+		return null;
 	}
 
 	public static parseTokenWithInsidePosition(line: vscode.TextLine, position: vscode.Position) : string {

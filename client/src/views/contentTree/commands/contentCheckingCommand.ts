@@ -63,10 +63,23 @@ export class ContentCheckingCommand extends ViewCommand {
 				}
 			);
 
+			let thereAreRulesWithLocalizations = false;
 			for(const rule of rules) {
 				// Игнорируем все, кроме правил корреляции, обогащения и нормализации
 				if(!(rule instanceof Correlation) && !(rule instanceof Enrichment) && !(rule instanceof Normalization)) {
 					continue;
+				}
+
+				if(rule instanceof Normalization) {
+					await this.checkNormalization(
+						rule,
+						{
+							progress: progress,
+							cancellationToken: token
+						}
+					);
+					// Можно собирать локализации, они должны быть в правиле
+					thereAreRulesWithLocalizations = true;
 				}
 
 				if(rule instanceof Correlation) {
@@ -78,7 +91,11 @@ export class ContentCheckingCommand extends ViewCommand {
 							cancellationToken: token
 						}
 					);
+
+					// Можно собирать локализации, они должны быть в правиле
+					thereAreRulesWithLocalizations = true;
 				}
+
 
 				if(rule instanceof Enrichment) {
 					await this.checkEnrichment(
@@ -91,28 +108,20 @@ export class ContentCheckingCommand extends ViewCommand {
 					);
 				}
 
-				if(rule instanceof Normalization) {
-					await this.checkNormalization(
-						rule,
-						{
-							progress: progress,
-							cancellationToken: token
-						}
-					);
-				}
 
 				await ContentTreeProvider.refresh(rule);
 			}
 
 			// Проверка локализаций
-			const parser = new SiemJOutputParser();
-			const command = new BuildLocalizationsCommand(this.config, {
-				outputParser: parser,
-				localizationsPath: this.selectedItem.getDirectoryPath()
-			});
-			await command.execute();
-			
-			// DialogHelper.showInfo(this.config.getMessage("View.ObjectTree.Message.ContentChecking.CompletedSuccessfully", this.selectedItem.getName()));
+			if(thereAreRulesWithLocalizations) {
+				const parser = new SiemJOutputParser();
+				const command = new BuildLocalizationsCommand(this.config, {
+					outputParser: parser,
+					localizationsPath: this.selectedItem.getDirectoryPath()
+					// TODO: добавить использования прогресса как параметра, чтобы не появлялось дополнительный прогресс
+				});
+				await command.execute();
+			}
 		});
 	}
 
@@ -294,15 +303,17 @@ export class ContentCheckingCommand extends ViewCommand {
 		// const testTmpDirectory = path.join(this.integrationTestTmpFilesPath, rule.getName());
 
 		Log.progress(options.progress, `Проверка локализации правила ${rule.getName()}`);
-		const ruleTmpFilesRuleName = path.join(this.integrationTestTmpFilesPath, rule.getName());
-		// TODO: файл не удается найти, скорее всего отключил генерацию временных файлов через keepTemp
-		if(!fs.existsSync(ruleTmpFilesRuleName)) {
-			throw new XpException("Не найдены результаты выполнения интеграционных тестов");
-		}
+
+		// TODO: убрал конкатенацию, так как получается слишком длинный путь для enrichment-cli
+		// const ruleTmpFilesRuleName = path.join(this.integrationTestTmpFilesPath, rule.getName());
+		// if(!fs.existsSync(ruleTmpFilesRuleName)) {
+		// 	throw new XpException("Не найдены результаты выполнения интеграционных тестов");
+		// }
+		// const locExamples = await siemjManager.buildLocalizationExamplesFromIntegrationTestResult(rule, ruleTmpFilesRuleName);
 
 		const siemjManager = new SiemjManager(this.config, options.cancellationToken);
-		const locExamples = await siemjManager.buildLocalizationExamplesFromIntegrationTestResult(rule, ruleTmpFilesRuleName);
 
+		const locExamples = await siemjManager.buildLocalizationExamplesFromIntegrationTestResult(rule, this.integrationTestTmpFilesPath);
 		if (locExamples.length === 0) {
 			rule.setStatus(ContentItemStatus.Unverified, "Локализации не были получены");
 			return;
@@ -384,6 +395,9 @@ export class ContentCheckingCommand extends ViewCommand {
 		const parentPath = rule.getDirectoryPath();
 		const directoryName = path.basename(parentPath);
 		const ruleNameFromCode = ParserHelper.parseRuleName(await rule.getRuleCode());
+		if(!ruleNameFromCode) {
+			return true;
+		}
 
 		const result = StringHelper.crossPlatformPathCompare(
 			directoryName,

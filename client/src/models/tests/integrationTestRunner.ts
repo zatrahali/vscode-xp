@@ -145,7 +145,7 @@ export class IntegrationTestRunner {
 		integrationTests.forEach(it => it.setStatus(TestStatus.Unknown));
 
 		if(integrationTests.length == 0) {
-			throw new XpException(`У правила ${rule.getName} не найдено интеграционных тестов`);
+			throw new XpException(`У правила ${rule.getName()} не найдено интеграционных тестов`);
 		}
 
 		// Хотя бы у одного теста есть сырые события и код теста.
@@ -177,8 +177,11 @@ export class IntegrationTestRunner {
 		// TODO: временно отключена генерация временных файлов, так как siemkb_tests.exe падает со следующей ошибкой:
 		// TEST_RULES :: log4cplus:ERROR Unable to open file: C:\Users\user\AppData\Local\Temp\eXtraction and Processing\tmp\5239e794-c14a-7526-113c-52479c1694d6\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\2024-04-18_19-06-45_unknown_sdk_227gsqqu\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\tests\raw_events_4_norm_enr.log
 		// TEST_RULES :: Error: SDK: Cannot open fpta db C:\Users\user\AppData\Local\Temp\eXtraction and Processing\tmp\5239e794-c14a-7526-113c-52479c1694d6\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\2024-04-18_19-06-45_unknown_sdk_227gsqqu\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\tests\raw_events_4_fpta.db : it's not exists
-		const testTmpDirectory = path.join(this.options.tmpFilesPath, rule.getName());
-		configBuilder.addTestsRun(rule.getDirectoryPath(), testTmpDirectory);
+
+		// const testTmpDirectory = path.join(this.options.tmpFilesPath, rule.getName());
+		// configBuilder.addTestsRun(rule.getDirectoryPath(), testTmpDirectory);
+
+		configBuilder.addTestsRun(rule.getDirectoryPath(), this.options.tmpFilesPath);
 
 		const siemjConfContent = configBuilder.build();
 		if(!siemjConfContent) {
@@ -235,7 +238,7 @@ export class IntegrationTestRunner {
 		integrationTests.forEach(it => it.setStatus(TestStatus.Unknown));
 
 		if(integrationTests.length == 0) {
-			throw new XpException(`У правила ${rule.getName} не найдено интеграционных тестов`);
+			throw new XpException(`У правила ${rule.getName()} не найдено интеграционных тестов`);
 		}
 
 		// Хотя бы у одного теста есть сырые события и код теста.

@@ -19,7 +19,7 @@
         },
         {
             "name": "keyword.control.xp",
-            "match": "\\b(if|then|else|elif|endif|and|not|or)\\b"
+            "match": "\\b(if|then|else|elif|endif|and|not|or|endswitch|switch)\\b"
         },
         {
             "name": "keyword.operator.relational.xp",
