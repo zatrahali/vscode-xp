@@ -18,6 +18,9 @@ Check the localization of rules, as well as test entire directories with rules:
 If you collect events from Windows logs, you can convert them to the desired format as follows:
 ![Adding Windows events to tests](./ru_gif/xml_to_json.gif)
 
+Validation of displayed rules (testing of code and localizations, correctness of the rule structure):
+![Validation of rules](./en_gif/content_validation.gif)
+
 If you want to correlate EVTX files using selected content:
 ![Correlation of EVTX files](./ru_gif/evtx_correlator.gif)
 
