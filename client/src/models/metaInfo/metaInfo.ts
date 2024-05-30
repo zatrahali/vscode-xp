@@ -1,5 +1,6 @@
 import * as path from "path";
 import * as fs from 'fs';
+import * as os from 'os';
 
 import { MetaInfoEventDescription } from './metaInfoEventDescription';
 import { Attack } from './attack';
@@ -27,12 +28,21 @@ export class MetaInfo {
 			return emptyMetainfo;
 		}
 
+		// Yaml parsing
 		const yamlContent = await FileSystemHelper.readContentFile(metaInfoFullPath);
 		const metaInfoAsInFile = YamlHelper.parse(yamlContent);
 
 		const metaInfo = MetaInfo.create(metaInfoAsInFile);
 		metaInfo.setDirectoryPath(ruleDirFullPath);
 
+		// Yaml comments parsing
+		const commentsResult = /^########$[\s\S]+^########$/gm.exec(yamlContent);
+		if(!commentsResult || commentsResult.length !== 1) {
+			return metaInfo;
+		}
+
+		const comments = commentsResult[0];
+		metaInfo.setComments(comments);
 		return metaInfo;
 	}
 
@@ -166,43 +176,39 @@ export class MetaInfo {
 
 	/// Описания правила.
 	public setRuDescription(description: string) : void {
-		this._ruDescription = description;
+		this.ruDescription = description;
 	}
 
 	public setEnDescription(description: string) : void {
-		this._enDescription = description;
+		this.enDescription = description;
 	}
 
 	public getRuDescription() : string {
-		return this._ruDescription;
+		return this.ruDescription;
 	}
 
 	public getEnDescription() : string {
-		return this._enDescription;
+		return this.enDescription;
 	}
 
 	public async toObject(): Promise<any> {
-
-		// Сохраняем если ранее не был сохранен.
-		//const metainfoFilePath = path.join(this.getDirectoryPath(), MetaInfo.METAINFO_FILENAME);
-		//if (!fs.existsSync(metainfoFilePath)) {
-		//	await this.save();
-		//}
-
-		//const metainfoString = await FileSystemHelper.readContentFile(metainfoFilePath);
-		//const metaInfo = YamlHelper.parse(metainfoString);
-
-		// Модифицируем ATTACK для форматирования корректного.
-		//metaInfo.ATTACK = this.getAttacks();
 		return this; //metaInfo;
 	}
 
+	public setComments(comments: string): void {
+		this.comments = comments;
+	}
+
+	public getComments(): string {
+		return this.comments;
+	}
+
 	public setDirectoryPath(dirPath: string): void {
-		this._directoryPath = dirPath;
+		this.directoryPath = dirPath;
 	}
 
 	public getDirectoryPath(): string {
-		return this._directoryPath;
+		return this.directoryPath;
 	}
 
 	public setCreatedDate(date: Date): void {
@@ -509,8 +515,21 @@ export class MetaInfo {
 			metaInfoFullPath = path.join(this.getDirectoryPath(), MetaInfo.METAINFO_FILENAME);
 		}
 
+		// Combine yaml file content
 		const yamlContent = this.toString();
-		await FileSystemHelper.writeContentFileIfChanged(metaInfoFullPath, yamlContent);
+		const yamlComments = this.getComments();
+		let yamlFileContent : string;
+		if(yamlComments) {
+			if(yamlContent.endsWith(os.EOL)) {
+				yamlFileContent = yamlContent + yamlComments;	
+			} else {
+				yamlFileContent = yamlContent + os.EOL + yamlComments;
+			}
+		} else {
+			yamlFileContent = yamlContent;
+		}
+
+		await FileSystemHelper.writeContentFileIfChanged(metaInfoFullPath, yamlFileContent);
 	}
 
 	public correctEventIds(metaInfoContent: string): string {
@@ -532,9 +551,10 @@ export class MetaInfo {
 
 	public static METAINFO_FILENAME = "metainfo.yaml";
 
-	private _directoryPath: string;
-	private _ruDescription : string;
-	private _enDescription : string;
+	private comments: string;
+	private directoryPath: string;
+	private ruDescription : string;
+	private enDescription : string;
 
 	private Created: Date;
 	private Updated: Date;

@@ -13,7 +13,7 @@ import { ExceptionHelper } from '../../helpers/exceptionHelper';
 export class MetainfoViewProvider {
 
 	private _view?: vscode.WebviewPanel;
-	private _rule: RuleBaseItem;
+	private rule: RuleBaseItem;
 
 	public static readonly viewId = 'MetaInfoView';
 	public static showMetaInfoEditorCommand = "MetaInfoView.showMetaInfoEditor";
@@ -53,7 +53,7 @@ export class MetainfoViewProvider {
 			this._view = undefined;
 		}
 
-		this._rule = rule;
+		this.rule = rule;
 
 		// Создать и показать панель.
 		const title = this._config.getMessage("View.Metainfo", rule.getName());
@@ -83,7 +83,7 @@ export class MetainfoViewProvider {
 	private async updateWebView(): Promise<void> {
 
 		// Данные в таком виде проще шаблонизировать.
-		const metaInfo = await this._rule.getMetaInfo().toObject();
+		const metaInfo = await this.rule.getMetaInfo().toObject();
 
 		// Подгружаем базовую ссылку для внешних ресурсов.
 		const resourcesUri = this._config.getExtensionUri();
@@ -118,11 +118,11 @@ export class MetainfoViewProvider {
 				try {
 					// Обновление метаданных.
 					const newMetaInfoPlain = message.metainfo;
-					const metaInfo = this._rule.getMetaInfo();
+					const metaInfo = this.rule.getMetaInfo();
 					this._metaInfoUpdater.update(metaInfo, newMetaInfoPlain);
 
 					// Сохранением и перечитываем из файла.
-					const corrFullPath = this._rule.getDirectoryPath();
+					const corrFullPath = this.rule.getDirectoryPath();
 					await metaInfo.save(corrFullPath);
 
 					await this.updateWebView();
