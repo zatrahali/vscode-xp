@@ -90,7 +90,7 @@ export class BuildLocalizationsCommand extends ViewCommand {
 
 				if(result.statusMessage) {
 					Log.error(result.statusMessage);
-					DialogHelper.showError("Ошибка компиляции локализаций. [Смотри Output](command:xp.commonCommands.showOutputChannel)");
+					DialogHelper.showError(this.config.getMessage(`Error.LocalizationBuilding`));
 					return;
 				}
 

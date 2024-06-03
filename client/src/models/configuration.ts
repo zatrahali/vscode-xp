@@ -731,11 +731,11 @@ export class Configuration {
 		}
 	}
 
-	public checkUserSetting() : void {
+	public async checkUserSetting() : Promise<void> {
 		const extensionConfig = this.getWorkspaceConfiguration();
 
 		// Порядок обратный по приоритету, так как вторая ошибка появится выше чем первая.
-		this.checkOutputSetting(extensionConfig);
+		await this.checkAndCreateOutputDirectory(extensionConfig);
 		this.checkKbtSetting(extensionConfig);
 	}
 
@@ -753,7 +753,7 @@ export class Configuration {
 		}
 	}
 
-	private checkOutputSetting(extensionConfig: vscode.WorkspaceConfiguration) {
+	private async checkAndCreateOutputDirectory(extensionConfig: vscode.WorkspaceConfiguration): Promise<void> {
 		const outputDirectoryPath = extensionConfig.get<string>("outputDirectoryPath");
 
 		if (!outputDirectoryPath){
@@ -761,9 +761,11 @@ export class Configuration {
 			return;
 		}
 
-		if (!fs.existsSync(outputDirectoryPath)){
-			DialogHelper.showError(`Выходная директория не найдена по пути ${outputDirectoryPath}. Актуализируйте путь к выходной директории [в настройках]${this.OUTPUT_DIR_SHOW_SETTING_COMMAND}`);
-			return;
+		try {
+			await fs.promises.mkdir(outputDirectoryPath, {recursive: true});
+		}
+		catch (error) {
+			throw new XpException(this.getMessage(`Error.IncorrectOutputDirectoryPath`, outputDirectoryPath));
 		}
 	}
 

@@ -47,11 +47,11 @@ export class RunIntegrationTestsCommand extends Command {
 				progress.report({message: progressMessage});
 			}
 
-			const ritd = new RunIntegrationTestDialog(this.params.config, {tmpFilesPath: this.params.tmpDirPath, cancellationToken: cancellationToken});
+			const ritd = new RunIntegrationTestDialog(config, {tmpFilesPath: this.params.tmpDirPath, cancellationToken: cancellationToken});
 			const testRunnerOptions = await ritd.getIntegrationTestRunOptionsForSingleRule(this.params.rule);
 			testRunnerOptions.cancellationToken = cancellationToken;
 
-			const outputParser = new SiemJOutputParser();
+			const outputParser = new SiemJOutputParser(config);
 			const testRunner = new IntegrationTestRunner(config, outputParser);
 			const siemjResult = await testRunner.runOnce(this.params.rule, testRunnerOptions);
 

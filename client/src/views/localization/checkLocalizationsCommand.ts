@@ -129,7 +129,7 @@ export class CheckLocalizationCommand extends ViewCommand {
 
 				Log.progress(progress, `Получение корреляционных событий на основе интеграционных тестов правила`);
 
-				const outputParser = new SiemJOutputParser();
+				const outputParser = new SiemJOutputParser(this.params.config);
 				const testRunner = new IntegrationTestRunner(this.params.config, outputParser);
 				const siemjResult = await testRunner.runOnce(this.params.rule, options);
 

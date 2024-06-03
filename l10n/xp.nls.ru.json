@@ -13,6 +13,9 @@
     "CouldNotGenerateSiemjConf": "Не удалось создать файл siemj.conf",
     "UnexpectedError": "Непредвиденная ошибка",
     "UncaughtExceptionMessage": "Если она [не встречалась раньше](https://github.com/Security-Experts-Community/vscode-xp/issues/), заведите [баг](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) и приложите [логи](command:xp.commonCommands.showOutputChannel). Кроме того, можно задать вопросы [в Telegram-чате](https://t.me/s3curity_experts_community/75)",
+    "Error.IncorrectOutputDirectoryPath": "Не удалось создать выходную директорию по пути '{0}'. Задайте корректный путь к выходной директории [в настройках](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath'])",
+    "Error.CommonBuilding": "Не удалось выполнить операцию. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
+    "Error.LocalizationBuilding": "Не удалось скомпилировать локализации. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
 
     "View.ObjectTree.Message.TheKnowledgeBaseIsNotInitialized": "База знаний не найдена. Создать стандартные папки для продукта {0}?",
     "View.ObjectTree.Message.NeedToOpenKnowledgeBase": "Для выполнения команды нужно [открыть базу знаний](command:xp.contentTree.openKnowledgebaseCommand)",
@@ -77,14 +80,14 @@
     "View.IntegrationTests.Message.NoTestsFound": "Тесты для правила {0} не найдены. Добавьте хотя бы один тест и повторите попытку",
     "View.IntegrationTests.Message.TestsPassed": "Интеграционные тесты для правила {0} пройдены успешно",
     "View.IntegrationTests.Message.NotAllTestsWereSuccessful": "Некоторые тесты для правила {0} не пройдены",
-    "View.IntegrationTests.Message.AllTestsFailed": "Ни один тест для правила {0} не пройден. [Исправьте ошибки в коде правила](command:workbench.action.showErrorsWarnings) и его вспомогательных правил. Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
+    "View.IntegrationTests.Message.AllTestsFailed": "Ни один тест для правила {0} не пройден. Исправьте [ошибки в коде](command:workbench.action.showErrorsWarnings) правила и его вспомогательных правил. Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
     
     "View.IntegrationTests.Message.TestsSavedSuccessfully": "Все тесты сохранены",
     "View.IntegrationTests.Message.FailedToSaveTests": "Не удалось сохранить тесты",
-    "View.IntegrationTests.Message.SuccessfulNormalization": "Нормализация сырых событий теста №{0} завершена успешно",
-    "View.IntegrationTests.Message.SuccessfulNormalizationAndEnrichment": "Нормализация и обогащение сырых событий теста №{0} завершено успешно",
+    "View.IntegrationTests.Message.SuccessfulNormalization": "Нормализация необработанных событий для теста №{0} завершена успешно",
+    "View.IntegrationTests.Message.SuccessfulNormalizationAndEnrichment": "Нормализация и обогащение необработанных событий для теста №{0} завершены успешно",
 
-    "View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated": "Ожидаемое событие в коде теста обновлено. Скорректируйте если необходимо и сохраните тест",
+    "View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated": "Ожидаемое событие в коде теста обновлено. Перед сохранением теста измените событие, если требуется",
     "View.IntegrationTests.Message.UnableGetExpectedEvent": "Невозможно получить ожидаемое событие для теста, который завершился неуспешно",
 
     "View.Metainfo": "Метаданные {0}",
@@ -112,7 +115,7 @@
     "View.CorrelateLogFiles.CorrelationEvents": "Корреляционные события",
 
     "View.CorrelateEvents.Title": "Корреляция событий",
-    "View.CorrelateEvents.RawEventsLabel": "События в конверте (необработанные или нормализованные события) в формате JSON Lines",
+    "View.CorrelateEvents.RawEventsLabel": "События (JSON Lines) в конверте",
     "View.CorrelateEvents.CorrelateEventsLabel": "Корреляционные события",
     "View.CorrelateEvents.CorrelateEventsButton": "Запустить корреляцию",
     "View.CorrelateEvents.WordWrapCheckBox": "Переносить по словам",

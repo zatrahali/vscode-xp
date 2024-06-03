@@ -3,7 +3,8 @@
 ## 3.15.12 (Pre-Release)
 
 - добавлено сохранение комментариев в файл метаданных (special thanks @zatraahali);
-- исправлена английская локализация (special thanks @feelstacy).
+- улучшена локализация (special thanks @feelstacy, @eugzolotukhin);
+- добавлен вывод ошибок сборки локализации в раздел Проблемы (Problems) VSCode.
 
 ## 3.15.11 (Pre-Release)
 

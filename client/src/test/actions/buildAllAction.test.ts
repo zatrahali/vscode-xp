@@ -5,9 +5,10 @@ import { SiemJOutputParser } from '../../models/siemj/siemJOutputParser';
 suite(BuildAllGraphsAndTableListsCommand.name, () => {
 
 	test('Инициализация', async () => {
+		const config = Configuration.get();
 		new BuildAllGraphsAndTableListsCommand(
-			Configuration.get(),
-			new SiemJOutputParser()
+			config,
+			new SiemJOutputParser(config)
 		);
 	});
 });

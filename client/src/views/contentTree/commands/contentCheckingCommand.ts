@@ -114,7 +114,7 @@ export class ContentCheckingCommand extends ViewCommand {
 
 			// Проверка локализаций
 			if(thereAreRulesWithLocalizations) {
-				const parser = new SiemJOutputParser();
+				const parser = new SiemJOutputParser(this.config);
 				const command = new BuildLocalizationsCommand(this.config, {
 					outputParser: parser,
 					localizationsPath: this.selectedItem.getDirectoryPath()
@@ -165,7 +165,7 @@ export class ContentCheckingCommand extends ViewCommand {
 			}
 		}
 
-		const outputParser = new SiemJOutputParser();
+		const outputParser = new SiemJOutputParser(this.config);
 		const testRunner = new IntegrationTestRunner(this.config, outputParser);
 
 		if(correlationBuildingConfigured || enrichmentBuildingConfigured) {

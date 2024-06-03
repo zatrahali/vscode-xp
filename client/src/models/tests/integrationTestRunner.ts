@@ -185,7 +185,7 @@ export class IntegrationTestRunner {
 
 		const siemjConfContent = configBuilder.build();
 		if(!siemjConfContent) {
-			throw new XpException("Не удалось сгенерировать файл siemj.conf для заданного правила и тестов");
+			throw new XpException(this.config.getMessage("CouldNotGenerateSiemjConf"));
 		}
 
 		const siemjManager = new SiemjManager(this.config, this.options.cancellationToken);
@@ -330,7 +330,7 @@ export class IntegrationTestRunner {
 		configBuilder.addTestsRun(rule.getDirectoryPath(), options.tmpFilesPath);
 		const siemjConfContent = configBuilder.build();
 		if(!siemjConfContent) {
-			throw new XpException("Не удалось сгенерировать файл siemj.conf для заданного правила и тестов");
+			throw new XpException(this.config.getMessage("CouldNotGenerateSiemjConf"));
 		}
 
 		const siemjManager = new SiemjManager(this.config, options.cancellationToken);

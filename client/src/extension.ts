@@ -40,6 +40,7 @@ import { LocalizationEditorViewProvider } from './views/localization/localizatio
 import { CommonCommands } from './models/command/commonCommands';
 import mainPackageFile from '../../package.json';
 import { ToolsManager } from './models/content/toolsManager';
+import { DialogHelper } from './helpers/dialogHelper';
 
 export let Log: Logger;
 let client: LanguageClient;
@@ -60,7 +61,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
 		await UserSettingsManager.init(config);
 		await ToolsManager.init(config);
 
-		config.checkUserSetting();
+		try {
+			await config.checkUserSetting();
+		}
+		catch(error) {
+			ExceptionHelper.show(error);
+		}
 
 		// Конфигурирование LSP.
 		const serverModule = context.asAbsolutePath(

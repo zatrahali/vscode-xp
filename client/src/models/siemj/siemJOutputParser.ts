@@ -4,6 +4,7 @@ import * as fs  from 'fs';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { TestHelper } from '../../helpers/testHelper';
 import { Log } from '../../extension';
+import { Configuration } from '../configuration';
 
 export class FileDiagnostics {
 	public uri : vscode.Uri;
@@ -21,6 +22,9 @@ export class SiemjExecutionResult {
 }
 
 export class SiemJOutputParser {
+	constructor(
+		private config: Configuration) {
+	}
 	/**
 	 * Разбирает ошибки из вывода SIEMJ.
 	 * @param siemjOutput вывод SIEMJ.
@@ -31,6 +35,7 @@ export class SiemJOutputParser {
 		const result = new SiemjExecutionResult();
 		this.processSectionsExitCode(siemjOutput, result);
 		this.processBuildRules(siemjOutput, result);
+		this.processBuildLocalization(siemjOutput, result);
 		this.processTestRules(siemjOutput, result);
 
 		// Корректировка диагностиков (выделение конкретных токенов) по анализу файлов с ошибками
@@ -54,7 +59,8 @@ export class SiemJOutputParser {
 			const exitCode = parseInt(m[1]);
 			if(exitCode !== 0) {
 				result.testsStatus = false;
-				result.statusMessage = `Ошибка выполнения, так как одна из утилит вернула код ошибки ${exitCode}, отличный от нуля. [Смотри Output](command:xp.commonCommands.showOutputChannel)`;
+				result.statusMessage = this.config.getMessage(`Error.CommonBuilding`);
+				Log.error(`The utility returned an error code ${exitCode}`);
 				return;
 			}
 		}
@@ -105,7 +111,7 @@ export class SiemJOutputParser {
 			}
 
 			const fileUri = vscode.Uri.file(ruleFilePath);
-			const ruleFileDiags = fileDiagnostics.find(rfd => rfd.uri === fileUri);
+			const ruleFileDiags = result.fileDiagnostics.find(rfd => rfd.uri === fileUri);
 
 			if(ruleFileDiags) {
 				// Файл был, добавляем в конец.
@@ -122,6 +128,62 @@ export class SiemJOutputParser {
 		}
 
 		result.fileDiagnostics.push(...fileDiagnostics);
+	}
+
+	private processBuildLocalization(siemjOutput: string, result: SiemjExecutionResult) {
+		// BUILD_EVENT_LOCALIZATION :: [ERROR] Each EventDescriptions entry must be a dict of 2 non-empty elements: C:\\Content\\knowledgebase\\packages\\package\\normalization_formulas\\Login_success\\i18n\\i18n_en.yaml
+		const fileDiagnostics: FileDiagnostics[] = [];
+		const pattern = /BUILD_EVENT_LOCALIZATION :: \[ERROR\] (.*?): (.*?)$/gm;
+		let m: RegExpExecArray | null;
+		while ((m = pattern.exec(siemjOutput))) {
+
+			if(m.length != 3) {
+				continue;
+			}
+
+			if(!m?.[1] || !m?.[2]) {
+				continue;
+			}
+
+			const errorDescription = (m[1] as string).trim();
+			const filePath = (m[2] as string).trim();
+
+			// В ошибке нет информации, где именно ошибка, указываем на начало файла.
+			const startPosition = new vscode.Position(0, 0);
+			const endPosition = new vscode.Position(0, 0);
+
+			const diagnostic = new vscode.Diagnostic(
+				new vscode.Range(
+					startPosition,
+					endPosition
+				),
+				errorDescription,
+				vscode.DiagnosticSeverity.Error
+			);
+
+			const newRuleFileDiag = this.addFileDiagnostics(result, filePath, diagnostic);
+			fileDiagnostics.push(newRuleFileDiag);
+		}
+
+		result.fileDiagnostics.push(...fileDiagnostics);
+	}
+
+	private addFileDiagnostics(result: SiemjExecutionResult, filePath: string, diagnostic: vscode.Diagnostic): FileDiagnostics {
+		diagnostic.source = 'xp';
+		const fileUri = vscode.Uri.file(filePath);
+		const ruleFileDiags = result.fileDiagnostics.find(rfd => rfd.uri === fileUri);
+
+		if(ruleFileDiags) {
+			// Файл был, добавляем в конец.
+			ruleFileDiags.diagnostics.push(diagnostic);
+			return;
+		}
+
+		// Такого файла еще не было, создаем и добавляем.
+		const newRuleFileDiag = new FileDiagnostics();
+		newRuleFileDiag.uri = fileUri;
+		newRuleFileDiag.diagnostics.push(diagnostic);
+		return newRuleFileDiag;
 	}
 
 	private processTestRules(siemjOutput: string, result: SiemjExecutionResult) {

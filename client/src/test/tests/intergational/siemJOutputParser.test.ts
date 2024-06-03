@@ -3,11 +3,24 @@ import * as vscode from 'vscode';
 
 import { SiemJOutputParser } from '../../../models/siemj/siemJOutputParser';
 import { TestFixture } from '../../helper';
+import { Configuration } from '../../../models/configuration';
 
 suite('SiemJOutputParser', () => {
 
 	test('Новый формат вывода siemj ', async () => {
-		const parser = new SiemJOutputParser();
+		const parser = new SiemJOutputParser(Configuration.get());
+
+		const output = 
+`BUILD_EVENT_LOCALIZATION :: [ERROR] Each EventDescriptions entry must be a dict of 2 non-empty elements: C:\\Content\\knowledgebase\\packages\\package\\normalization_formulas\\Login_success\\i18n\\i18n_en.yaml`;
+
+		const status = await parser.parse(output);
+
+		assert.ok(!status.testsStatus);
+		assert.strictEqual(status.fileDiagnostics.length, 1);
+	});
+
+	test('Новый формат вывода siemj ', async () => {
+		const parser = new SiemJOutputParser(Configuration.get());
 
 		const output = 
 `
@@ -29,7 +42,7 @@ TEST_RULES :: Elapsed time: 43.649 sec`;
 	});
 
 	test('Прошли все тесты', async () => {
-		const parser = new SiemJOutputParser();
+		const parser = new SiemJOutputParser(Configuration.get());
 
 		const output = 
 `
@@ -44,7 +57,7 @@ TEST_RULES [Err] :: All tests OK`;
 	});
 
 	test('Сырое событие без конверта', async () => {
-		const parser = new SiemJOutputParser();
+		const parser = new SiemJOutputParser(Configuration.get());
 
 		const output = 
 `
@@ -59,7 +72,7 @@ TEST_RULES [Err] :: Errors found.`;
 	});
 
 	test('Один тест не прошел', async () => {
-		const parser = new SiemJOutputParser();
+		const parser = new SiemJOutputParser(Configuration.get());
 
 		const output = 
 `
@@ -75,7 +88,7 @@ TEST_RULES :: Expected results are not obtained.`;
 	});
 
 	test('Одна строка с ошибкой', async () => {
-		const parser = new SiemJOutputParser();
+		const parser = new SiemJOutputParser(Configuration.get());
 
 		const ruleFilePath = TestFixture.getCorrelationFilePath("Active_Directory_Snapshot", "rule.co");
 
@@ -101,7 +114,7 @@ BUILD_RULES [Err] :: ${ruleFilePath}:5:1: syntax error, unexpected '='`;
 	});
 
 	test('Одна строка с предупреждением', async () => {
-		const parser = new SiemJOutputParser();
+		const parser = new SiemJOutputParser(Configuration.get());
 
 		const rulePath = TestFixture.getEnrichmentFilePath("MSSQL_user_command", "rule.en");
 		const output = 		
