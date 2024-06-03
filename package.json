@@ -18,9 +18,9 @@
   "categories": [
     "Snippets",
     "Formatters",
-    "Language Packs",
     "Testing",
-    "Visualization"
+    "Visualization",
+    "Linters"
   ],
   "keywords": [
     "SIEM",
