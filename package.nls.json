@@ -10,7 +10,8 @@
 	"xp.views.knowledgebaseTree.openKnowledgebaseCommand": "Open knowledge base",
 	"xp.views.knowledgebaseTree.correlateEventsCommand": "Correlate events",
 
-	"xp.views.knowledgebaseTree.createPackageCommand": "Create new package",
+	"xp.views.knowledgebaseTree.createSubmenu": "Create",
+	"xp.views.knowledgebaseTree.createPackageCommand": "Create a package",
 	"xp.views.knowledgebaseTree.createCorrelationCommand": "Create a correlation rule",
 	"xp.views.knowledgebaseTree.createEnrichmentCommand": "Create a enrichment rule",
 	"xp.views.knowledgebaseTree.createNormalizationCommand": "Create a normalization rule",

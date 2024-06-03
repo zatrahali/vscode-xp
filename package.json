@@ -333,11 +333,6 @@
       ],
       "view/item/context": [
         {
-          "command": "xp.contentTree.createPackageCommand",
-          "when": "view == KnowledgebaseTree && viewItem == ContentRoot",
-          "group": "ContentRoot@1"
-        },
-        {
           "command": "KnowledgebaseTree.unpackKbPackage",
           "when": "view == KnowledgebaseTree && viewItem == ContentRoot",
           "group": "ContentRoot@2"
@@ -348,34 +343,9 @@
           "group": "PackageFolder@1"
         },
         {
-          "command": "KnowledgebaseTree.showCreateCorrelationView",
-          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
-          "group": "create@1"
-        },
-        {
-          "command": "KnowledgebaseTree.showCreateEnrichmentView",
-          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
-          "group": "create@2"
-        },
-        {
-          "command": "KnowledgebaseTree.showCreateNormalizationView",
-          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
-          "group": "create@3"
-        },
-        {
-          "command": "xp.contentTree.verifyFolder",
-          "when": "view == KnowledgebaseTree && (viewItem == Normalization || viewItem == Correlation || viewItem == Enrichment || viewItem == AnotherFolder || viewItem == PackageFolder)",
-          "group": "verify@1"
-        },
-        {
-          "command": "xp.tableListsEditor.create",
-          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
-          "group": "create@4"
-        },
-        {
-          "command": "xp.contentTree.createMacroCommand",
-          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder)",
-          "group": "create@5"
+          "submenu": "xpConfig.create",
+          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder ||viewItem == PackageFolder || viewItem == ContentRoot)",
+          "group": "create"
         },
         {
           "command": "IntegrationTestEditorView.showEditor",
@@ -443,11 +413,6 @@
           "group": "ModularTest@4"
         },
         {
-          "command": "xp.contentTree.createSubFolderCommand",
-          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder ||viewItem == PackageFolder || viewItem == ContentRoot)",
-          "group": "ZCommonItems@1"
-        },
-        {
           "command": "xp.contentTree.renameItemCommand",
           "when": "view == KnowledgebaseTree && (viewItem == Correlation || viewItem == Normalization || viewItem == Enrichment)",
           "group": "ZCommonItems@2"
@@ -477,8 +442,65 @@
           "when": "view == KnowledgebaseTree && viewItem == Table",
           "group": "Table@1"
         }
+      ],
+      "xpConfig.create": [
+        {
+          "command": "xp.contentTree.createSubFolderCommand",
+          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder ||viewItem == PackageFolder || viewItem == ContentRoot)",
+          "group": "create@1"
+        },
+        {
+          "command": "xp.contentTree.createPackageCommand",
+          "when": "view == KnowledgebaseTree && viewItem == ContentRoot",
+          "title": "%xp.views.knowledgebaseTree.createPackageCommand%",
+          "category": "%xp.commonCommandCategory%",
+          "group": "create@1"
+        },
+        {
+          "command": "KnowledgebaseTree.showCreateCorrelationView",
+          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
+          "title": "%xp.views.knowledgebaseTree.createCorrelationCommand%",
+          "category": "%xp.commonCommandCategory%",
+          "icon": "$(file-add)",
+          "group": "create@1"
+        },
+        {
+          "command": "KnowledgebaseTree.showCreateEnrichmentView",
+          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
+          "title": "%xp.views.knowledgebaseTree.createEnrichmentCommand%",
+          "category": "%xp.commonCommandCategory%",
+          "group": "create@1"
+        },
+        {
+          "command": "KnowledgebaseTree.showCreateNormalizationView",
+          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
+          "title": "%xp.views.knowledgebaseTree.createNormalizationCommand%",
+          "category": "%xp.commonCommandCategory%",
+          "group": "create@1"
+        },
+        {
+          "command": "xp.contentTree.createMacroCommand",
+          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
+          "title": "%xp.views.knowledgebaseTree.createMacroCommand%",
+          "category": "%xp.commonCommandCategory%",
+          "group": "create@1"
+        },
+        {
+          "command": "xp.tableListsEditor.create",
+          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
+          "title": "%xp.views.knowledgebaseTree.createTableListsCommand%",
+          "category": "%xp.commonCommandCategory%",
+          "group": "create@1"
+        }
       ]
     },
+    "submenus": [
+      {
+        "id": "xpConfig.create",
+        "label": "%xp.views.knowledgebaseTree.createSubmenu%",
+        "group": "create"
+      }
+    ],
     "commands": [
       {
         "command": "xp.commonCommands.showExtensionSettings",
