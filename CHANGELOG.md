@@ -2,7 +2,8 @@
 
 ## 3.15.12 (Pre-Release)
 
-- добавлено сохранение комментариев в файл метаданных (special thanks @zatraahali).
+- добавлено сохранение комментариев в файл метаданных (special thanks @zatraahali);
+- исправлена английская локализация (special thanks @feelstacy).
 
 ## 3.15.11 (Pre-Release)
 
