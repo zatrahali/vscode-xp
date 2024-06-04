@@ -5,7 +5,7 @@
   "author": "Dmitry Fedosov (@DmitryOffsec)",
   "icon": "resources/xp.png",
   "license": "MIT",
-  "version": "3.15.12",
+  "version": "3.15.13",
   "repository": {
     "type": "git",
     "url": "https://github.com/Security-Experts-Community/vscode-xp"
@@ -333,6 +333,11 @@
       ],
       "view/item/context": [
         {
+          "command": "xp.contentTree.verifyFolder",
+          "when": "view == KnowledgebaseTree && (viewItem == Normalization || viewItem == Correlation || viewItem == Enrichment || viewItem == AnotherFolder || viewItem == PackageFolder)",
+          "group": "verify@1"
+        },
+        {
           "command": "KnowledgebaseTree.unpackKbPackage",
           "when": "view == KnowledgebaseTree && viewItem == ContentRoot",
           "group": "ContentRoot@2"
@@ -445,17 +450,13 @@
       ],
       "xpConfig.create": [
         {
-          "command": "xp.contentTree.createSubFolderCommand",
-          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder ||viewItem == PackageFolder || viewItem == ContentRoot)",
-          "group": "create@1"
-        },
-        {
           "command": "xp.contentTree.createPackageCommand",
           "when": "view == KnowledgebaseTree && viewItem == ContentRoot",
           "title": "%xp.views.knowledgebaseTree.createPackageCommand%",
           "category": "%xp.commonCommandCategory%",
           "group": "create@1"
         },
+
         {
           "command": "KnowledgebaseTree.showCreateCorrelationView",
           "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
@@ -469,28 +470,33 @@
           "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
           "title": "%xp.views.knowledgebaseTree.createEnrichmentCommand%",
           "category": "%xp.commonCommandCategory%",
-          "group": "create@1"
+          "group": "create@2"
         },
         {
           "command": "KnowledgebaseTree.showCreateNormalizationView",
           "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
           "title": "%xp.views.knowledgebaseTree.createNormalizationCommand%",
           "category": "%xp.commonCommandCategory%",
-          "group": "create@1"
+          "group": "create@3"
         },
         {
           "command": "xp.contentTree.createMacroCommand",
           "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
           "title": "%xp.views.knowledgebaseTree.createMacroCommand%",
           "category": "%xp.commonCommandCategory%",
-          "group": "create@1"
+          "group": "create@4"
         },
         {
           "command": "xp.tableListsEditor.create",
           "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
           "title": "%xp.views.knowledgebaseTree.createTableListsCommand%",
           "category": "%xp.commonCommandCategory%",
-          "group": "create@1"
+          "group": "create@5"
+        },
+        {
+          "command": "xp.contentTree.createSubFolderCommand",
+          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder ||viewItem == PackageFolder || viewItem == ContentRoot)",
+          "group": "create@6"
         }
       ]
     },
