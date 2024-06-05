@@ -18,6 +18,7 @@ import { Log } from '../../../extension';
 import { ContentFolder } from '../../../models/content/contentFolder';
 import { Localization } from '../../../models/content/localization';
 import { ViewCommand } from '../../../models/command/command';
+import { KbHelper } from '../../../helpers/kbHelper';
 
 export class UnpackKbCommand extends ViewCommand {
 	constructor(private config: Configuration, private selectedPackage : ContentTreeBaseItem) {
@@ -53,9 +54,8 @@ export class UnpackKbCommand extends ViewCommand {
 		return vscode.window.withProgress({
 			location: vscode.ProgressLocation.Notification,
 			cancellable: true,
-			title: "Распаковка пакета"
 		}, async (progress, cancellationToken) => {
-
+			Log.progress(progress, "Распаковка пакета");
 			const kbFilePath = kbUris[0].fsPath; 
 
 			// Получаем путь к директории пакетов.
@@ -69,7 +69,7 @@ export class UnpackKbCommand extends ViewCommand {
 
 			// Полезно, если путь к директории временных файлов (в домашней директории) будет сокращен тильдой.
 			const username = os.userInfo().username;
-			Log.info("Username:", username);
+			Log.debug("Username:", username);
 
 			const unpackPackagePath = this.config.getRandTmpSubDirectoryPath();
 			await fs.promises.mkdir(unpackPackagePath, {recursive: true});
@@ -77,7 +77,7 @@ export class UnpackKbCommand extends ViewCommand {
 			
 			const kbFileName = path.parse(kbFilePath).name;
 			const outputDirPath = path.join(unpackPackagePath, kbFileName);
-			Log.info("OutputDirPath: ", outputDirPath);
+			Log.debug("OutputDirPath: ", outputDirPath);
 
 			// Типовая команда выглядит так:
 			// dotnet kbpack.dll unpack -s c:\tmp\pack\esc.kb -o c:\tmp\pack\unpack\doesn_t_exist_folder
@@ -120,10 +120,19 @@ export class UnpackKbCommand extends ViewCommand {
 			// Корректировка имени для пакетов без заданного системного имени, в таком случае оно является GUID.
 			await this.correctPackageNameFromLocalizationFile(outputDirPath);
 
+			// Меняем новые строки \n для текущей ОС
+			Log.info("Преобразование новых строк под текущую ОС");
+			const contentFullPaths = FileSystemHelper.getRecursiveFilesSync(outputDirPath);
+			for(const contentFullPath of contentFullPaths) {
+				let content = await FileSystemHelper.readContentFile(contentFullPath);
+				content = KbHelper.convertEOLToCurrOs(content);
+				await fs.promises.writeFile(contentFullPath, content);
+			}
+
 			// Если внутри несколько пакетов.
 			const packagesPackagePath = path.join(outputDirPath, ContentTreeProvider.PACKAGES_DIRNAME);
 			if(fs.existsSync(packagesPackagePath)) {
-				Log.info("Копирование распакованного пакета в целевую директорию");
+				Log.progress(progress, "Копирование распакованного пакета в целевую директорию");
 				await fse.copy(packagesPackagePath, packageDirPath, { overwrite: true });
 			}
 			
@@ -143,7 +152,7 @@ export class UnpackKbCommand extends ViewCommand {
 			// Обновляем макросы
 			const macroPackagePath = path.join(outputDirPath, ContentTreeProvider.MACRO_DIRNAME);
 			if(fs.existsSync(macroPackagePath)) {
-				Log.info("Распаковка макросов из пакета");
+				Log.progress(progress, "Распаковка макросов из пакета");
 				const marcoDirPath = path.join(rootContentDirPath, ContentTreeProvider.MACRO_DIRNAME);
 				await fse.copy(macroPackagePath, marcoDirPath);
 			}

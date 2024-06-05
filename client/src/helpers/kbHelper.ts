@@ -1,4 +1,5 @@
 import * as crc32 from 'crc-32';
+import * as os from 'os';
 
 export class KbHelper {
 
@@ -12,6 +13,13 @@ export class KbHelper {
 			return ""; 
 		}
 		return text.replace(/(\r\n)/gm, "\n");
+	}
+
+	public static convertEOLToCurrOs (text : string) : string {
+		if (!text) {
+			return ""; 
+		}
+		return text.replace(/(\r\n|\n)/gm, os.EOL);
 	}
 
 	public static getContentSubDirectories(): string[] {

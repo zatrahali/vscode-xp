@@ -587,7 +587,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 			// Изменилась директория \esc_profile, а выделяется \esc
 			const directoryPath = item.getDirectoryPath().toLocaleLowerCase() + path.sep;
 
-			if(changePaths.some(cp => cp.startsWith(directoryPath))) {
+			if(changePaths.some(cp => cp.startsWith(directoryPath) && !cp.endsWith(".yaml"))) {
 				item.setHighlightsLabel(item.getName());
 			}
 		}
