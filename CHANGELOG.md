@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.17.0 (Pre-Release)
+
+- усилена проверка кода интеграционных тестов на наличие проверок `expect 1 {...}` или `expect table_list {...}` (special thanks @UncleSStepa).
+
+## 3.16.0 (Release)
+
 ## 3.15.14 (Pre-Release)
 
 - доработана английская локализация под стиль VSCode (special thanks @DuckDarkwing);

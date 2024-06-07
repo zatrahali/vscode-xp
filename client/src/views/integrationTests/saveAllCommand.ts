@@ -81,6 +81,11 @@ export class SaveAllCommand extends Command {
 			// Код теста.
 			let testCode = plainTest?.testCode;
 
+			// Проверяем наличие проверки ожидаемых событий
+			if(!/(\bexpect\b\s+\d+)|(\bexpect\b\s+\btable_list\b)\s+{.*}$/gm.test(testCode)) {
+				throw new XpException("В коде теста не обнаружен или является некорректным блок проверки expect 1 {...} или expect table_list {...}. Исправьте и повторите");
+			}
+
 			// Из textarea новые строки только \n, поэтому надо их поправить под систему.
 			testCode = testCode.replace(/(?<!\\)\n/gm, os.EOL);
 			let compressedCode: string;

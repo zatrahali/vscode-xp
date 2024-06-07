@@ -326,11 +326,14 @@ export class TestHelper {
 	public static compressFormattedJsons(input: string, regEx: RegExp): string {
 		let comNormEventResult: RegExpExecArray | null;
 		let compressedJson = input;
+
+		let isJsonDetected = false;
 		while ((comNormEventResult = regEx.exec(input))) {
 			if (comNormEventResult.length != 1) {
 				continue;
 			}
 
+			isJsonDetected = true;
 			const jsonRawEvent = comNormEventResult[0];
 			try {
 				const jsonObject = JSON.parse(jsonRawEvent);
@@ -344,6 +347,10 @@ export class TestHelper {
 			catch (error) {
 				throw new XpException("Не удалось распарсить JSON. Проверьте корректность сохраняемых данных", error);
 			}
+		}
+
+		if(!isJsonDetected) {
+			throw new XpException("Не удалось обнаружить JSON. Проверьте корректность сохраняемых данных");
 		}
 
 		return compressedJson.trim();
