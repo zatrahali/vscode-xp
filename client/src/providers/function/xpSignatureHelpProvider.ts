@@ -63,6 +63,10 @@ export class XpSignatureHelpProvider implements vscode.SignatureHelpProvider {
 						scheme: 'file',
 						language: 'flt'
 					},
+					{
+						scheme: 'file',
+						language: 'agr'
+					},
 				],
 				signatureProvider,
 				'(', ','

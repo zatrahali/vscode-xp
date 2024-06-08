@@ -23,6 +23,7 @@ import { NormalizeRawEventsCommand } from './normalizeRawEventsCommand';
 import { GetExpectedEventCommand } from './getExpectEventCommand';
 import { StringHelper } from '../../helpers/stringHelper';
 import { SaveAllCommand } from './saveAllCommand';
+import { Aggregation } from '../../models/content/aggregation';
 
 export class IntegrationTestEditorViewProvider {
 
@@ -76,7 +77,7 @@ export class IntegrationTestEditorViewProvider {
 	}
 
 	public static readonly showEditorCommand = "IntegrationTestEditorView.showEditor";
-	public async showEditor(rule: Correlation | Enrichment) : Promise<void> {
+	public async showEditor(rule: Correlation|Enrichment|Aggregation) : Promise<void> {
 
 		Log.debug(`Редактор интеграционных тестов открыт для правила ${rule.getName()}`);
 
@@ -87,8 +88,8 @@ export class IntegrationTestEditorViewProvider {
 			this._view.dispose();
 		}
 
-		if (!(rule instanceof Correlation || rule instanceof Enrichment)) {
-			DialogHelper.showWarning(`Редактор интеграционных тестов не поддерживает правил кроме корреляций и обогащений`);
+		if (!(rule instanceof Correlation || rule instanceof Enrichment || rule instanceof Aggregation)) {
+			DialogHelper.showWarning(`Редактор интеграционных тестов не поддерживает правил кроме корреляций, обогащений и агрегаций`);
 			return;
 		}
 
@@ -441,7 +442,7 @@ export class IntegrationTestEditorViewProvider {
 				// Сохраняем актуальное состояние тестов из вьюшки.
 				let rule: RuleBaseItem;
 				try {
-					rule = await TestHelper.saveAllTest(message, this.rule);
+					rule = await this.saveAllTests(message);
 					Log.info(`Все тесты правила ${this.rule.getName()} сохранены`);
 				}
 				catch (error) {
@@ -474,6 +475,33 @@ export class IntegrationTestEditorViewProvider {
 				DialogHelper.showError(`Команда ${message?.command} не найдена`);
 			}
 		}
+	}
+
+	private async saveAllTests(message: any) : Promise<RuleBaseItem> {
+		if (!message?.activeTestNumber) {
+			DialogHelper.showError('Номер теста не передан в запросе на back-end');
+			return;
+		}
+
+		const activeTestNumber = parseInt(message?.activeTestNumber);
+		if (!activeTestNumber) {
+			throw new XpException(`Переданное значение ${message?.activeTestNumber} не является номером интеграционного теста`);
+		}
+
+		const command = new SaveAllCommand( {
+				config : this.config,
+				rule: this.rule,
+				tmpDirPath: this.testsTmpFilesPath,
+				testNumber: activeTestNumber,
+				tests: message.tests}
+		);
+		
+		const result = await command.execute();
+		// Если сохранение прошло успешно, тогда обновляем окно.
+		if(result) {
+			this.updateView(activeTestNumber);
+		}
+		return this.rule;
 	}
 
 	private lastTest() {
@@ -555,17 +583,6 @@ export class IntegrationTestEditorViewProvider {
 		const test = await TestHelper.saveIntegrationTest(this.rule, message);
 		DialogHelper.showInfo(`Тест №${test.getNumber()} сохранен`);
 		return test;
-	}
-
-	async saveAllTests(message: any): Promise<RuleBaseItem> {
-
-		// Номер активного теста.
-		const activeTestNumberString = message?.activeTestNumber;
-		if (!activeTestNumberString) {
-			throw new XpException(`Не задан номер активного теста`);
-		}
-
-		return TestHelper.saveAllTest(message, this.rule);
 	}
 
 	public async updateTestCode(newTestCode: string, testNumber?: number): Promise<boolean> {

@@ -368,6 +368,11 @@
           "group": "Correlation@4"
         },
         {
+          "command": "IntegrationTestEditorView.showEditor",
+          "when": "view == KnowledgebaseTree && viewItem == Aggregation",
+          "group": "Aggregation@1"
+        },
+        {
           "command": "MetaInfoView.showMetaInfoEditor",
           "when": "view == KnowledgebaseTree && viewItem == Aggregation",
           "group": "Aggregation@2"
@@ -458,7 +463,7 @@
         },
 
         {
-          "command": "KnowledgebaseTree.showCreateCorrelationView",
+          "command": "xp.contentTree.showCreateCorrelationView",
           "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
           "title": "%xp.views.knowledgebaseTree.createCorrelationCommand%",
           "category": "%xp.commonCommandCategory%",
@@ -466,37 +471,44 @@
           "group": "create@1"
         },
         {
-          "command": "KnowledgebaseTree.showCreateEnrichmentView",
+          "command": "xp.contentTree.showCreateEnrichmentView",
           "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
           "title": "%xp.views.knowledgebaseTree.createEnrichmentCommand%",
           "category": "%xp.commonCommandCategory%",
           "group": "create@2"
         },
         {
-          "command": "KnowledgebaseTree.showCreateNormalizationView",
+          "command": "xp.contentTree.showCreateNormalizationView",
           "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
           "title": "%xp.views.knowledgebaseTree.createNormalizationCommand%",
           "category": "%xp.commonCommandCategory%",
           "group": "create@3"
         },
         {
+          "command": "xp.contentTree.showCreateAggregationView",
+          "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
+          "title": "%xp.views.knowledgebaseTree.createAggregationCommand%",
+          "category": "%xp.commonCommandCategory%",
+          "group": "create@4"
+        },
+        {
           "command": "xp.contentTree.createMacroCommand",
           "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
           "title": "%xp.views.knowledgebaseTree.createMacroCommand%",
           "category": "%xp.commonCommandCategory%",
-          "group": "create@4"
+          "group": "create@5"
         },
         {
           "command": "xp.tableListsEditor.create",
           "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder || viewItem == PackageFolder)",
           "title": "%xp.views.knowledgebaseTree.createTableListsCommand%",
           "category": "%xp.commonCommandCategory%",
-          "group": "create@5"
+          "group": "create@6"
         },
         {
           "command": "xp.contentTree.createSubFolderCommand",
           "when": "view == KnowledgebaseTree && (viewItem == AnotherFolder ||viewItem == PackageFolder || viewItem == ContentRoot)",
-          "group": "create@6"
+          "group": "create@7"
         }
       ]
     },
@@ -566,19 +578,24 @@
         "category": "%xp.commonCommandCategory%"
       },
       {
-        "command": "KnowledgebaseTree.showCreateCorrelationView",
+        "command": "xp.contentTree.showCreateCorrelationView",
         "title": "%xp.views.knowledgebaseTree.createCorrelationCommand%",
         "category": "%xp.commonCommandCategory%",
         "icon": "$(file-add)"
       },
       {
-        "command": "KnowledgebaseTree.showCreateEnrichmentView",
+        "command": "xp.contentTree.showCreateEnrichmentView",
         "title": "%xp.views.knowledgebaseTree.createEnrichmentCommand%",
         "category": "%xp.commonCommandCategory%"
       },
       {
-        "command": "KnowledgebaseTree.showCreateNormalizationView",
+        "command": "xp.contentTree.showCreateNormalizationView",
         "title": "%xp.views.knowledgebaseTree.createNormalizationCommand%",
+        "category": "%xp.commonCommandCategory%"
+      },
+      {
+        "command": "xp.contentTree.showCreateAggregationView",
+        "title": "%xp.views.knowledgebaseTree.createAggregationCommand%",
         "category": "%xp.commonCommandCategory%"
       },
       {

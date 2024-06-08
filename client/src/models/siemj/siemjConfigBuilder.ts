@@ -111,6 +111,12 @@ out=${output}`;
 		}
 
 		const output = path.join('${output_folder}', this.config.getAggregationGraphFileName());
+
+// [make-argraph]
+// type=BUILD_RULES
+// rcc_lang=a
+// rules_src=C:\knowledgebase\packages
+// out=${output_folder}\aggfilters.json
 		const argraphBuildingSection = 
 `
 [make-argraph]
@@ -356,6 +362,8 @@ out=${output}`;
 		const formulas = path.join('${output_folder}', this.config.getNormalizationsGraphFileName());
 		const enrules = path.join('${output_folder}', this.config.getEnrichmentsGraphFileName());
 		const corrules = path.join('${output_folder}', this.config.getCorrelationsGraphFileName());
+		const argrules = path.join('${output_folder}', this.config.getAggregationGraphFileName());
+
 		const table_list_defaults = path.join('${output_folder}', this.config.getCorrelationDefaultsFileName());
 		const crTimeout = this.config.getСorrelatorTimeoutPerSecond();
 		
@@ -367,6 +375,7 @@ cr_timeout=${crTimeout}
 formulas=${formulas}
 enrules=${enrules}
 corrules=${corrules}
+aggrules=${argrules}
 table_list_defaults=${table_list_defaults}
 rules_src=${testsRuleFullPath}`;
 

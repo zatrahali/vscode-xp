@@ -10,18 +10,26 @@ import { Configuration } from '../../models/configuration';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { ContentHelper } from '../../helpers/contentHelper';
 
+enum CreateType {
+    createCorrelation = "createCorrelation",
+    createEnrichment = "createEnrichment",
+    createNormalization = "createNormalization",
+    createAggregation = "createAggregation",
+}
+
 export class CreateRuleViewProvider {
 
     public static viewId = 'CreateCorrelationView';
 
-    public static showCreateCorrelationViewCommand = 'KnowledgebaseTree.showCreateCorrelationView';
-    public static showCreateEnrichmentViewCommand = 'KnowledgebaseTree.showCreateEnrichmentView';
-	public static showCreateNormalizationViewCommand = 'KnowledgebaseTree.showCreateNormalizationView';
+    public static showCreateCorrelationViewCommand = 'xp.contentTree.showCreateCorrelationView';
+    public static showCreateEnrichmentViewCommand = 'xp.contentTree.showCreateEnrichmentView';
+	public static showCreateNormalizationViewCommand = 'xp.contentTree.showCreateNormalizationView';
+    public static showCreateAggregationViewCommand = 'xp.contentTree.showCreateAggregationView';
 
 
     private constructor(
-        private readonly _config: Configuration,
-        private readonly _formatter: MustacheFormatter
+        private readonly config: Configuration,
+        private readonly formatter: MustacheFormatter
     ) {}
 
     public static async init(config : Configuration) : Promise<void> {
@@ -31,7 +39,7 @@ export class CreateRuleViewProvider {
             config.getExtensionPath(), "client", "templates", "CreateRule.html");
         const createCorrelationTemplateContent = await FileSystemHelper.readContentFile(createCorrelationTemplateFilePath);
 
-        const createCorrelationViewProvider = new CreateRuleViewProvider(
+        const createViewProvider = new CreateRuleViewProvider(
             config,
             new MustacheFormatter(createCorrelationTemplateContent));
 
@@ -40,7 +48,7 @@ export class CreateRuleViewProvider {
                 CreateRuleViewProvider.showCreateCorrelationViewCommand,
                 async (selectedItem: RuleBaseItem) => {
                     const parentFullPath = selectedItem.getDirectoryPath();
-                    return createCorrelationViewProvider.showCreateCorrelationView(parentFullPath);
+                    return createViewProvider.showCreateCorrelationView(parentFullPath);
                 }
             )
         );
@@ -50,7 +58,7 @@ export class CreateRuleViewProvider {
                 CreateRuleViewProvider.showCreateEnrichmentViewCommand,
                 async (selectedItem: RuleBaseItem) => {
                     const parentFullPath = selectedItem.getDirectoryPath();
-                    return createCorrelationViewProvider.showCreateEnrichmentView(parentFullPath);
+                    return createViewProvider.showCreateEnrichmentView(parentFullPath);
                 }
             )
         );
@@ -60,41 +68,62 @@ export class CreateRuleViewProvider {
                 CreateRuleViewProvider.showCreateNormalizationViewCommand,
                 async (selectedItem: RuleBaseItem) => {
                     const parentFullPath = selectedItem.getDirectoryPath();
-                    return createCorrelationViewProvider.showCreateNormalizationView(parentFullPath);
+                    return createViewProvider.showCreateNormalizationView(parentFullPath);
+                }
+            )
+        );
+
+        config.getContext().subscriptions.push(
+            vscode.commands.registerCommand(
+                CreateRuleViewProvider.showCreateAggregationViewCommand,
+                async (selectedItem: RuleBaseItem) => {
+                    const parentFullPath = selectedItem.getDirectoryPath();
+                    return createViewProvider.showCreateAggregationView(parentFullPath);
                 }
             )
         );
     }
 
     public showCreateCorrelationView(ruleFullPath: string): void {
-        const templateNames = ContentHelper.getTemplateNames(this._config, ContentHelper.CORRELATIONS_DIRECTORY_NAME);
+        const templateNames = ContentHelper.getTemplateNames(this.config, ContentHelper.CORRELATIONS_DIRECTORY_NAME);
 
         this.showCreateRuleView(
-            this._config.getMessage("View.CreateRule.CreateCorrelationTitle"),
-            "createCorrelation", 
-            this._config.getMessage("View.CreateRule.CreateCorrelationHeader"),
+            this.config.getMessage("View.CreateRule.CreateCorrelationTitle"),
+            CreateType.createCorrelation, 
+            this.config.getMessage("View.CreateRule.CreateCorrelationHeader"),
             ruleFullPath,
             templateNames);
     }
 
     public showCreateEnrichmentView(ruleFullPath: string) : void {
-        const templateNames = ContentHelper.getTemplateNames(this._config, ContentHelper.ENRICHMENTS_DIRECTORY_NAME);
+        const templateNames = ContentHelper.getTemplateNames(this.config, ContentHelper.ENRICHMENTS_DIRECTORY_NAME);
 
         this.showCreateRuleView(
-            this._config.getMessage("View.CreateRule.CreateEnrichmentTitle"),
-            "createEnrichment", 
-            this._config.getMessage("View.CreateRule.CreateEnrichmentHeader"),
+            this.config.getMessage("View.CreateRule.CreateEnrichmentTitle"),
+            CreateType.createEnrichment, 
+            this.config.getMessage("View.CreateRule.CreateEnrichmentHeader"),
             ruleFullPath,
             templateNames);
     }
 
     public showCreateNormalizationView(ruleFullPath: string) : void {
-        const templateNames = ContentHelper.getTemplateNames(this._config, ContentHelper.NORMALIZATIONS_DIRECTORY_NAME);
+        const templateNames = ContentHelper.getTemplateNames(this.config, ContentHelper.NORMALIZATIONS_DIRECTORY_NAME);
 
         this.showCreateRuleView(
-            this._config.getMessage("View.CreateRule.CreateNormalizationTitle"),
-            "createNormalization", 
-            this._config.getMessage("View.CreateRule.CreateNormalizationHeader"), 
+            this.config.getMessage("View.CreateRule.CreateNormalizationTitle"),
+            CreateType.createNormalization, 
+            this.config.getMessage("View.CreateRule.CreateNormalizationHeader"), 
+            ruleFullPath,
+            templateNames);
+    }
+
+    public showCreateAggregationView(ruleFullPath: string) : void {
+        const templateNames = ContentHelper.getTemplateNames(this.config, ContentHelper.AGGREGATIONS_DIRECTORY_NAME);
+
+        this.showCreateRuleView(
+            this.config.getMessage("View.CreateRule.CreateAggregationTitle"),
+            CreateType.createAggregation, 
+            this.config.getMessage("View.CreateRule.CreateAggregationHeader"), 
             ruleFullPath,
             templateNames);
     }
@@ -115,39 +144,39 @@ export class CreateRuleViewProvider {
         templateNames?: string[]) {
 
         // Создать и показать панель.
-        this._view = vscode.window.createWebviewPanel(
+        this.view = vscode.window.createWebviewPanel(
             CreateRuleViewProvider.viewId,
             viewTitle,
             vscode.ViewColumn.One,
             {retainContextWhenHidden : true});
 
-        this._view.webview.options = {
+        this.view.webview.options = {
             enableScripts: true
         };
 
-        this._view.webview.onDidReceiveMessage(
+        this.view.webview.onDidReceiveMessage(
             this.receiveMessageFromWebView,
             this
         );
 
-        const resourcesUri = this._config.getExtensionUri();
-		const extensionBaseUri = this._view.webview.asWebviewUri(resourcesUri);
+        const resourcesUri = this.config.getExtensionUri();
+		const extensionBaseUri = this.view.webview.asWebviewUri(resourcesUri);
         try {
             const templateDefaultContent = {
                 "ruleFullPath" : ruleFullPath,
                 "commandName" : commandName,
 
                 "CreateNewRule" : createNewRule,
-                "NameLabel" : this._config.getMessage("View.CreateRule.NameLabel"),
-                "Template" : this._config.getMessage("View.CreateRule.Template"),
-                "Create" : this._config.getMessage("Create"),
+                "NameLabel" : this.config.getMessage("View.CreateRule.NameLabel"),
+                "Template" : this.config.getMessage("View.CreateRule.Template"),
+                "Create" : this.config.getMessage("Create"),
 
                 "extensionBaseUri" : extensionBaseUri,
                 "templateNames" : templateNames
             };
 
-            const htmlContent = this._formatter.format(templateDefaultContent);
-            this._view.webview.html = htmlContent;
+            const htmlContent = this.formatter.format(templateDefaultContent);
+            this.view.webview.html = htmlContent;
         }
         catch (error) {
             DialogHelper.showError("Не удалось отобразить шаблон правила корреляции", error);
@@ -158,8 +187,8 @@ export class CreateRuleViewProvider {
     private getPath(parentPath: string, defaultFolder: string) : string {
         // Магическая функция получения декартового произведения
         const cartesian = (...args) => args.reduce((root, packs) => root.flatMap(root => packs.map(pack => [root, pack].flat())));
-        const packages = this._config.getPackages();
-        const packageRoots = this._config.getContentRoots();
+        const packages = this.config.getPackages();
+        const packageRoots = this.config.getContentRoots();
         // Получаем векторное произведение массивов
         const array = cartesian(packageRoots, packages);
         // Объединяем элементы массивов в пути
@@ -200,9 +229,9 @@ export class CreateRuleViewProvider {
         if(fs.existsSync(ruleFullPath)) {
             const overwriteResult = await DialogHelper.showInfo(
                 `Правило с именем '${ruleName}' уже есть. Перезаписать его?`,
-                ...[this._config.getMessage('Yes'), this._config.getMessage('No')]);
+                ...[this.config.getMessage('Yes'), this.config.getMessage('No')]);
 
-            if (overwriteResult === this._config.getMessage('No')) {
+            if (overwriteResult === this.config.getMessage('No')) {
                 return;
             }
 
@@ -214,28 +243,34 @@ export class CreateRuleViewProvider {
         let rule : RuleBaseItem;
         try {
             switch (message.command) {
-                case 'createCorrelation': {
-                    rule = await ContentHelper.createCorrelationFromTemplate(ruleName, templateName, this._config);
+                case CreateType.createCorrelation: {
+                    rule = await ContentHelper.createCorrelationFromTemplate(ruleName, templateName, this.config);
                     const newRuleFullPath = this.getPath(ruleParentPath, ContentHelper.CORRELATIONS_DIRECTORY_NAME);
                     await rule.save(newRuleFullPath);
                     break;
                 }
-                case 'createEnrichment': {
-                    rule = await ContentHelper.createEnrichmentFromTemplate(ruleName, templateName, this._config);
+                case CreateType.createEnrichment: {
+                    rule = await ContentHelper.createEnrichmentFromTemplate(ruleName, templateName, this.config);
                     const newRuleFullPath = this.getPath(ruleParentPath, ContentHelper.ENRICHMENTS_DIRECTORY_NAME);
                     await rule.save(newRuleFullPath);
                     break;
                 }
-                case 'createNormalization': {
-                    rule = await ContentHelper.createNormalizationFromTemplate(ruleName, templateName, this._config);
+                case CreateType.createNormalization: {
+                    rule = await ContentHelper.createNormalizationFromTemplate(ruleName, templateName, this.config);
                     const newRuleFullPath = this.getPath(ruleParentPath, ContentHelper.NORMALIZATIONS_DIRECTORY_NAME);
+                    await rule.save(newRuleFullPath);
+                    break;
+                }
+                case CreateType.createAggregation: {
+                    rule = await ContentHelper.createAggregationFromTemplate(ruleName, templateName, this.config);
+                    const newRuleFullPath = this.getPath(ruleParentPath, ContentHelper.AGGREGATIONS_DIRECTORY_NAME);
                     await rule.save(newRuleFullPath);
                     break;
                 }
             }
         }
         catch (error) {
-            DialogHelper.showError(`Не удалось создать и сохранить правило '${ruleName}'.`, error);
+            DialogHelper.showError(`Не удалось создать и сохранить правило '${ruleName}'`, error);
             return;
         }
 
@@ -244,7 +279,7 @@ export class CreateRuleViewProvider {
         await ContentTreeProvider.selectItem(rule);
         
         DialogHelper.showInfo(`Правило ${ruleName} создано`);
-        this._view.dispose();
+        this.view.dispose();
     }
 
     private parseMessageFromFrontEnd(message: any) : [string, string, string]  {
@@ -267,5 +302,5 @@ export class CreateRuleViewProvider {
         return [ruleName, templateType, ruleParentPath];
     }
 
-    private _view: vscode.WebviewPanel;
+    private view: vscode.WebviewPanel;
 }

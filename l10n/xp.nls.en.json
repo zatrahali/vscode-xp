@@ -134,9 +134,13 @@
     "View.CreateRule.CreateCorrelationTitle": "Create correlation rule",
     "View.CreateRule.CreateEnrichmentTitle": "Create enrichment rule",
     "View.CreateRule.CreateNormalizationTitle": "Create normalization rule",
+    "View.CreateRule.CreateAggregationTitle": "Create aggregation rule",
+
     "View.CreateRule.CreateCorrelationHeader": "Create correlation rule",
     "View.CreateRule.CreateEnrichmentHeader": "Create enrichment rule",
     "View.CreateRule.CreateNormalizationHeader": "Create normalization rule",
+    "View.CreateRule.CreateAggregationHeader": "Create aggregation rule",
+    
     "View.CreateRule.Template": "Template",
     "View.CreateRule.NameLabel": "Name"
 }

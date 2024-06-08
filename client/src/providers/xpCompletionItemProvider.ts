@@ -92,7 +92,10 @@ export class XpCompletionItemProvider implements vscode.CompletionItemProvider {
 				"insert_into", "remove_from", "clear_table",
 
 				// обогащение
-				"enrichment", "enrich", "enrich_fields"
+				"enrichment", "enrich", "enrich_fields",
+
+				// aggregation
+				"aggregate"
 			]
 				.map(k => new vscode.CompletionItem(k, vscode.CompletionItemKind.Keyword));
 
@@ -125,6 +128,10 @@ export class XpCompletionItemProvider implements vscode.CompletionItemProvider {
 					{
 						scheme: 'file',
 						language: 'flt'
+					},
+					{
+						scheme: 'file',
+						language: 'agr'
 					},
 				],
 				completionItemProvider,

@@ -52,7 +52,7 @@ export class SaveAllCommand extends Command {
 			let rawEvents = plainTest?.rawEvents;
 			rawEvents = rawEvents ? rawEvents.trim() : "";
 			if (!rawEvents || rawEvents == "") {
-				throw new XpException(`Попытка сохранения теста №${plainTest.number ?? 0} без сырых событий`);
+				throw new XpException(`Попытка сохранения теста №${plainTest.number ?? 0} без необработанных событий. Добавьте данные события и повторите`);
 			}
 
 			// Код теста.

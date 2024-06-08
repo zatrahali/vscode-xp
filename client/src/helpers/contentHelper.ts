@@ -13,6 +13,9 @@ import { KbHelper } from './kbHelper';
 import { RuleBaseItem } from '../models/content/ruleBaseItem';
 import { Table } from '../models/content/table';
 import { Macros } from '../models/content/macros';
+import { Aggregation } from '../models/content/aggregation';
+import { Log } from '../extension';
+import { FileSystemException } from '../models/fileSystemException';
 
 export class ContentHelper {
 
@@ -37,10 +40,10 @@ export class ContentHelper {
     public static async getDefaultLocalizationCriteria(rule: RuleBaseItem) : Promise<string> {
 		const ruleType = rule.contextValue;
 		switch(ruleType) {
-			case Correlation.name: {
+			case "Correlation": {
 				return `correlation_name = "${rule.getName()}"`;
 			}
-			case Normalization.name: {
+			case "Normalization": {
 				// Извлекаем id из кода правила
 				const parseIdRegExp = /id\s+=\s+"(\w+)"/gm;
 				const code = await rule.getRuleCode();
@@ -52,6 +55,10 @@ export class ContentHelper {
 				// Если не удалось, тогда возвращаем с именем правила нормализации.
 				return `id = "${rule.getName()}"`;
 			}
+            case "Aggregation": {
+                return `aggregation_name = "${rule.getName()}"`;
+            }
+            
             // Правила без локализации
             case "Macros": 
 			case "Table": 
@@ -174,6 +181,10 @@ export class ContentHelper {
         const templatesPath = path.join(
             config.getExtensionPath(), "content_templates", contentDirectory);
 
+        if(!fs.existsSync(templatesPath)) {
+            throw new FileSystemException(`The template directory doesn't exist`, templatesPath );
+        }
+
         const templateNames = 
             FileSystemHelper.getRecursiveDirPathSync(templatesPath)
             .map(p => path.basename(p));
@@ -265,7 +276,30 @@ export class ContentHelper {
         return ruleFromTemplate;
     }
 
-    public static async copyContentTemplateToTmpDirectory(templateName : string, templatesPath : string, tmpDirPath: string) {
+    public static async createAggregationFromTemplate(
+        ruleName : string,
+        templateName : string,
+        config: Configuration) : Promise<Aggregation> {
+
+        const templatesPath = path.join(config.getExtensionPath(), this.CONTENT_TEMPLATES_DIRECTORY_NAME, this.AGGREGATIONS_DIRECTORY_NAME);
+        const tmpDirPath = config.getRandTmpSubDirectoryPath();
+        await this.copyContentTemplateToTmpDirectory(templateName, templatesPath, tmpDirPath);
+
+        // Копируем во временную директорию и переименовываем.
+        const templateNormTmpDirPath = path.join(tmpDirPath, templateName);
+        const ruleFromTemplate = await Aggregation.parseFromDirectory(templateNormTmpDirPath);
+        await ruleFromTemplate.rename(ruleName);
+
+        // Задаем ObjectID только при создании нормализации.
+		const objectId = ruleFromTemplate.generateObjectId();
+		if(objectId) {
+			ruleFromTemplate.getMetaInfo().setObjectId(objectId);
+		}
+        
+        return ruleFromTemplate;
+    }
+
+    public static async copyContentTemplateToTmpDirectory(templateName : string, templatesPath : string, tmpDirPath: string) : Promise<void> {
         // Находим путь к нужному шаблону.
         const templateDirPath = 
             FileSystemHelper.getRecursiveDirPathSync(templatesPath)
@@ -327,6 +361,8 @@ export class ContentHelper {
     public static CORRELATIONS_DIRECTORY_NAME  = "correlation_rules";
     public static ENRICHMENTS_DIRECTORY_NAME  = "enrichment_rules";
     public static NORMALIZATIONS_DIRECTORY_NAME  = "normalization_formulas";
+    public static AGGREGATIONS_DIRECTORY_NAME  = "aggregation_rules";
+
     public static CONTENT_TEMPLATES_DIRECTORY_NAME  = "content_templates";
 }
 

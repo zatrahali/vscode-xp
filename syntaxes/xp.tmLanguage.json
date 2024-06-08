@@ -87,6 +87,18 @@
             }
         },
         {
+            "name": "meta.aggregate.xp",
+            "match": "\\b(aggregate)\\s([a-zA-Z0-9_.]*)",
+            "captures": {
+                "1": {
+                    "name": "keyword.other.xp"
+                },
+                "2": {
+                    "name": "entity.name.class"
+                }
+            }
+        },
+        {
             "name": "meta.filter.xp",
             "match": "\\b(filter)\\s*\\{",
             "captures": {

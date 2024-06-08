@@ -15,6 +15,7 @@
 	"xp.views.knowledgebaseTree.createCorrelationCommand": "New Correlation Rule",
 	"xp.views.knowledgebaseTree.createEnrichmentCommand": "New Enrichment Rule",
 	"xp.views.knowledgebaseTree.createNormalizationCommand": "New Normalization Rule",
+	"xp.views.knowledgebaseTree.createAggregationCommand": "New Aggregation Rule",
 	"xp.views.knowledgebaseTree.createTableListsCommand": "New Tabular List",
 	"xp.views.knowledgebaseTree.createMacroCommand": "New Macro",
 	"xp.views.knowledgebaseTree.createFolderCommand": "New Folder",

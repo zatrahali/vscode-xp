@@ -13,6 +13,7 @@ import { XpException } from '../models/xpException';
 import { DialogHelper } from '../helpers/dialogHelper';
 import { Log } from '../extension';
 import { RegExpHelper } from '../helpers/regExpHelper';
+import { Aggregation } from '../models/content/aggregation';
 
 
 export class RunIntegrationTestDialog {
@@ -28,6 +29,14 @@ export class RunIntegrationTestDialog {
 			if(rule instanceof Enrichment) {
 				// Уточняем у пользователя, что необходимо скомпилировать для тестов обогащения.
 				return this.getEnrichmentOptionsForSingleRule(rule);
+			}
+
+			if(rule instanceof Aggregation) {
+				// Ничего для агрегация компилировать не надо
+				const options = new IntegrationTestRunnerOptions();
+				options.correlationCompilation = CompilationType.DontCompile;
+				options.tmpFilesPath = this.options.tmpFilesPath;
+				return options;
 			}
 
 			throw new XpException('Для заданного типа контента не поддерживается получение настроек интеграционных тестов');
@@ -172,25 +181,6 @@ export class RunIntegrationTestDialog {
 			const foundedSubruleNamesSet = new Set(depRulePaths.map(p => path.basename(p).toLocaleLowerCase()));
 			const ruleNamesNotFound = [...uniqueDepRuleNames].filter(x => !foundedSubruleNamesSet.has(x));
 			throw new XpException(`Не удалось найти зависимые от обогащения правила: ${ruleNamesNotFound.join(", ")}`);
-
-			// const result = await this.askTheUser(rule.getName());
-			// switch(result) {
-			// 	case this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingSingleCorrelationCompilation.CurrentPackage", rule.getName()): {
-			// 		testRunnerOptions.correlationCompilation = CompilationType.CurrentPackage;
-			// 		break;
-			// 	}
-
-			// 	case this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingSingleCorrelationCompilation.AllPackages", rule.getName()): {
-			// 		testRunnerOptions.correlationCompilation = CompilationType.AllPackages;
-			// 		break;
-			// 	}
-				
-			// 	case this.config.getMessage("View.ObjectTree.Message.ContentChecking.ChoosingSingleCorrelationCompilation.DontCompile", rule.getName()): {
-			// 		testRunnerOptions.correlationCompilation = CompilationType.DontCompile;
-			// 		break;
-			// 	}
-			// }
-			//  return testRunnerOptions;
 		}
 
 		const uniqueDepRulePaths = depRulePaths;

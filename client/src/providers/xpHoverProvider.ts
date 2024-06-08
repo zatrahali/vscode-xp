@@ -59,18 +59,23 @@ export class XpHoverProvider implements vscode.HoverProvider {
 		const xpHoverProvider = new XpHoverProvider(signatures, taxonomySignatures);
 		config.getContext().subscriptions.push(
 			vscode.languages.registerHoverProvider([
-				{
-					scheme: 'file',
-					language: 'co'
-				},
-				{
-					scheme: 'file',
-					language: 'xp'
-				},
-				{
-					scheme: 'file',
-					language: 'en'
-				}], 
+					{
+						scheme: 'file',
+						language: 'co'
+					},
+					{
+						scheme: 'file',
+						language: 'xp'
+					},
+					{
+						scheme: 'file',
+						language: 'en'
+					},
+					{
+						scheme: 'file',
+						language: 'agr'
+					}
+				], 
 				xpHoverProvider
 			)
 		);

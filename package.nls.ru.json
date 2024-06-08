@@ -15,6 +15,7 @@
 	"xp.views.knowledgebaseTree.createCorrelationCommand": "Новое правило корреляции",
 	"xp.views.knowledgebaseTree.createEnrichmentCommand": "Новое правило обогащения",
 	"xp.views.knowledgebaseTree.createNormalizationCommand": "Новое правило нормализации",
+	"xp.views.knowledgebaseTree.createAggregationCommand": "Новое правило агрегации",
 	"xp.views.knowledgebaseTree.createTableListsCommand": "Новый табличный список",
 	"xp.views.knowledgebaseTree.createMacroCommand": "Новый макрос",
 	"xp.views.knowledgebaseTree.createFolderCommand": "Новую папку",

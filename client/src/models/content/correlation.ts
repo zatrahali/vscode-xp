@@ -139,10 +139,10 @@ export class Correlation extends RuleBaseItem {
 		const duplicatedRule = Object.assign(Correlation.create(newName), copy) as Correlation;
 		
 		duplicatedRule.setCommand({
-				command: ContentTreeProvider.onRuleClickCommand,
-				title: "Open File",
-				arguments: [duplicatedRule]
-			});
+			command: ContentTreeProvider.onRuleClickCommand,
+			title: "Open File",
+			arguments: [duplicatedRule]
+		});
 
 		duplicatedRule.getRuleFilePath();
 
@@ -253,7 +253,6 @@ export class Correlation extends RuleBaseItem {
 	}
 
 	public async save(parentFullPath?: string): Promise<void> {
-
 		// Путь либо передан как параметр, либо он уже задан в правиле.
 		let corrDirPath = "";
 		if (parentFullPath) {

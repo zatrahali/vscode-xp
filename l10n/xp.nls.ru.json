@@ -134,9 +134,13 @@
     "View.CreateRule.CreateCorrelationTitle": "Создание правила корреляции",
     "View.CreateRule.CreateEnrichmentTitle": "Создание правила обогащения",
     "View.CreateRule.CreateNormalizationTitle": "Создание правила нормализации",
+    "View.CreateRule.CreateAggregationTitle": "Создание правила агрегации",
+    
     "View.CreateRule.CreateCorrelationHeader": "Создать правило корреляции",
     "View.CreateRule.CreateEnrichmentHeader": "Создать правило обогащения",
     "View.CreateRule.CreateNormalizationHeader": "Создать правило нормализации",
+    "View.CreateRule.CreateAggregationHeader": "Создать правила агрегации",
+    
     "View.CreateRule.Template": "Шаблон",
     "View.CreateRule.NameLabel": "Название"
 }
