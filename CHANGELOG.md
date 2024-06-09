@@ -5,7 +5,21 @@
 - усилена проверка кода интеграционных тестов на наличие хотя бы одной проверки `expect 1 {...}` или `expect table_list {...}` (special thanks @UncleSStepa);
 - добавлена базовая поддержка правил агрегации: создание из шаблона, тестирование, заполнение метаинформации, описание и локализация (special thanks @Protenil, @hiddenbymeeee).
 
-## 3.16.0 (Release)
+## 3.16.0 (Release - June 9, 2024)
+
+- фича [#123](https://github.com/Security-Experts-Community/vscode-xp/issues/123) - проверка объектов с оптимизацией сборки артефактов, что значительно повысило скорость её выполнения;
+- фича [#144](https://github.com/Security-Experts-Community/vscode-xp/issues/144) - индивидуальная проверка локализации для правил нормализации в редакторе локализации (special thanks @laaral-home);
+- фича [#195](https://github.com/Security-Experts-Community/vscode-xp/issues/195) - добавлена возможность коррелировать EVTX-файлы на Linux (special thanks @anfinogenov);
+- добавлен раздел Начало работы (Getting Started) на [русском](https://github.com/Security-Experts-Community/vscode-xp/blob/develop/docs/GETTING_STARTED.md) и [английском](https://github.com/Security-Experts-Community/vscode-xp/blob/develop/docs/GETTING_STARTED_EN.md
+) языках по базовым кейсам работы с расширением и контентом (special thanks @Yulia17_00, @GenRockeR);
+- улучшены локализации на русском и английском языках (special thanks @DuckDarkwing, @feelstacy, @eugzolotukhin);
+- добавлено конвертирования новых строк экспертизы при распаковке KB-пакета под текущую систему, что снижает количество незначимых изменений в git (special thanks @hiddenbymeeee);
+- реализована проверка корректности пути (только латинские буквы, цифры и допустимые для пути символы) к правилу при запуске тестов нормализаций и выходной директории (special thanks @iatrofimenko);
+- добавлено сохранение статуса теста при их сохранение в редакторе интеграционных тестов если не менялись ни необработанные события, ни код теста;
+- расширены возможности по тестированию правил обогащения корреляционных правил (special thanks @g4n8g);
+- расширено логирование;
+- добавлена возможность избежать ручного задания выходной директории, она формируется автоматически;
+- исправлены ошибки и повышена стабильность.
 
 ## 3.15.14 (Pre-Release)
 
