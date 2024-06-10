@@ -189,6 +189,10 @@ export class Localization {
 		const ruLocContent = await FileSystemHelper.readContentFile(ruLocFilePath);
 		const ruLocObject = YamlHelper.parse(ruLocContent);
 
+		if(!ruLocObject?.Description) {
+			return "";
+		}
+
 		return ruLocObject.Description;
 	}
 
@@ -200,6 +204,10 @@ export class Localization {
 		
 		const enLocContent = await FileSystemHelper.readContentFile(enLocFilePath);
 		const enLocObject = YamlHelper.parse(enLocContent);
+
+		if(!enLocObject?.Description) {
+			return "";
+		}
 
 		return enLocObject.Description;
 	}
