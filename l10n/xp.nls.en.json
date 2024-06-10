@@ -92,9 +92,9 @@
     "View.IntegrationTests.Message.RawEventsAreNotDefined": "Raw events are not set for normalization. Set the events and repeat",
     "View.IntegrationTests.Message.SaveTheTestBefore": "Save the test before starting the operation and repeat",
     "View.IntegrationTests.Message.LastTestCannotBeDeleted": "The last test cannot be deleted",
-    "View.IntegrationTests.Message.SaveWithoutRawEvents": "Attempt to save test #{0} without unhandled events. Add the event data and repeat",
-    "View.IntegrationTests.Message.SaveWithoutTestCode": "Attempt to save test #{0} without test event code. Add the test code and repeat",
-    "View.IntegrationTests.Message.InvalidTestCode": "In the test code #{0}, the expect 1 {...} or expect table_list {...} validation block was not detected or is incorrect. Correct and repeat",
+    "View.IntegrationTests.Message.SaveWithoutRawEvents": "Attempt to save test No {0} without unhandled events. Add the event data and repeat",
+    "View.IntegrationTests.Message.SaveWithoutTestCode": "Attempt to save test No {0} without test event code. Add the test code and repeat",
+    "View.IntegrationTests.Message.InvalidTestCode": "In the test code No {0}, the expect 1 {...} or expect table_list {...} validation block was not detected or is incorrect. Correct and repeat",
     "View.IntegrationTests.Message.InvalidJsonInTestCode": "JSON correctness error in the test code. Make corrections and repeat",
     "View.IntegrationTests.Message.NoTestResultFound": "Integration test results not found. Run the integration tests again",
 
