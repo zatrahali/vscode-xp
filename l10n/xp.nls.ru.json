@@ -13,9 +13,9 @@
     "CouldNotGenerateSiemjConf": "Не удалось создать файл siemj.conf",
     "UnexpectedError": "Непредвиденная ошибка",
     "UncaughtExceptionMessage": "Если она [не встречалась раньше](https://github.com/Security-Experts-Community/vscode-xp/issues/), заведите [баг](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) и приложите [логи](command:xp.commonCommands.showOutputChannel). Кроме того, можно задать вопросы [в Telegram-чате](https://t.me/s3curity_experts_community/75)",
-    "Error.IncorrectOutputDirectoryPath": "Не удалось создать выходную директорию по пути '{0}'. Задайте корректный путь к выходной директории [в настройках](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath'])",
+    "Error.IncorrectOutputDirectoryPath": "Не удалось создать папку в {0}. Укажите корректный путь [в параметре](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath'])",
     "Error.CommonBuilding": "Не удалось выполнить операцию. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
-    "Error.LocalizationBuilding": "Не удалось скомпилировать локализации. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
+    "Error.LocalizationBuilding": "Не удалось скомпилировать правила локализации. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
 
     "View.ObjectTree.Message.TheKnowledgeBaseIsNotInitialized": "База знаний не найдена. Создать стандартные папки для продукта {0}?",
     "View.ObjectTree.Message.NeedToOpenKnowledgeBase": "Для выполнения команды нужно [открыть базу знаний](command:xp.contentTree.openKnowledgebaseCommand)",

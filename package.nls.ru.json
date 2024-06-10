@@ -3,7 +3,7 @@
 	
 	"xp.commonCommands.showOutputChannel": "Показать выходные данные",
 
-	"xp.commonCommands.showExtensionSettings" : "Настройки расширения",
+	"xp.commonCommands.showExtensionSettings" : "Параметры расширения",
 
 	"xp.views.knowledgebaseTree.title": "Дерево объектов",
 	"xp.views.knowledgebaseTree.refreshContentTreeCommand": "Обновить",
@@ -51,10 +51,10 @@
 
 	"xp.xpConfig.kbtBaseDirectoryDescription": "Путь к папке c [Knowledge Base Toolkit](https://github.com/vxcontrol/xp-kbt/releases)",
 	"xp.xpConfig.outputDirectoryPathDescription": "Путь к папке, в которой сохраняются временные объекты. Эта папка очищается автоматически при каждом запуске расширения",
-	"xp.xpConfig.correlatorTimeoutDescription": "Таймаут работы коррелятора в секундах",
+	"xp.xpConfig.correlatorTimeoutDescription": "Макс. время корреляции в секундах. Если оно будет превышено, корреляция будет прервана",
 
-	"xp.xpConfig.originDescription": "Информация о поставщике. Используется при упаковке контента в KB-файл",
-	"xp.xpConfig.origin.contentPrefixDescription": "Префикс ObjectId, а также системный префикс для задания поставщика контента. Например, пользовательские правила с возможностью редактирования имеют префикс LOC, системные PT. Если префикс не задан, ObjectId не генерируется для создаваемых правил",
+	"xp.xpConfig.originDescription": "Информация о поставщике. Используется при экспорте объектов в KB-файл",
+	"xp.xpConfig.origin.contentPrefixDescription": "Префикс поставщика объектов. Должен совпадать с ObjectId. По умолчанию, пользовательским правилам соответствует префикс LOC, системным — PT. Если не указать префикс, у создаваемых правил не будет ObjectId",
 	"xp.xpConfig.origin.ruDescription": "Отображаемое имя (RU)",
 	"xp.xpConfig.origin.enDescription": "Display Name (EN)",
 	"xp.xpConfig.origin.idDescription": "Уникальный идентификатор поставщика, который представляет собой GUID (глобальный уникальный идентификатор).",
