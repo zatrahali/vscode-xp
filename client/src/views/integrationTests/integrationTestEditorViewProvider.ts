@@ -292,6 +292,7 @@ export class IntegrationTestEditorViewProvider {
 	private async executeCommand(message: any) {
 		// События, не требующие запуска утилит.
 		switch (message.command) {
+			// TODO: не используется, надо удалить
 			case 'saveTest': {
 				const currTest = IntegrationTest.convertFromObject(message.test);
 				try {
@@ -505,17 +506,17 @@ export class IntegrationTestEditorViewProvider {
 	}
 
 	private lastTest() {
-		DialogHelper.showWarning('Последний тест нельзя удалить, он будет использован как шаблон для создания новых тестов');
+		DialogHelper.showWarning(this.config.getMessage("View.IntegrationTests.Message.LastTestCannotBeDeleted"));
 	}
 
 	private async saveTestFromUI(message: any) : Promise<IntegrationTest> {
 		let rawEvents = message?.rawEvents;
 		if (!rawEvents) {
-			throw new XpException("Не заданы сырые события для нормализации. Задайте события и повторите");
+			throw new XpException(this.config.getMessage("View.IntegrationTests.Message.RawEventsAreNotDefined"));
 		}
 
 		if (!message?.test) {
-			throw new XpException("Сохраните тест перед запуском нормализации сырых событий и повторите действие");
+			throw new XpException(this.config.getMessage("View.IntegrationTests.Message.SaveTheTestBefore"));
 		}
 
 		const currTest = IntegrationTest.convertFromObject(message.test);
@@ -528,40 +529,12 @@ export class IntegrationTestEditorViewProvider {
 	private getSelectedTestNumber(message: any): number {
 		const activeTestNumberString = message?.activeTestNumber;
 		if (!activeTestNumberString) {
-			DialogHelper.showError(`Не задан номер активного теста.`);
+			DialogHelper.showError(`The number of the active test is not set`);
 			return;
 		}
 
 		const activeTestNumber = parseInt(activeTestNumberString);
 		return activeTestNumber;
-	}
-
-	private async cleanTestCode(message: any) {
-		if (!message.test) {
-			DialogHelper.showInfo("Сохраните тест перед запуском нормализации сырых событий и повторите действие");
-			return;
-		}
-
-		let test: IntegrationTest;
-		try {
-			const testCode = message?.testCode;
-			if (!testCode) {
-				throw new Error("Не удалось получить условия выполнения теста из интерфейса редактирования интеграционных тестов");
-			}
-
-			test = IntegrationTest.convertFromObject(message.test);
-
-			// Обновляем и сохраняем тест.
-			const cleanedTestCode = TestHelper.cleanTestCode(testCode);
-
-			this._view.webview.postMessage({
-				'command': 'updateTestCode',
-				'cleanedTestCode': cleanedTestCode
-			});
-		}
-		catch (error) {
-			DialogHelper.showError(`Не удалось очистить код теста №${test.getNumber()}`, error);
-		}
 	}
 
 	public async addEnvelope(rawEvents: string, mimeType: EventMimeType): Promise<void> {
@@ -571,7 +544,7 @@ export class IntegrationTestEditorViewProvider {
 			envelopedRawEventsString = envelopedEvents.join(IntegrationTestEditorViewProvider.TEXTAREA_END_OF_LINE);
 		}
 		catch (error) {
-			ExceptionHelper.show(error, "Ошибка добавления конверта");
+			ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.DefaultErrorAddingEnvelope"));
 			return;
 		}
 

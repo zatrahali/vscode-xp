@@ -89,6 +89,17 @@
 
     "View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated": "The expected event in the test code was updated. Correct if necessary and save the test.",
     "View.IntegrationTests.Message.UnableGetExpectedEvent": "Cannot retrieve the expected event for the failed test",
+    "View.IntegrationTests.Message.RawEventsAreNotDefined": "Raw events are not set for normalization. Set the events and repeat",
+    "View.IntegrationTests.Message.SaveTheTestBefore": "Save the test before starting the operation and repeat",
+    "View.IntegrationTests.Message.LastTestCannotBeDeleted": "The last test cannot be deleted",
+    "View.IntegrationTests.Message.SaveWithoutRawEvents": "Attempt to save test #{0} without unhandled events. Add the event data and repeat",
+    "View.IntegrationTests.Message.SaveWithoutTestCode": "Attempt to save test #{0} without test event code. Add the test code and repeat",
+    "View.IntegrationTests.Message.InvalidTestCode": "In the test code #{0}, the expect 1 {...} or expect table_list {...} validation block was not detected or is incorrect. Correct and repeat",
+    "View.IntegrationTests.Message.InvalidJsonInTestCode": "JSON correctness error in the test code. Make corrections and repeat",
+    "View.IntegrationTests.Message.NoTestResultFound": "Integration test results not found. Run the integration tests again",
+
+    "View.IntegrationTests.Message.DefaultErrorAddingEnvelope": "Error adding an envelope",
+    "View.IntegrationTests.Message.DefaultErrorEventsNormalization": "Events could not be normalized. It is necessary to [recompile normalizations](command:xp.contentTree.buildNormalizations), check the format of the raw events and their envelopes, the availability of appropriate normalization in the knowledge base",
 
     "View.Metainfo": "Metadata for {0}",
     "View.Metainfo.Id" : "ID",

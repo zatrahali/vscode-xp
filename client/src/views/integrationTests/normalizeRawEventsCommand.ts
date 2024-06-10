@@ -43,7 +43,7 @@ export class NormalizeRawEventsCommand extends Command {
 				this.params.test.setNormalizedEvents(normEvents);
 			}
 			catch (error) {
-				ExceptionHelper.show(error, "Не удалось нормализовать события. Необходимо [перекомпилировать нормализации](command:xp.contentTree.buildNormalizations), проверить формат необработанных событий и их конвертов, проверить наличие соответствующей нормализации");
+				ExceptionHelper.show(error, this.params.config.getMessage('View.IntegrationTests.Message.DefaultErrorEventsNormalization'));
 				return;
 			}
 

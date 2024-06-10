@@ -24,6 +24,7 @@ export class SaveAllCommand extends Command {
 			// Номер активного теста.
 			const activeTestNumberString = this.params.testNumber;
 			if (!activeTestNumberString) {
+				// TODO: внутренняя ошибка
 				throw new XpException(`Не задан номер активного теста`);
 			}
 
@@ -52,13 +53,13 @@ export class SaveAllCommand extends Command {
 			let rawEvents = plainTest?.rawEvents;
 			rawEvents = rawEvents ? rawEvents.trim() : "";
 			if (!rawEvents || rawEvents == "") {
-				throw new XpException(`Попытка сохранения теста №${plainTest.number ?? 0} без необработанных событий. Добавьте данные события и повторите`);
+				throw new XpException(this.params.config.getMessage("View.IntegrationTests.Message.SaveWithoutRawEvents", plainTest.number ?? 0));
 			}
 
 			// Код теста.
 			const testCode = plainTest?.testCode;
 			if (!testCode || testCode == "") {
-				throw new XpException("Попытка сохранения теста без тестового кода событий");
+				throw new XpException(this.params.config.getMessage("View.IntegrationTests.Message.SaveWithoutTestCode", plainTest.number ?? 0));
 			}
 		});
 
@@ -83,7 +84,7 @@ export class SaveAllCommand extends Command {
 
 			// Проверяем наличие проверки ожидаемых событий
 			if(!/(\bexpect\b\s+\d+)|(\bexpect\b\s+\btable_list\b)\s+{.*}$/gm.test(testCode)) {
-				throw new XpException("В коде теста не обнаружен или является некорректным блок проверки expect 1 {...} или expect table_list {...}. Исправьте и повторите");
+				throw new XpException(this.params.config.getMessage("View.IntegrationTests.Message.InvalidTestCode", number));
 			}
 
 			// Из textarea новые строки только \n, поэтому надо их поправить под систему.
@@ -93,7 +94,7 @@ export class SaveAllCommand extends Command {
 				compressedCode = TestHelper.compressTestCode(testCode);
 			}
 			catch(error) {
-				throw new XpException("Ошибка корректности JSON в коде теста. Внесите исправления и повторите", error);
+				throw new XpException(this.params.config.getMessage("View.IntegrationTests.Message.InvalidJsonInTestCode"), error);
 			}
 			
 			newTest.setTestCode(compressedCode);

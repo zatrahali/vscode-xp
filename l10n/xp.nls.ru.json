@@ -89,6 +89,17 @@
 
     "View.IntegrationTests.Message.ExpectedEventWasSuccessfullyUpdated": "Ожидаемое событие в коде теста обновлено. Перед сохранением теста измените событие, если требуется",
     "View.IntegrationTests.Message.UnableGetExpectedEvent": "Невозможно получить ожидаемое событие для теста, который завершился неуспешно",
+    "View.IntegrationTests.Message.RawEventsAreNotDefined": "Не заданы сырые события для нормализации. Задайте события и повторите",
+    "View.IntegrationTests.Message.SaveTheTestBefore": "Сохраните тест перед запуском операции и повторите",
+    "View.IntegrationTests.Message.LastTestCannotBeDeleted": "Последний тест нельзя удалить",
+    "View.IntegrationTests.Message.SaveWithoutRawEvents": "Попытка сохранения теста №{0} без необработанных событий. Добавьте данные события и повторите",
+    "View.IntegrationTests.Message.SaveWithoutTestCode": "Попытка сохранения теста №{0} без тестового кода событий. Добавьте код теста и повторите",
+    "View.IntegrationTests.Message.InvalidTestCode": "В коде теста №{0} не обнаружен или является некорректным блок проверки expect 1 {...} или expect table_list {...}. Исправьте и повторите",
+    "View.IntegrationTests.Message.InvalidJsonInTestCode": "Ошибка корректности JSON в коде теста. Внесите исправления и повторите",
+    "View.IntegrationTests.Message.NoTestResultFound": "Результаты интеграционных тестов не найдена. Запустите интеграционные тесты еще раз",
+
+    "View.IntegrationTests.Message.DefaultErrorAddingEnvelope": "Ошибка добавления конверта",
+    "View.IntegrationTests.Message.DefaultErrorEventsNormalization": "Не удалось нормализовать события. Необходимо [перекомпилировать нормализации](command:xp.contentTree.buildNormalizations), проверить формат необработанных событий и их конвертов, наличие соответствующей нормализации в базе знаний",
 
     "View.Metainfo": "Метаданные {0}",
     "View.Metainfo.Id" : "Идентификатор",

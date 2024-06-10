@@ -29,12 +29,13 @@ export class ShowTestResultsDiffCommand extends Command {
 		// Получаем ожидаемое событие.
 		const tests = this.params.rule.getIntegrationTests();
 		if(tests.length < this.params.testNumber) {
+			// TODO: внутренняя ошибка
 			DialogHelper.showError(`Запрашиваемый интеграционный тест №${this.params.testNumber} правила ${ruleName} не найден`);
 			return;
 		}
 
 		if(!fs.existsSync(this.params.tmpDirPath)) {
-			DialogHelper.showError(`Директория результатов интеграционных тестов не найдена. Запустите интеграционные тесты еще раз`);
+			DialogHelper.showError(this.params.config.getMessage("View.IntegrationTests.Message.NoTestResultFound"));
 			return;
 		}
 
@@ -46,6 +47,7 @@ export class ShowTestResultsDiffCommand extends Command {
 			const testCode = currTest.getTestCode();
 			expectedEvent = RegExpHelper.getSingleExpectEvent(testCode);
 			if(!expectedEvent) {
+				// TODO: внутренняя ошибка?
 				DialogHelper.showError(`Ожидаемое событий интеграционного теста №${this.params.testNumber} правила ${ruleName} пусто`);
 				return;
 			}
