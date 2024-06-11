@@ -16,6 +16,7 @@ import { Correlation, CorrelationEvent } from '../models/content/correlation';
 import { ArgumentException } from '../models/argumentException';
 import { JsHelper } from './jsHelper';
 import { Normalization } from '../models/content/normalization';
+import { Aggregation } from '../models/content/aggregation';
 
 export type EventMimeType = "application/x-pt-eventlog" | "application/json" | "text/plain" | "text/csv" | "text/xml"
 

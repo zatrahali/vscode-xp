@@ -20,10 +20,10 @@ import { OperationCanceledException } from '../../../models/operationCanceledExc
 import { StringHelper } from '../../../helpers/stringHelper';
 import { ParserHelper } from '../../../helpers/parserHelper';
 import { ViewCommand } from '../../../models/command/command';
-import { XpException } from '../../../models/xpException';
 import { SiemjManager } from '../../../models/siemj/siemjManager';
 import { TestHelper } from '../../../helpers/testHelper';
 import { BuildLocalizationsCommand } from './buildLocalizationsCommand';
+import { Aggregation } from '../../../models/content/aggregation';
 
 /**
  * Проверяет контент по требованиям. В настоящий момент реализована только проверка интеграционных тестов и локализаций.
@@ -66,7 +66,7 @@ export class ContentCheckingCommand extends ViewCommand {
 			let thereAreRulesWithLocalizations = false;
 			for(const rule of rules) {
 				// Игнорируем все, кроме правил корреляции, обогащения и нормализации
-				if(!(rule instanceof Correlation) && !(rule instanceof Enrichment) && !(rule instanceof Normalization)) {
+				if(!(rule instanceof Correlation) && !(rule instanceof Enrichment) && !(rule instanceof Normalization) && !(rule instanceof Aggregation)) {
 					continue;
 				}
 
@@ -96,7 +96,6 @@ export class ContentCheckingCommand extends ViewCommand {
 					thereAreRulesWithLocalizations = true;
 				}
 
-
 				if(rule instanceof Enrichment) {
 					await this.checkEnrichment(
 						rule,
@@ -108,6 +107,16 @@ export class ContentCheckingCommand extends ViewCommand {
 					);
 				}
 
+				if(rule instanceof Aggregation) {
+					await this.checkAggregation(
+						rule,
+						testRunner,
+						{
+							progress: progress,
+							cancellationToken: token
+						}
+					);
+				}
 
 				await ContentTreeProvider.refresh(rule);
 			}
@@ -136,6 +145,7 @@ export class ContentCheckingCommand extends ViewCommand {
 		// Собираем обобщенные настройки для компиляции графа корреляции.
 		let correlationBuildingConfigured = false;
 		let enrichmentBuildingConfigured = false;
+		let aggregationBuildingConfigured = false;
 		for(const rule of rules) {
 			// Сбрасываем статус для правила в дереве объектов.
 			rule.setStatus(ContentItemStatus.Default);
@@ -163,12 +173,19 @@ export class ContentCheckingCommand extends ViewCommand {
 
 				enrichmentBuildingConfigured = true;
 			}
+
+			if(rule instanceof Aggregation) {
+				const ruleRunOptions = await ritd.getIntegrationTestRunOptionsForSingleRule(rule);
+				unionOptions.union(ruleRunOptions);
+
+				aggregationBuildingConfigured = true;
+			}
 		}
 
 		const outputParser = new SiemJOutputParser(this.config);
 		const testRunner = new IntegrationTestRunner(this.config, outputParser);
 
-		if(correlationBuildingConfigured || enrichmentBuildingConfigured) {
+		if(correlationBuildingConfigured || enrichmentBuildingConfigured || aggregationBuildingConfigured) {
 			const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.BuildAllArtifacts");
 			Log.info(statusMessage);
 			options.progress.report({message: statusMessage});
@@ -289,11 +306,11 @@ export class ContentCheckingCommand extends ViewCommand {
 		const siemjResult = await runner.run(rule);
 		if (siemjResult.testsStatus) {
 			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsPassed");
-			Log.debug(message);
+			Log.info(message);
 			rule.setStatus(ContentItemStatus.Verified, message);
 		} else {
 			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsFailed");
-			Log.debug(message);
+			Log.info(message);
 			rule.setStatus(ContentItemStatus.Unverified, message);
 		}
 
@@ -334,6 +351,33 @@ export class ContentCheckingCommand extends ViewCommand {
 
 		rule.setLocalizationExamples(locExamples);
 	}
+	private async checkAggregation(
+		rule: RuleBaseItem,
+		runner: IntegrationTestRunner,
+		options: {progress: any, cancellationToken: vscode.CancellationToken}
+	) {
+		Log.progress(
+			options.progress,
+			this.config.getMessage("View.ObjectTree.Progress.ContentChecking.AggregationChecking", rule.getName())
+		);
+
+		if(!await this.checkDirectoryNameEqualRuleName(rule)) {
+			return;
+		}
+
+		this.checkRuleDescription(rule);
+
+		const siemjResult = await runner.run(rule);
+		if (siemjResult.testsStatus) {
+			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsPassed");
+			Log.info(message);
+			rule.setStatus(ContentItemStatus.Verified, message);
+		} else {
+			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsFailed");
+			Log.info(message);
+			rule.setStatus(ContentItemStatus.Unverified, message);	
+		}
+	}
 
 	private async checkEnrichment(
 		rule: RuleBaseItem,
@@ -351,23 +395,18 @@ export class ContentCheckingCommand extends ViewCommand {
 
 		this.checkRuleDescription(rule);
 
-		const statusMessage = this.config.getMessage("View.ObjectTree.Progress.ContentChecking.EnrichmentChecking", rule.getName());
-		Log.info(statusMessage);
-		options.progress.report({ message: statusMessage});
-
 		if(options.cancellationToken.isCancellationRequested) {
 			throw new OperationCanceledException(this.config.getMessage("OperationWasAbortedByUser"));
 		}
 
 		const siemjResult = await runner.run(rule);
-		
 		if (siemjResult.testsStatus) {
 			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsPassed");
-			Log.debug(message);
+			Log.info(message);
 			rule.setStatus(ContentItemStatus.Verified, message);
 		} else {
 			const message = this.config.getMessage("View.ObjectTree.ItemStatus.TestsFailed");
-			Log.debug(message);
+			Log.info(message);
 			rule.setStatus(ContentItemStatus.Unverified, message);	
 		}
 	}
@@ -407,7 +446,7 @@ export class ContentCheckingCommand extends ViewCommand {
 
 		if(!result) {
 			const message = `В правиле ${ruleNameFromCode} имя директории ${directoryName} отличается от имени правила. Исправьте данную ошибку и повторите`;
-			Log.debug(message);
+			Log.info(message);
 			rule.setStatus(ContentItemStatus.Unverified, message);
 			return false;
 		}

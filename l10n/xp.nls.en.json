@@ -39,6 +39,7 @@
     "View.ObjectTree.Progress.ContentChecking.NormalizationChecking": "Testing normalization rule {0}",
     "View.ObjectTree.Progress.ContentChecking.CorrelationChecking": "Testing correlation rule {0}",
     "View.ObjectTree.Progress.ContentChecking.EnrichmentChecking": "Testing enrichment rule {0}",
+    "View.ObjectTree.Progress.ContentChecking.AggregationChecking": "Testing aggregation rule {0}",
 
     "View.ObjectTree.Message.BuildAllGraphsCompletedSuccessfully": "Successfully compiled all rules and lists",
     "View.ObjectTree.Message.BuildAllLocalizationsCompletedSuccessfully": "Successfully compiled all localization rules",

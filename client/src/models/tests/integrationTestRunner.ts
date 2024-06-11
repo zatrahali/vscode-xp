@@ -88,6 +88,7 @@ export class IntegrationTestRunner {
 			}
 		}
 
+		configBuilder.addAggregationGraphBuilding();
 		configBuilder.addTablesSchemaBuilding();
 		configBuilder.addTablesDbBuilding();
 		configBuilder.addEnrichmentsGraphBuilding();
