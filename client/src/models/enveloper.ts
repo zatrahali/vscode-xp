@@ -7,6 +7,7 @@ import * as readline from 'readline';
 import { EventMimeType, TestHelper } from '../helpers/testHelper';
 import { XpException } from './xpException';
 import { StringHelper } from '../helpers/stringHelper';
+import { Configuration } from './configuration';
 
 export class Enveloper {
 	/**
@@ -36,7 +37,7 @@ export class Enveloper {
 		const compressedRawEvents = rawEventsTrimmed.split(Enveloper.END_OF_LINE).filter(e => e);
 
 		if(!this.thereAreUnEnvelopedEvents(compressedRawEvents)) {
-			throw new XpException("Конверт для всех событий уже добавлен");
+			throw new XpException(Configuration.get().getMessage("View.IntegrationTests.Message.EnvelopeHasAlreadyAdded"));
 		}
 
 		// Добавляем каждому конверт

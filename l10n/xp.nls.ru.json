@@ -77,6 +77,7 @@
     "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Выполняются интеграционные тесты для правила {0} со вспомогательными правилами",
     "View.IntegrationTests.Progress.Normalization": "Нормализация необработанных событий для теста №{0}",
     "View.IntegrationTests.Progress.NormalizationAndEnrichment": "Нормализация и обогащение необработанных событий для теста №{0}",
+    "View.IntegrationTests.Progress.AddingEnvelope": "Добавление конверта на необработанные события",
 
     "View.IntegrationTests.Message.NoTestsFound": "Тесты для правила {0} не найдены. Добавьте хотя бы один тест и повторите попытку",
     "View.IntegrationTests.Message.TestsPassed": "Интеграционные тесты для правила {0} пройдены успешно",
@@ -98,8 +99,9 @@
     "View.IntegrationTests.Message.InvalidTestCode": "В коде теста №{0} не обнаружен или является некорректным блок проверки expect 1 {...} или expect table_list {...}. Исправьте и повторите",
     "View.IntegrationTests.Message.InvalidJsonInTestCode": "Ошибка корректности JSON в коде теста. Внесите исправления и повторите",
     "View.IntegrationTests.Message.NoTestResultFound": "Результаты интеграционных тестов не найдена. Запустите интеграционные тесты еще раз",
+    "View.IntegrationTests.Message.EnvelopeHasAlreadyAdded": "Конверт для всех событий уже добавлен",
 
-    "View.IntegrationTests.Message.DefaultErrorAddingEnvelope": "Ошибка добавления конверта",
+    "View.IntegrationTests.Message.DefaultErrorAddingEnvelope": "Ошибка добавления конверта на необработанные события",
     "View.IntegrationTests.Message.DefaultErrorEventsNormalization": "Не удалось нормализовать события. Необходимо [перекомпилировать нормализации](command:xp.contentTree.buildNormalizations), проверить формат необработанных событий и их конвертов, наличие соответствующей нормализации в базе знаний",
 
     "View.Metainfo": "Метаданные {0}",
@@ -113,6 +115,9 @@
     "View.Metainfo.References": "Ссылки",
     "View.Metainfo.DataSources": "Источники и события",
     "View.Metainfo.MITRE": "Тактики и техники MITRE ATT&CK",
+
+    "View.Metainfo.Message.MetadataIsSaved": "Метаданные правила сохранены",
+    "View.Metainfo.Message.DefaultErrorMetaInfoSave": "Не удалось сохранить метаданные",
 
     "MacrosName": "Название макроса",
 

@@ -19,7 +19,7 @@ export class MetainfoViewProvider {
 	public static showMetaInfoEditorCommand = "MetaInfoView.showMetaInfoEditor";
 
 	constructor(
-		private readonly _config: Configuration,
+		private readonly config: Configuration,
 		private readonly _formatter: MustacheFormatter
 	) { }
 
@@ -56,7 +56,7 @@ export class MetainfoViewProvider {
 		this.rule = rule;
 
 		// Создать и показать панель.
-		const title = this._config.getMessage("View.Metainfo", rule.getName());
+		const title = this.config.getMessage("View.Metainfo", rule.getName());
 		this._view = vscode.window.createWebviewPanel(
 			MetainfoViewProvider.viewId,
 			title,
@@ -86,27 +86,27 @@ export class MetainfoViewProvider {
 		const metaInfo = await this.rule.getMetaInfo().toObject();
 
 		// Подгружаем базовую ссылку для внешних ресурсов.
-		const resourcesUri = this._config.getExtensionUri();
+		const resourcesUri = this.config.getExtensionUri();
 		const extensionBaseUri = this._view.webview.asWebviewUri(resourcesUri);
 		metaInfo.ExtensionBaseUri = extensionBaseUri;
 
-		const webviewUri = this.getUri(this._view.webview, this._config.getExtensionUri(), ["client", "out", "ui.js"]);
+		const webviewUri = this.getUri(this._view.webview, this.config.getExtensionUri(), ["client", "out", "ui.js"]);
 		const metainfoHtml = this._formatter.format({ ...metaInfo,
 			WebviewUri: webviewUri,
 
 			// Локализация
 			Localization: {
-				Save: this._config.getMessage("Save"),
-				KnowledgeHolders : this._config.getMessage("View.Metainfo.KnowledgeHolders"),
-				Created: this._config.getMessage("View.Metainfo.Created"),
-				Updated: this._config.getMessage("View.Metainfo.Updated"),
-				Id: this._config.getMessage("View.Metainfo.Id"),
-				Usecases: this._config.getMessage("View.Metainfo.Usecases"),
-				Falsepositives: this._config.getMessage("View.Metainfo.Falsepositives"),
-				Improvements: this._config.getMessage("View.Metainfo.Improvements"),
-				References: this._config.getMessage("View.Metainfo.References"),
-				DataSources: this._config.getMessage("View.Metainfo.DataSources"),
-				MITRE: this._config.getMessage("View.Metainfo.MITRE")
+				Save: this.config.getMessage("Save"),
+				KnowledgeHolders : this.config.getMessage("View.Metainfo.KnowledgeHolders"),
+				Created: this.config.getMessage("View.Metainfo.Created"),
+				Updated: this.config.getMessage("View.Metainfo.Updated"),
+				Id: this.config.getMessage("View.Metainfo.Id"),
+				Usecases: this.config.getMessage("View.Metainfo.Usecases"),
+				Falsepositives: this.config.getMessage("View.Metainfo.Falsepositives"),
+				Improvements: this.config.getMessage("View.Metainfo.Improvements"),
+				References: this.config.getMessage("View.Metainfo.References"),
+				DataSources: this.config.getMessage("View.Metainfo.DataSources"),
+				MITRE: this.config.getMessage("View.Metainfo.MITRE")
 			}
 		});
 		this._view.webview.html = metainfoHtml;
@@ -128,10 +128,10 @@ export class MetainfoViewProvider {
 					await this.updateWebView();
 				}
 				catch (error) {
-					return ExceptionHelper.show(error, "Не удалось сохранить метаданные");
+					return ExceptionHelper.show(error, this.config.getMessage("View.Metainfo.Message.DefaultErrorMetaInfoSave"));
 				}
 
-				return DialogHelper.showInfo("Метаданные правила сохранены");
+				return DialogHelper.showInfo(this.config.getMessage("View.Metainfo.Message.MetadataIsSaved"));
 			}
 		}
 	}

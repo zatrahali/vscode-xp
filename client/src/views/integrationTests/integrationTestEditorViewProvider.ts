@@ -344,13 +344,13 @@ export class IntegrationTestEditorViewProvider {
 				return vscode.window.withProgress({
 					location: vscode.ProgressLocation.Notification,
 					cancellable: false,
-					title: `Добавление конверта на необработанные события`
+					title: this.config.getMessage('View.IntegrationTests.Progress.AddingEnvelope')
 				}, async (progress) => {
 					try {
 						return this.addEnvelope(rawEvents, mimeType);
 					}
 					catch (error) {
-						ExceptionHelper.show(error, "Ошибка добавления конверта на необработанные события");
+						ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.DefaultErrorAddingEnvelope"));
 					}
 				});
 			}

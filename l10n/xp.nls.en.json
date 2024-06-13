@@ -77,6 +77,7 @@
     "View.IntegrationTests.Progress.RunAllTestsWithSubrules": "Running integration tests for rule {0} with subrules",
     "View.IntegrationTests.Progress.Normalization": "Normalizing raw events for test No {0}",
     "View.IntegrationTests.Progress.NormalizationAndEnrichment": "Normalizing and enriching raw events for test No {0}",
+    "View.IntegrationTests.Progress.AddingEnvelope": "Adding an envelope to unprocessed events",
 
     "View.IntegrationTests.Message.NoTestsFound": "Tests for rule {0} were not found. Add at least one test and try again.",
     "View.IntegrationTests.Message.TestsPassed": "Integration tests for rule {0} successfully passed",
@@ -98,6 +99,7 @@
     "View.IntegrationTests.Message.InvalidTestCode": "In the test code No {0}, the expect 1 {...} or expect table_list {...} validation block was not detected or is incorrect. Correct and repeat",
     "View.IntegrationTests.Message.InvalidJsonInTestCode": "JSON correctness error in the test code. Make corrections and repeat",
     "View.IntegrationTests.Message.NoTestResultFound": "Integration test results not found. Run the integration tests again",
+    "View.IntegrationTests.Message.EnvelopeHasAlreadyAdded": "The envelope for all events has already been added",
 
     "View.IntegrationTests.Message.DefaultErrorAddingEnvelope": "Error adding an envelope",
     "View.IntegrationTests.Message.DefaultErrorEventsNormalization": "Events could not be normalized. It is necessary to [recompile normalizations](command:xp.contentTree.buildNormalizations), check the format of the raw events and their envelopes, the availability of appropriate normalization in the knowledge base",
@@ -113,6 +115,9 @@
     "View.Metainfo.References": "Links",
     "View.Metainfo.DataSources": "Sources and events",
     "View.Metainfo.MITRE": "MITRE ATT&CK tactics and techniques",
+
+    "View.Metainfo.Message.MetadataIsSaved": "The metadata of the rule is saved",
+    "View.Metainfo.Message.DefaultErrorMetaInfoSave": "Metadata could not be saved",
 
     "MacrosName": "Macro name",
 
