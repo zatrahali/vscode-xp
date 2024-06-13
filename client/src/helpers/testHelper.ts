@@ -314,21 +314,38 @@ export class TestHelper {
 	/**
 	 * Сжатие json-событий.
 	 * @param rawEvents строка с сырыми событиями
+	 * @param isStrict обязательно ли должен встретиться JSON в строке
 	 * @returns строка с сырыми событиями, в которых json-события сжаты
 	 */
-	public static compressJsonRawEvents(rawEvents: string): string {
-		return this.compressFormattedJsons(rawEvents, /^{$[\s\S]+?^}/gm);
+	public static compressJsonRawEvents(rawEvents: string, isStrict = false): string {
+		return this.compressFormattedJsons(rawEvents, /^{$[\s\S]+?^}/gm, isStrict);
 	}
 
-	public static compressTestCode(rawEvents: string): string {
-		return this.compressFormattedJsons(rawEvents, /{$[\s\S]+?^}/gm);
+	/**
+	 * 
+	 * @param testCode 
+	 * @param isStrict обязательно ли должен встретиться JSON в строке
+	 * @returns 
+	 */
+	public static compressTestCode(testCode: string, isStrict = false): string {
+		return this.compressFormattedJsons(testCode, /{$[\s\S]+?^}/gm, isStrict);
 	}
 
-	public static compressFormattedJsons(input: string, regEx: RegExp): string {
+	/**
+	 * 
+	 * @param input 
+	 * @param regEx 
+	 * @param isStrict обязательно ли должен встретиться JSON в строке
+	 * @returns 
+	 */
+	public static compressFormattedJsons(input: string, regEx: RegExp, isStrict = false): string {
 		let comNormEventResult: RegExpExecArray | null;
 		let compressedJson = input;
 
 		let isJsonDetected = false;
+		if(!isStrict) {
+			isJsonDetected = true;
+		}
 		while ((comNormEventResult = regEx.exec(input))) {
 			if (comNormEventResult.length != 1) {
 				continue;
@@ -351,7 +368,7 @@ export class TestHelper {
 		}
 
 		if(!isJsonDetected) {
-			throw new XpException("Не удалось обнаружить JSON. Проверьте корректность сохраняемых данных");
+			throw new XpException("Не удалось обнаружить JSON. Проверьте корректность сохраняемых данных и выбираемый конверт");
 		}
 
 		return compressedJson.trim();

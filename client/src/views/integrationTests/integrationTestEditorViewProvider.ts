@@ -515,12 +515,13 @@ export class IntegrationTestEditorViewProvider {
 			throw new XpException(this.config.getMessage("View.IntegrationTests.Message.RawEventsAreNotDefined"));
 		}
 
-		if (!message?.test) {
+		const test = message?.test;
+		if (!test) {
 			throw new XpException(this.config.getMessage("View.IntegrationTests.Message.SaveTheTestBefore"));
 		}
 
-		const currTest = IntegrationTest.convertFromObject(message.test);
-		rawEvents = TestHelper.compressTestCode(rawEvents);
+		const currTest = IntegrationTest.convertFromObject(test);
+		rawEvents = TestHelper.compressJsonRawEvents(rawEvents);
 		currTest.setRawEvents(rawEvents);
 		await currTest.save();
 		return currTest;
