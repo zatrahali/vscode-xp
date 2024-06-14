@@ -8,9 +8,9 @@ export class RegExpHelper {
 	public static getEnrichedNormTestEventsFileName(ruleName: string, testNumber?: number) : RegExp { 
 		let regExpTemplate: string;
 		if(testNumber) {
-			regExpTemplate = `.+?${ruleName}.+?raw_events_${testNumber}_norm_enr\.json`;
+			regExpTemplate = `.+?${ruleName}.+?raw_events_${testNumber}_norm_(agg_)?enr\.json`;
 		} else {
-			regExpTemplate = `.+?${ruleName}.+?raw_events_\\d+_norm_enr\.json`;
+			regExpTemplate = `.+?${ruleName}.+?raw_events_\\d+_norm_(agg_)?enr\.json`;
 		}
 		
 		return RegExp(regExpTemplate, "i");
@@ -19,9 +19,9 @@ export class RegExpHelper {
 	public static getEnrichedCorrTestEventsFileName(ruleName: string, testNumber?: number) : RegExp { 
 		let regExpTemplate: string;
 		if(testNumber) {
-			regExpTemplate = `.+?${ruleName}.+?raw_events_${testNumber}_norm_enr_cor(r)?_enr\.json`;
+			regExpTemplate = `.+?${ruleName}.+?raw_events_${testNumber}_norm_(agg_)?enr_cor(r)?_(agg_)?enr\.json`;
 		} else {
-			regExpTemplate = `.+?${ruleName}.+?raw_events_\\d+_norm_enr_cor(r)?_enr\.json`;
+			regExpTemplate = `.+?${ruleName}.+?raw_events_\\d+_norm_(agg_)?enr_cor(r)?_(agg_)?enr\.json`;
 		}
 		
 		return RegExp(regExpTemplate, "i");
@@ -31,9 +31,9 @@ export class RegExpHelper {
 
 		let regExpTemplate: string;
 		if(testNumber) {
-			regExpTemplate = `.+?${ruleName}.+?raw_events_${testNumber}_norm_enr_cor(r)\.json`;
+			regExpTemplate = `.+?${ruleName}.+?raw_events_${testNumber}_norm_(agg_)?enr_cor(r)\.json`;
 		} else {
-			regExpTemplate = `.+?${ruleName}.+?raw_events_\\d+_norm_enr_cor(r)?\.json`;
+			regExpTemplate = `.+?${ruleName}.+?raw_events_\\d+_norm_(agg_)?enr_cor(r)?\.json`;
 		}
 		
 		return RegExp(regExpTemplate, "i");
