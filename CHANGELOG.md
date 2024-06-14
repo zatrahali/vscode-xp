@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.17.1 (Pre-Release)
+
+- исправлена ошибка сохранения негативного интеграционного теста (special thanks @g4n8g).
+
 ## 3.17.0 (Pre-Release)
 
 - усилена проверка кода интеграционных тестов на наличие хотя бы одной проверки `expect 1 {...}` или `expect table_list {...}` (special thanks @UncleSStepa);

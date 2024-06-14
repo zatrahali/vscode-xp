@@ -83,7 +83,7 @@ export class SaveAllCommand extends Command {
 			let testCode = plainTest?.testCode;
 
 			// Проверяем наличие проверки ожидаемых событий
-			if(!/(\bexpect\b\s+\d+)|(\bexpect\b\s+\btable_list\b)\s+{.*}$/gm.test(testCode)) {
+			if(!/(\bexpect\b\s+(\d+|not))|(\bexpect\b\s+\btable_list\b)\s+{[\s\S]*?}$/gm.test(testCode)) {
 				throw new XpException(this.params.config.getMessage("View.IntegrationTests.Message.InvalidTestCode", number));
 			}
 
