@@ -1,13 +1,10 @@
 import * as os from 'os';
 import * as vscode from 'vscode';
-import * as path from 'path';
-import * as fs from 'fs';
 
 import { RuleBaseItem } from '../models/content/ruleBaseItem';
 import { IntegrationTest } from '../models/tests/integrationTest';
 import { RegExpHelper } from './regExpHelper';
 import { XpException } from '../models/xpException';
-import { ParseException } from '../models/parseException';
 import { BaseUnitTest } from '../models/tests/baseUnitTest';
 import { StringHelper } from './stringHelper';
 import { Log } from '../extension';
@@ -16,7 +13,6 @@ import { Correlation, CorrelationEvent } from '../models/content/correlation';
 import { ArgumentException } from '../models/argumentException';
 import { JsHelper } from './jsHelper';
 import { Normalization } from '../models/content/normalization';
-import { Aggregation } from '../models/content/aggregation';
 
 export type EventMimeType = "application/x-pt-eventlog" | "application/json" | "text/plain" | "text/csv" | "text/xml"
 

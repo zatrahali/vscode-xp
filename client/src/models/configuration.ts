@@ -112,6 +112,22 @@ export class Configuration {
 		return this.diagnosticCollection;
 	}
 
+	public addDiagnosticCollection(uri: string, addedDiag: vscode.Diagnostic) : void {
+		const fileUri = vscode.Uri.file(uri);
+		if(!this.diagnosticCollection.has(fileUri)) {
+			this.diagnosticCollection.set(fileUri, [addedDiag]);
+			return;
+		}
+
+		// Копируем имеющие и добавляем новые.
+		const prevDiags = this.diagnosticCollection.get(fileUri);
+		const newDiags: vscode.Diagnostic[] = [];
+		prevDiags.forEach(d => newDiags.push(d));
+		newDiags.push(addedDiag);
+		
+		this.diagnosticCollection.set(fileUri, newDiags);
+	}
+
 	public getOutputChannel() : vscode.OutputChannel {
 		return this.outputChannel;
 	}

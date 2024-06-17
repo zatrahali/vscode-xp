@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 
 import { Command, RuleCommandParams } from '../../models/command/command';
 import { TestHelper } from '../../helpers/testHelper';
@@ -10,6 +11,8 @@ import { TestStatus } from '../../models/tests/testStatus';
 import { ContentItemStatus } from '../../models/content/ruleBaseItem';
 import { Log } from '../../extension';
 import { ContentTreeProvider } from '../contentTree/contentTreeProvider';
+import { FileSystemHelper } from '../../helpers/fileSystemHelper';
+import { RegExpHelper } from '../../helpers/regExpHelper';
 
 export class RunIntegrationTestsCommand extends Command {
 
@@ -53,10 +56,13 @@ export class RunIntegrationTestsCommand extends Command {
 
 			const outputParser = new SiemJOutputParser(config);
 			const testRunner = new IntegrationTestRunner(config, outputParser);
-			const siemjResult = await testRunner.runOnce(this.params.rule, testRunnerOptions);
 
+			const siemjResult = await testRunner.runOnce(this.params.rule, testRunnerOptions);
 			config.resetDiagnostics(siemjResult.fileDiagnostics);
 
+			// Проверка необходимого набора полей.
+			this.validateRequiredFields(siemjResult.testCount);
+			
 			const executedIntegrationTests = this.params.rule.getIntegrationTests();
 			if(executedIntegrationTests.every(it => it.getStatus() === TestStatus.Success)) {
 				// Задаем и обновляем статус элемента дерева
@@ -87,4 +93,49 @@ export class RunIntegrationTestsCommand extends Command {
 			return true;
 		});
 	}
+
+	private async validateRequiredFields(testCount: number) : Promise<void> {
+		[...Array(testCount).keys()].map(i => i + 1).forEach( 
+			async (testNumber) => {
+
+			const corrFilePath = TestHelper.getEnrichedCorrEventFilePath(
+				this.params.tmpDirPath,
+				this.params.rule.getName(),
+				testNumber);
+
+			if(!corrFilePath) {
+				return;
+			}
+	
+			if(!fs.existsSync(corrFilePath)) {
+				return;
+			}
+
+			const corrEvents = await FileSystemHelper.readContentFile(corrFilePath);
+			const eventStrings = RegExpHelper.parseJsonsFromMultilineString(corrEvents);
+			const ruleFilePath = this.params.rule.getRuleFilePath();
+
+			for(const eventString of eventStrings) {
+				const eventObject = JSON.parse(eventString);
+
+				// Проверяем наличие минимального набора полей
+				for(const requiredCorrField of this.REQUIRED_CORRELATION_FIELDS) { 
+					if(eventObject[requiredCorrField]) {
+						continue;
+					}
+
+					this.params.config.addDiagnosticCollection(
+						ruleFilePath,
+						new vscode.Diagnostic(
+							new vscode.Range(new vscode.Position(0,0), new vscode.Position(0,0)), 
+							this.params.config.getMessage(`View.IntegrationTests.Message.NotEnoughRequiredFields`, testNumber, requiredCorrField)
+						)
+					);
+				}
+			}
+			// 
+		});
+	}
+
+	private REQUIRED_CORRELATION_FIELDS = ["correlation_name", "importance", "action", "status", "object"];
 }
