@@ -9,8 +9,11 @@ To simplify the creation of rules, the most popular templates are used:
 The extension provides auto-completion of taxonomy fields, keywords, functions with their descriptions. Snippets (template pieces of code) are also available to speed up and simplify the addition of XP language constructs:
 ![Autocomplete and snippets](./ru_gif/hover_autocomplete_snippets.gif)
 
-Testing a rule is the key to its stable and accurate operation without false positives. To do this, you need to create tests. This is how you need to work with integration tests for correlations and enrichments:
+Testing a rule is the key to its stable and accurate operation without false positives. This is how you need to work with integration tests for correlations and enrichments:
 ![Integration tests](./ru_gif/integration_tests.gif)
+
+This is how you need to create integration tests:
+![Adding an integration test](./ru_gif/integration_test_addition.gif)
 
 Check the localization of rules, as well as test entire directories with rules:
 ![Localization testing and mass testing of rules](./ru_gif/localization_test_and_test_folder.gif)
