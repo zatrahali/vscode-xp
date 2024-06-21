@@ -18,7 +18,7 @@ export class OpenKnowledgebaseCommand extends ViewCommand {
 			canSelectFolders: true
 		});
 
-		if(!showOpenDialogUris && showOpenDialogUris.length != 1) {
+		if(!showOpenDialogUris || showOpenDialogUris.length != 1) {
 			return;
 		}
 

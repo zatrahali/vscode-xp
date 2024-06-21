@@ -127,6 +127,7 @@ export class RunIntegrationTestsCommand extends Command {
 					this.params.config.addDiagnosticCollection(
 						ruleFilePath,
 						new vscode.Diagnostic(
+							// TODO: указывать в какое-то более разумное место.
 							new vscode.Range(new vscode.Position(0,0), new vscode.Position(0,0)), 
 							this.params.config.getMessage(`View.IntegrationTests.Message.NotEnoughRequiredFields`, testNumber, requiredCorrField)
 						)
