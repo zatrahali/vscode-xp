@@ -138,5 +138,5 @@ export class RunIntegrationTestsCommand extends Command {
 		});
 	}
 
-	private REQUIRED_CORRELATION_FIELDS = ["correlation_name", "importance", "action", "status", "object"];
+	private REQUIRED_CORRELATION_FIELDS = ["correlation_type", "importance", "action", "status", "object"];
 }
