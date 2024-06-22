@@ -77,7 +77,7 @@ export class Table extends RuleBaseItem {
 		// Путь либо передан как параметр, либо он уже задан в правиле.
 		let tableDirPath = "";
 		if (parentFullPath) {
-			tableDirPath = path.join(parentFullPath, this._name);
+			tableDirPath = path.join(parentFullPath, this.name);
 			this.setParentPath(parentFullPath);
 		} else {
 			const parentPath = this.getParentPath();

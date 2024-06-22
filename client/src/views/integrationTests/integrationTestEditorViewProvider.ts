@@ -145,7 +145,7 @@ export class IntegrationTestEditorViewProvider {
 		const resourcesUri = this.config.getExtensionUri();
 		const extensionBaseUri = this._view.webview.asWebviewUri(resourcesUri);
 
-		const webviewUri = this.getUri(this._view.webview, this.config.getExtensionUri(), ["client", "out", "ui.js"]);
+		const webviewUri = FileSystemHelper.getUri(this._view.webview, this.config.getExtensionUri(), ["client", "out", "ui.js"]);
 
 		const plain = {
 			"IntegrationTests": [],
@@ -212,21 +212,6 @@ export class IntegrationTestEditorViewProvider {
 			const formatter = new MustacheFormatter(template);
 			const htmlContent = formatter.format(plain);
 			this._view.webview.html = htmlContent;
-
-			// const webviewUri = this.getUri(this._view.webview, this._config.getExtensionUri(), ["client", "out", "ui.js"]);
-			// this._view.webview.html = `<!DOCTYPE html>
-			// <html lang="en">
-			//   <head>
-			// 	<meta charset="UTF-8">
-			// 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			// 	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-DGSADGASDHRYASDG';">
-			// 	<title>Hello World!</title>
-			//   </head>
-			//   <body>
-			// 		<vscode-button id="howdy">Howdy!</vscode-button>
-			// 		<script type="module" nonce="DGSADGASDHRYASDG" src="${webviewUri}"></script>
-			//   </body>
-			// </html>`;
 		}
 		catch (error) {
 			DialogHelper.showError("Не удалось открыть интеграционные тесты", error);
@@ -572,10 +557,6 @@ export class IntegrationTestEditorViewProvider {
 			'command': 'updateRawEvents',
 			'rawEvents': rawEvents
 		});
-	}
-
-	private getUri(webview: vscode.Webview, extensionUri: vscode.Uri, pathList: string[]) {
-		return webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, ...pathList));
 	}
 
 	private testsTmpFilesPath: string;

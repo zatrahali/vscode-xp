@@ -4,94 +4,58 @@ import * as vscode from 'vscode';
 
 import { DialogHelper } from '../../helpers/dialogHelper';
 import { RuleBaseItem } from '../../models/content/ruleBaseItem';
-import { Correlation } from '../../models/content/correlation';
 import { MustacheFormatter } from '../mustacheFormatter';
 import { MetaInfoUpdater } from './metaInfoUpdater';
 import { Configuration } from '../../models/configuration';
 import { ExceptionHelper } from '../../helpers/exceptionHelper';
+import { BaseWebViewController} from '../baseWebViewController';
+import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 
-export class MetainfoViewProvider {
+interface AssociativeArray {
+	[key: string]: MetainfoViewProvider
+}
 
-	private _view?: vscode.WebviewPanel;
-	private rule: RuleBaseItem;
+export class MetainfoViewProvider extends BaseWebViewController {
 
-	public static readonly viewId = 'MetaInfoView';
-	public static showMetaInfoEditorCommand = "MetaInfoView.showMetaInfoEditor";
+	protected onDispose(e: void) : void {
+		const ruleName = this.rule.getName();
+		delete MetainfoViewProvider.Providers[ruleName];
+	}
 
-	constructor(
-		private readonly config: Configuration,
-		private readonly _formatter: MustacheFormatter
-	) { }
+	protected getTitle(): string {
+		return this.config.getMessage("View.Metainfo", this.rule.getName());
+	}
 
-	public static init(config: Configuration): MetainfoViewProvider {
-		const metaInfoTemplateFilePath = path.join(
-			config.getExtensionPath(), "client", "templates", "MetaInfo.html");
-		const metainfoTemplateContent = fs.readFileSync(metaInfoTemplateFilePath).toString();
+	protected async receiveMessageFromWebView(message: any): Promise<void> {
+		switch (message.command) {
+			case 'saveMetaInfo': {
+				try {
+					// Обновление метаданных.
+					const newMetaInfoPlain = message.metainfo;
+					const metaInfo = this.rule.getMetaInfo();
+					this.metaInfoUpdater.update(metaInfo, newMetaInfoPlain);
 
-		const metaInfoViewProvider = new MetainfoViewProvider(
-			config,
-			new MustacheFormatter(metainfoTemplateContent),
-		);
-
-		config.getContext().subscriptions.push(
-			vscode.commands.registerCommand(
-				MetainfoViewProvider.showMetaInfoEditorCommand,
-				async (correlation: Correlation) => {
-					metaInfoViewProvider.showMetaInfoEditor(correlation);
+					// Сохранением и перечитываем из файла.
+					const corrFullPath = this.rule.getDirectoryPath();
+					await metaInfo.save(corrFullPath);
 				}
-			)
-		);
+				catch (error) {
+					return ExceptionHelper.show(error, this.config.getMessage("View.Metainfo.Message.DefaultErrorMetaInfoSave"));
+				}
 
-		return metaInfoViewProvider;
-	}
-
-	public async showMetaInfoEditor(rule: RuleBaseItem) : Promise<void> {
-
-		// Если открыта еще одна метаинформация, то закрываем ее перед открытием новой.
-		if (this._view) {
-			this._view.dispose();
-			this._view = undefined;
-		}
-
-		this.rule = rule;
-
-		// Создать и показать панель.
-		const title = this.config.getMessage("View.Metainfo", rule.getName());
-		this._view = vscode.window.createWebviewPanel(
-			MetainfoViewProvider.viewId,
-			title,
-			vscode.ViewColumn.One,
-			{ retainContextWhenHidden: true });
-
-		this._view.webview.options = {
-			enableScripts: true
-		};
-
-		this._view.webview.onDidReceiveMessage(
-			this.receiveMessageFromWebView,
-			this
-		);
-
-		try {
-			this.updateWebView();
-		}
-		catch (error) {
-			DialogHelper.showError("Ошибка визуализации метаданных", error);
+				DialogHelper.showInfo(this.config.getMessage("View.Metainfo.Message.MetadataIsSaved"));
+			}
 		}
 	}
 
-	private async updateWebView(): Promise<void> {
-
+	protected renderHtml(): string {
 		// Данные в таком виде проще шаблонизировать.
-		const metaInfo = await this.rule.getMetaInfo().toObject();
+		const metaInfo = this.rule.getMetaInfo().toObject();
 
-		// Подгружаем базовую ссылку для внешних ресурсов.
-		const resourcesUri = this.config.getExtensionUri();
-		const extensionBaseUri = this._view.webview.asWebviewUri(resourcesUri);
-		metaInfo.ExtensionBaseUri = extensionBaseUri;
-
-		const webviewUri = this.getUri(this._view.webview, this.config.getExtensionUri(), ["client", "out", "ui.js"]);
-		const metainfoHtml = this._formatter.format({ ...metaInfo,
+		const webviewUri = FileSystemHelper.getUri(this.webView.webview, this.config.getExtensionUri(), ["client", "out", "ui.js"]);
+		const extensionBaseUri = FileSystemHelper.getUri(this.webView.webview, this.config.getExtensionUri());
+		const metainfoHtml = this.formatter.format({ ...metaInfo,
+			ExtensionBaseUri: extensionBaseUri,
 			WebviewUri: webviewUri,
 
 			// Локализация
@@ -109,36 +73,63 @@ export class MetainfoViewProvider {
 				MITRE: this.config.getMessage("View.Metainfo.MITRE")
 			}
 		});
-		this._view.webview.html = metainfoHtml;
+
+		return metainfoHtml;
 	}
 
-	private async receiveMessageFromWebView(message: any) {
-		switch (message.command) {
-			case 'saveMetaInfo': {
-				try {
-					// Обновление метаданных.
-					const newMetaInfoPlain = message.metainfo;
-					const metaInfo = this.rule.getMetaInfo();
-					this._metaInfoUpdater.update(metaInfo, newMetaInfoPlain);
+	protected preRender(): Promise<boolean> {
+		return Promise.resolve(true);
+	}
 
-					// Сохранением и перечитываем из файла.
-					const corrFullPath = this.rule.getDirectoryPath();
-					await metaInfo.save(corrFullPath);
+	public static readonly viewId = 'MetaInfoView';
+	public static showMetaInfoEditorCommand = "MetaInfoView.showMetaInfoEditor";
 
-					await this.updateWebView();
+	constructor(
+		private readonly rule: RuleBaseItem,
+		private readonly config: Configuration,
+		private readonly formatter: MustacheFormatter
+	) {
+		super(
+			{
+				config: config,
+				viewId: MetainfoViewProvider.viewId,
+				webViewOptions: { 
+					enableScripts: true,
+					retainContextWhenHidden: true 
 				}
-				catch (error) {
-					return ExceptionHelper.show(error, this.config.getMessage("View.Metainfo.Message.DefaultErrorMetaInfoSave"));
-				}
-
-				return DialogHelper.showInfo(this.config.getMessage("View.Metainfo.Message.MetadataIsSaved"));
 			}
-		}
+		);
 	}
 
-	private _metaInfoUpdater = new MetaInfoUpdater();
+	public static async init(config: Configuration): Promise<void> {
+		const metaInfoTemplateFilePath = path.join(
+			config.getExtensionPath(), "client", "templates", "MetaInfo.html");
+		const metainfoTemplateContent = await FileSystemHelper.readContentFile(metaInfoTemplateFilePath);
 
-	private getUri(webview: vscode.Webview, extensionUri: vscode.Uri, pathList: string[]) {
-		return webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, ...pathList));
+		config.getContext().subscriptions.push(
+			vscode.commands.registerCommand(
+				MetainfoViewProvider.showMetaInfoEditorCommand,
+				async (rule: RuleBaseItem) => {
+					const ruleName = rule.getName();
+					if(MetainfoViewProvider.Providers[ruleName]) {
+						MetainfoViewProvider.Providers[ruleName].reveal();
+						return;
+					}
+
+					const provider = new MetainfoViewProvider(
+						rule,
+						config,
+						new MustacheFormatter(metainfoTemplateContent),
+					);
+					MetainfoViewProvider.Providers[ruleName] = provider;
+
+					provider.show();
+				}
+			)
+		);
 	}
+
+	private metaInfoUpdater = new MetaInfoUpdater();
+
+	public static Providers: AssociativeArray[] = [];
 }

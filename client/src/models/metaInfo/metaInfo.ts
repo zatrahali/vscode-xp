@@ -191,8 +191,8 @@ export class MetaInfo {
 		return this.enDescription;
 	}
 
-	public async toObject(): Promise<any> {
-		return this; //metaInfo;
+	public toObject(): any {
+		return this;
 	}
 
 	public setComments(comments: string): void {

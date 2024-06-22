@@ -20,7 +20,7 @@ export class Macros extends RuleBaseItem {
 		// Путь либо передан как параметр, либо он уже задан в правиле.
 		let marcoDirPath = "";
 		if (parentFullPath) {
-			marcoDirPath = path.join(parentFullPath, this._name);
+			marcoDirPath = path.join(parentFullPath, this.name);
 			this.setParentPath(parentFullPath);
 		} else {
 			const parentPath = this.getParentPath();

@@ -4,6 +4,7 @@ import { Configuration } from '../../models/configuration';
 import { YamlHelper } from '../../helpers/yamlHelper';
 import { DialogHelper } from '../../helpers/dialogHelper';
 import { TableView } from '../tableListsEditor/commands/tableListCommandBase';
+import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 
 export class DefaultTLValuesEditorViewProvider implements vscode.CustomTextEditorProvider {
 
@@ -174,10 +175,6 @@ export class DefaultTLValuesEditorViewProvider implements vscode.CustomTextEdito
 		updateWebview();
 	}
 
-	protected getUri(webview: vscode.Webview, extensionUri: vscode.Uri, pathList: string[]): vscode.Uri {
-		return webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, ...pathList));
-	}
-
 	private async updateTextDocument(document: vscode.TextDocument, json: any) {
 
 		const edit = new vscode.WorkspaceEdit();
@@ -201,7 +198,7 @@ export class DefaultTLValuesEditorViewProvider implements vscode.CustomTextEdito
 
 	private _getWebviewContent(webview: vscode.Webview) {
 		const resourcesUri = this._config.getExtensionUri();
-		const webviewUri = this.getUri(webview, resourcesUri, ["out", "tableListDefaultsEditor.js"]);
+		const webviewUri = FileSystemHelper.getUri(webview, resourcesUri, ["out", "tableListDefaultsEditor.js"]);
 		const nonce = this.getNonce();
 	
 		return /*html*/ `

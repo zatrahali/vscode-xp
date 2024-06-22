@@ -256,7 +256,7 @@ export class Correlation extends RuleBaseItem {
 		// Путь либо передан как параметр, либо он уже задан в правиле.
 		let corrDirPath = "";
 		if (parentFullPath) {
-			corrDirPath = path.join(parentFullPath, this._name);
+			corrDirPath = path.join(parentFullPath, this.name);
 			this.setParentPath(parentFullPath);
 		} else {
 			const parentPath = this.getParentPath();

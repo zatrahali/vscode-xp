@@ -22,9 +22,5 @@ export abstract class WebViewProviderBase {
 		return this.panel.webview.postMessage(message);
 	}
 
-	protected getUri(webview: vscode.Webview, extensionUri: vscode.Uri, pathList: string[]): vscode.Uri {
-		return webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, ...pathList));
-	}
-
 	private panel: vscode.WebviewPanel;
 }

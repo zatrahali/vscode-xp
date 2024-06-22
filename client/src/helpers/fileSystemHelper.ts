@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as vscode from 'vscode';
 import * as path from 'path';
 import * as crypto from 'crypto';
 
@@ -8,6 +9,17 @@ import { Log } from '../extension';
 import { MetaInfo } from '../models/metaInfo/metaInfo';
 
 export class FileSystemHelper {
+
+    /**
+     * Получить Uri-путь к ресурсу для конкретной webView.
+     * @param webview 
+     * @param extensionUri 
+     * @param pathList 
+     * @returns 
+     */
+	public static getUri(webview: vscode.Webview, extensionUri: vscode.Uri, pathList: string[] = []): vscode.Uri {
+		return webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, ...pathList));
+	}
 
     /**
      * Проверяем корректность пути для использования в KBT, без кириллицы и пробелов.
@@ -142,11 +154,11 @@ export class FileSystemHelper {
         return null;
     }
 
-    public static readContentFile(filePath:string): Promise<string> {
+    public static async readContentFile(filePath:string): Promise<string> {
         return fs.promises.readFile(filePath, FileSystemHelper._fileEncoding);
     }
 
-    public static writeContentFile(filePath: string, fileContent: string) : Promise<void> {
+    public static async writeContentFile(filePath: string, fileContent: string) : Promise<void> {
         return fs.promises.writeFile(filePath, fileContent, FileSystemHelper._fileEncoding);
     }
 

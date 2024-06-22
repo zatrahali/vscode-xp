@@ -11,10 +11,10 @@ import { XpException } from '../xpException';
  * Базовый класс для всех item-ом дерева контента.
  */
 export abstract class ContentTreeBaseItem extends vscode.TreeItem {
-	constructor(protected _name : string, 
+	constructor(protected name : string, 
 		protected _parentPath : string) {
-		super(_name, vscode.TreeItemCollapsibleState.None);
-		this.label = _name;
+		super(name, vscode.TreeItemCollapsibleState.None);
+		this.label = name;
 	}
 
 	public abstract getObjectType() : string;
@@ -80,7 +80,7 @@ export abstract class ContentTreeBaseItem extends vscode.TreeItem {
 	 */
 	public setName(newName :string) : void {
 		this.label = newName;
-		this._name = newName;
+		this.name = newName;
 	}
 
 	/**
@@ -88,7 +88,7 @@ export abstract class ContentTreeBaseItem extends vscode.TreeItem {
 	 * @returns  имя метки, которая отображается в дереве.
 	 */
 	public getName() : string {
-		return this._name;
+		return this.name;
 	}
 
 	/**
@@ -96,7 +96,7 @@ export abstract class ContentTreeBaseItem extends vscode.TreeItem {
 	 * @param fileName 
 	 */
 	public setFileName(fileName : string) : void {
-		this._fileName = fileName;
+		this.fileName = fileName;
 	}
 
 	/**
@@ -104,7 +104,7 @@ export abstract class ContentTreeBaseItem extends vscode.TreeItem {
 	 * @returns возвращает имя файла правила или undefined для директорий.
 	 */
 	public getFileName() : string {
-		return this._fileName;
+		return this.fileName;
 	}
 
 	/**
@@ -112,10 +112,10 @@ export abstract class ContentTreeBaseItem extends vscode.TreeItem {
 	 * @returns возвращает путь к файлу правила (корреляции, нормализации, обогащения, макроса и т.д.) или undefined для директорий.
 	 */
 	public getFilePath() : string {
-		if(!this._fileName) {
+		if(!this.fileName) {
 			return undefined;
 		}
-		return path.join(this._parentPath, this._name, this._fileName);
+		return path.join(this._parentPath, this.name, this.fileName);
 	}
 
 	public setLabel(newLabel:string) : void {
@@ -172,7 +172,7 @@ export abstract class ContentTreeBaseItem extends vscode.TreeItem {
 		this._children = children;
 	}
 
-	private _fileName : string;
+	private fileName : string;
 	private _metaInfo: MetaInfo = new MetaInfo();
 	private _children: ContentTreeBaseItem [] = [];
 }

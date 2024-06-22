@@ -15,6 +15,14 @@ import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 
 export class RetroCorrelationViewController extends BaseWebViewController {
 
+	protected onDispose(e: void) : void {
+		return;
+	}
+
+	protected getTitle(): string {
+		return this.descriptor.config.getMessage("View.CorrelateLogFiles.Title");
+	}
+
     public static viewId = 'xp.retroCorrelation';
     public static showViewCommand = 'xp.retroCorrelationShow';
 
@@ -34,9 +42,7 @@ export class RetroCorrelationViewController extends BaseWebViewController {
         const view = new RetroCorrelationViewController(
             {
 				config : config,
-				templatePath: createCorrelationTemplateFilePath,
 				viewId: RetroCorrelationViewController.viewId,
-				viewTitle: config.getMessage("View.CorrelateLogFiles.Title"),
 				webViewOptions: {
 					retainContextWhenHidden: true,
 					enableCommandUris : true,
@@ -57,22 +63,22 @@ export class RetroCorrelationViewController extends BaseWebViewController {
         );
     }
 
-	protected async preShow() : Promise<boolean> {
-		this.tmpDirPath = this._descriptor.config.getRandTmpSubDirectoryPath();
+	protected async preRender() : Promise<boolean> {
+		this.tmpDirPath = this.descriptor.config.getRandTmpSubDirectoryPath();
 		this.xmlEventsFilePath = path.join(this.tmpDirPath, RetroCorrelationViewController.XML_EVENTS_FILENAME);
 		
 		await fs.promises.mkdir(this.tmpDirPath, {recursive : true});
 		return true;
 	}
 
-	protected getHtml(): string {
-        const resourcesUri = this._descriptor.config.getExtensionUri();
-		const extensionBaseUri = this.view.webview.asWebviewUri(resourcesUri);
+	protected renderHtml(): string {
+        const resourcesUri = this.descriptor.config.getExtensionUri();
+		const extensionBaseUri = this.webView.webview.asWebviewUri(resourcesUri);
 		const templateDefaultContent = {
 			"ExtensionBaseUri" : extensionBaseUri,
-			"AddEventFiles": this._descriptor.config.getMessage("View.CorrelateLogFiles.AddEventFiles"),
-			"CorrelateEvents": this._descriptor.config.getMessage("View.CorrelateLogFiles.CorrelateEvents"),
-			"CorrelationEvents": this._descriptor.config.getMessage("View.CorrelateLogFiles.CorrelationEvents")
+			"AddEventFiles": this.descriptor.config.getMessage("View.CorrelateLogFiles.AddEventFiles"),
+			"CorrelateEvents": this.descriptor.config.getMessage("View.CorrelateLogFiles.CorrelateEvents"),
+			"CorrelationEvents": this.descriptor.config.getMessage("View.CorrelateLogFiles.CorrelationEvents")
 		};
 
 		const htmlContent = this.formatter.format(templateDefaultContent);

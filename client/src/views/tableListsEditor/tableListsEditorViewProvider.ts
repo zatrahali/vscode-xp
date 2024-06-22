@@ -141,7 +141,7 @@ export class TableListsEditorViewProvider extends WebViewProviderBase {
 		const resourcesUri = this._config.getExtensionUri();
 		const extensionBaseUri = this._view.webview.asWebviewUri(resourcesUri);
 
-		const webviewUri = this.getUri(this._view.webview, resourcesUri, ["client", "out", "ui.js"]);
+		const webviewUri = FileSystemHelper.getUri(this._view.webview, resourcesUri, ["client", "out", "ui.js"]);
 
 		const templatePlainObject = {
 			"ExtensionBaseUri": extensionBaseUri,
