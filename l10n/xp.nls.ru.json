@@ -62,7 +62,7 @@
     "View.IntegrationTests.Test": "Тест", 
     "View.IntegrationTests.SaveAll" : "Сохранить все",
     "View.IntegrationTests.RunAllTests" : "Запустить все",
-    "View.IntegrationTests.RawEvents" : "Необработанные события",
+    "View.IntegrationTests.RawEvents" : "Необработанные события в конвертах",
     "View.IntegrationTests.WordWrap" : "Переносить по словам",
     "View.IntegrationTests.WrapRawEventsInAnEnvelope" : "Обернуть в конверт",
     "View.IntegrationTests.Normalize" : "Нормализовать",

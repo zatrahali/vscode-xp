@@ -62,7 +62,7 @@
     "View.IntegrationTests.Test": "Test", 
     "View.IntegrationTests.SaveAll" : "Save all",
     "View.IntegrationTests.RunAllTests" : "Run all",
-    "View.IntegrationTests.RawEvents" : "Raw events",
+    "View.IntegrationTests.RawEvents" : "Raw events in envelopes",
     "View.IntegrationTests.WordWrap" : "Word wrap",
     "View.IntegrationTests.WrapRawEventsInAnEnvelope" : "Envelope wrap",
     "View.IntegrationTests.Normalize" : "Normalize",
