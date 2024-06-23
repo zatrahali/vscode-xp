@@ -3,17 +3,18 @@ event EventName:
         event_src.host
     filter {
         filter::NotFromCorrelator()
-
-        and filter::CheckWL_Specific_Only("Windows_Universal", )
+        and filter::CheckWL_Specific_Only("MacOS_FileCreate", )
     }
 
-rule Windows_Universal: EventName
+rule MacOS_FileCreate: EventName
 
     init {
         $labels = "w_auto|CheckWL_Specific_Only"
     }
 
     on EventName {
+        $status = status
+
         $subject.account.name = subject.account.name
         $subject.account.domain = subject.account.domain
         $subject.account.session_id = subject.account.session_id
@@ -24,6 +25,10 @@ rule Windows_Universal: EventName
         $subject.process.name = subject.process.name
         $subject.process.path = subject.process.path
         $subject.process.fullpath = subject.process.fullpath
+
+		$object.fullpath = object.fullpath
+        $object.name = object.name
+        $object.path = object.path
         
         $object.account.session_id = object.account.session_id
         $object.account.name = object.account.name
@@ -53,23 +58,6 @@ rule Windows_Universal: EventName
         $object.process.parent.guid = object.process.parent.guid
         $object.process.parent.cmdline = object.process.parent.cmdline
 
-        $datafield18 = datafield18 # Цепочка процесса-субъекта с идентификаторами
-        $datafield19 = datafield19 # Цепочка процесса-объекта с идентификаторами
-
-        # src
-        $src.host = src.host
-        $src.hostname = src.hostname
-        $src.ip = src.ip
-        $src.asset = src.asset
-        $src.port = src.port
-
-        # dst
-        $dst.host = dst.host
-        $dst.hostname = dst.hostname
-        $dst.ip = dst.ip
-        $dst.asset = dst.asset
-        $dst.port = dst.port
-
         # event src host
         $event_src.host = event_src.host
         $event_src.fqdn = event_src.fqdn
@@ -81,8 +69,16 @@ rule Windows_Universal: EventName
         $event_src.subsys = event_src.subsys
         $event_src.category = event_src.category
 
+		$datafield1 = datafield1
+		$datafield2 = datafield2
+		$datafield3 = datafield3
+		$datafield4 = datafield4
+		$datafield5 = datafield5
+		$datafield6 = datafield6
+		$datafield7 = datafield7
+		$datafield8 = datafield8
+
         # other
-        $alert.key = 
         $alert.context = 
         $alert.regex_match = 
 
@@ -92,12 +88,11 @@ rule Windows_Universal: EventName
 emit {
     $correlation_type = ""
 
-    $subject = ""
-    $action = ""
-    $object = ""
-    $status = ""
-
     $importance = ""
+
+    $subject = "process"
+    $action = "create"
+    $object = "file_object"
 
     $category.generic = ""
     $category.high = ""

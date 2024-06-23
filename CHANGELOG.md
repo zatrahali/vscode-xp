@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.17.6 (Pre-Release)
+
+- добавлены шаблоны правил для MacOS: MacOS_ProcessExecution и MacOS_FileCreate.
+
 ## 3.17.5 (Pre-Release)
 
 - добавлена возможность открывать неограниченное количество редакторов метаданных (special thanks @DuckDarkwing, @iddqdidkfa, @FedosovaOA, @Bobyboba18, @g4n8g and others).

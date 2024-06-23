@@ -148,7 +148,7 @@ rule For_Profilling: Anomaly_Logon_Application
         dst_path = ""
         additional_data = ""
     }
-   
+
 emit {
     $correlation_type = "event"
 
