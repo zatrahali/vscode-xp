@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.17.7 (Pre-Release)
+
+- из сборки расширения исключена документация, расширение похудело на 100 Мб.
+
 ## 3.17.6 (Pre-Release)
 
 - добавлены шаблоны правил для MacOS: MacOS_ProcessExecution и MacOS_FileCreate.
