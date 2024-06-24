@@ -19,6 +19,7 @@ import { UnitTestOutputParser } from '../tests/unitTestOutputParser';
 export enum ContentItemStatus {
 	Default = 1,
 	Verified,
+	VerifiedWithWarnings,
 	Unverified
 }
 

@@ -314,11 +314,6 @@ export class ContentCheckingCommand extends ViewCommand {
 			rule.setStatus(ContentItemStatus.Unverified, message);
 		}
 
-		// TODO: временно отключены тесты локализаций, так как siemkb_tests.exe падает со следующей ошибкой:
-		// TEST_RULES :: log4cplus:ERROR Unable to open file: C:\Users\user\AppData\Local\Temp\eXtraction and Processing\tmp\5239e794-c14a-7526-113c-52479c1694d6\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\2024-04-18_19-06-45_unknown_sdk_227gsqqu\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\tests\raw_events_4_norm_enr.log
-		// TEST_RULES :: Error: SDK: Cannot open fpta db C:\Users\user\AppData\Local\Temp\eXtraction and Processing\tmp\5239e794-c14a-7526-113c-52479c1694d6\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\2024-04-18_19-06-45_unknown_sdk_227gsqqu\AdAstra_TraceMode_File_Suspect_Operation_Inst_Fldr\tests\raw_events_4_fpta.db : it's not exists
-		// const testTmpDirectory = path.join(this.integrationTestTmpFilesPath, rule.getName());
-
 		Log.progress(options.progress, `Проверка локализации правила ${rule.getName()}`);
 
 		// TODO: убрал конкатенацию, так как получается слишком длинный путь для enrichment-cli

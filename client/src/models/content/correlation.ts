@@ -23,6 +23,7 @@ import { UnitTestContentEditorViewProvider } from '../../views/unitTestEditor/un
 import { MetaInfoEventDescription } from '../metaInfo/metaInfoEventDescription';
 import { XPObjectType } from './xpObjectType';
 import { FileSystemException } from '../fileSystemException';
+import { ParserHelper } from '../../helpers/parserHelper';
 
 export class CorrelationEvent {
 	correlation_name: string;
@@ -94,6 +95,14 @@ export class Correlation extends RuleBaseItem {
 		
 		const ruleCode = await FileSystemHelper.readContentFile(ruleFilePath);
 		await correlation.setRuleCode(ruleCode);
+
+		// Если из кода удалось извлечь имя правила, то именно оно будет использоваться в дереве объектов
+		if(ruleCode) {
+			const ruleName = ParserHelper.parseRuleName(ruleCode);
+			if(ruleName) {
+				correlation.setName(ruleName);
+			}
+		}
 
 		// Парсим описания на разных языках.
 		const ruDescription = await Localization.parseRuDescription(directoryPath);
