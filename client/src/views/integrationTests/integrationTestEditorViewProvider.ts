@@ -24,7 +24,7 @@ import { GetExpectedEventCommand } from './getExpectEventCommand';
 import { StringHelper } from '../../helpers/stringHelper';
 import { SaveAllCommand } from './saveAllCommand';
 import { Aggregation } from '../../models/content/aggregation';
-import { ShowActualEventCommand } from './ShowActualEventCommand';
+import { ShowActualEventCommand } from './showActualEventCommand';
 
 export class IntegrationTestEditorViewProvider {
 
