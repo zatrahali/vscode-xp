@@ -240,12 +240,6 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 			vscode.commands.registerCommand(
 				ContentTreeProvider.unpackKbPackageCommand,
 				async (selectedItem: RuleBaseItem) => {
-	
-					const config = Configuration.get();
-					if(!config.isKbOpened()) {
-						return DialogHelper.showInfo("Для распаковки KB-пакета нужно открыть базу знаний");
-					}
-					
 					const command = new UnpackKbCommand(config, selectedItem);
 					await CommandHelper.singleExecutionCommand(command, `Неожиданная ошибка распаковки kb-пакета`);
 				}
@@ -301,7 +295,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 				ContentTreeProvider.buildKbPackageCommand,
 				async (selectedPackage: RuleBaseItem) => {
 					if(!config.isKbOpened()) {
-						DialogHelper.showInfo("Для сбора графов нужно открыть базу знаний");
+						DialogHelper.showInfo(config.getMessage("View.ObjectTree.Message.NeedToOpenKnowledgeBase"));
 						return;
 					}
 					
@@ -523,7 +517,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 		const configContentType = this._config.getContentType();
 		
 		if(!actualContentType){
-			const answer = await DialogHelper.showInfo(
+			const answer = await DialogHelper.showWarning(
 				this._config.getMessage("View.ObjectTree.Message.TheKnowledgeBaseIsNotInitialized", configContentType),
 				this._config.getMessage("View.ObjectTree.Message.Create"),
 				this._config.getMessage("View.ObjectTree.Message.Cancel"),
@@ -541,7 +535,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 		const configContentType = this._config.getContentType();
 
 		if(actualContentType == ContentType.EDR && configContentType == ContentType.SIEM) {
-			const answer = await DialogHelper.showInfo(
+			const answer = await DialogHelper.showWarning(
 				this._config.getMessage("View.ObjectTree.Message.TheCurrentKbFormatEDRDoesNotMatchTargetSIEM"),
 				this._config.getMessage("Yes"),
 				this._config.getMessage("No")
