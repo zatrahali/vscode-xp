@@ -21,6 +21,12 @@ export class VsCodeApiHelper {
 		return new vscode.Range(firstLine.range.start, lastLine.range.end);
 	}
 
+	public static open(fileUri: vscode.Uri) : Thenable<unknown> {
+		return vscode.commands.executeCommand('vscode.open',
+			fileUri
+		);
+	}
+
 	public static openWith(fileUri: vscode.Uri, viewId: string, columnOrOptions: any) : Thenable<unknown> {
 		return vscode.commands.executeCommand('vscode.openWith',
 			fileUri,

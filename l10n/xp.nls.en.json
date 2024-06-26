@@ -69,6 +69,7 @@
     "View.IntegrationTests.NormalizeAndEnrich" : "Normalize and enrich",
     "View.IntegrationTests.NormalizedEvents" : "Normalized events",
     "View.IntegrationTests.ConditionForPassingTheTest" : "Test code",
+    "View.IntegrationTests.ShowActualEvent" : "Show actual events",
     "View.IntegrationTests.GetExpectedEvent" : "Replace expected event with actual event",
     "View.IntegrationTests.CompareYourResults": "Compare actual event with expected event",
     "View.IntegrationTests.ClearExpectedEvent": "Clear expected event",

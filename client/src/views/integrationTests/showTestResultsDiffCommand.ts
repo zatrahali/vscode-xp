@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs';
 
-import { Command, RuleCommandParams } from '../../models/command/command';
+import { Command, IntegrationTestParams} from '../../models/command/command';
 import { DialogHelper } from '../../helpers/dialogHelper';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { RegExpHelper } from '../../helpers/regExpHelper';
@@ -13,12 +13,8 @@ import { Log } from '../../extension';
 import { FileSystemException } from '../../models/fileSystemException';
 import { VsCodeApiHelper } from '../../helpers/vsCodeApiHelper';
 
-export interface ShowTestResultsDiffParams extends RuleCommandParams {
-	testNumber: number;
-}
-
 export class ShowTestResultsDiffCommand extends Command {
-	constructor(private params: ShowTestResultsDiffParams) {
+	constructor(private params: IntegrationTestParams) {
 		super();
 	}
 	
@@ -112,7 +108,7 @@ export class ShowTestResultsDiffCommand extends Command {
 		} 
 
 		// Помимо форматирование их требуется почистить от технических полей.
-		const testEvents = TestHelper.cleanTestCodeJsonl(actualFilteredEvents).join(os.EOL);
+		const testEvents = TestHelper.cleanJsonlEventFromTechnicalFields(actualFilteredEvents).join(os.EOL);
 		formattedActualEvent = TestHelper.formatTestCodeAndEvents(testEvents);
 
 		// Записываем очищенное фактическое значение файл для последующего сравнения

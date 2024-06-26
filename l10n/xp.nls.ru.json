@@ -69,6 +69,7 @@
     "View.IntegrationTests.NormalizeAndEnrich" : "Нормализовать и обогатить",
     "View.IntegrationTests.NormalizedEvents" : "Нормализованные события",
     "View.IntegrationTests.ConditionForPassingTheTest" : "Код теста",
+    "View.IntegrationTests.ShowActualEvent" : "Показать фактические события",
     "View.IntegrationTests.GetExpectedEvent" : "Заменить ожидаемое событие фактическим",
     "View.IntegrationTests.CompareYourResults": "Сравнить фактическое событие с ожидаемым",
     "View.IntegrationTests.ClearExpectedEvent": "Очистить ожидаемое событие",

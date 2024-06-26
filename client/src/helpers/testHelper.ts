@@ -122,7 +122,7 @@ export class TestHelper {
 		return testCode;
 	}
 
-	public static cleanTestCodeJsonl(jsonl: string[]): string [] {
+	public static cleanJsonlEventFromTechnicalFields(jsonl: string[]): string [] {
 		if (!jsonl) { 
 			throw new ArgumentException("Не задан обязательных параметр", "testCode");
 		}

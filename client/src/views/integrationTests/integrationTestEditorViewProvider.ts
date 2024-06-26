@@ -24,6 +24,7 @@ import { GetExpectedEventCommand } from './getExpectEventCommand';
 import { StringHelper } from '../../helpers/stringHelper';
 import { SaveAllCommand } from './saveAllCommand';
 import { Aggregation } from '../../models/content/aggregation';
+import { ShowActualEventCommand } from './ShowActualEventCommand';
 
 export class IntegrationTestEditorViewProvider {
 
@@ -165,6 +166,7 @@ export class IntegrationTestEditorViewProvider {
 				"NormalizeAndEnrich" : this.config.getMessage('View.IntegrationTests.NormalizeAndEnrich'),
 				"NormalizedEvents" : this.config.getMessage('View.IntegrationTests.NormalizedEvents'),
 				"TestCondition" : this.config.getMessage('View.IntegrationTests.ConditionForPassingTheTest'),
+				"ShowActualEvent" : this.config.getMessage('View.IntegrationTests.ShowActualEvent'),
 				"GetExpectedEvent" : this.config.getMessage('View.IntegrationTests.GetExpectedEvent'),
 				"CompareResults" : this.config.getMessage('View.IntegrationTests.CompareYourResults'),
 				"ClearExpectedEvent" : this.config.getMessage('View.IntegrationTests.ClearExpectedEvent'),
@@ -295,7 +297,7 @@ export class IntegrationTestEditorViewProvider {
 
 			case 'saveAllTests': {
 				if (!message?.activeTestNumber) {
-					DialogHelper.showError('Номер теста не передан в запросе на back-end');
+					DialogHelper.showError('Внутренняя ошибка. Номер теста не передан в запросе на backend');
 					return;
 				}
 
@@ -349,32 +351,7 @@ export class IntegrationTestEditorViewProvider {
 			// 	return this.cleanTestCode(message);
 			// }
 
-			case "ShowTestResultsDiffCommand": {
-				if (!message?.selectedTestNumber) {
-					DialogHelper.showError('Номер теста не передан в запросе на back-end');
-					return;
-				}
 
-				try {
-					const selectedTestNumber = parseInt(message?.selectedTestNumber);
-					if (!selectedTestNumber) {
-						throw new XpException(`Переданное значение ${message?.activeTestNumber} не является номером интеграционного теста`);
-					}
-
-					const command = new ShowTestResultsDiffCommand( {
-							config : this.config,
-							rule: this.rule,
-							tmpDirPath: this.testsTmpFilesPath,
-							testNumber: selectedTestNumber
-						}
-					);
-					await command.execute();
-				}
-				catch (error) {
-					ExceptionHelper.show(error, "Ошибка сравнения фактического и ожидаемого события");
-				}
-				break;
-			}
 			// Команды с запуском утилит.
 			case "NormalizeRawEventsCommand": {
 				try {
@@ -403,15 +380,54 @@ export class IntegrationTestEditorViewProvider {
 				break;
 			}
 
-			// Почему-то GetExpectedEventCommand.name при отладке равен _GetExpectedEventCommand
-			// TODO: разобраться, почему так получилось
-			case "GetExpectedEventCommand": {
+			case "ShowTestResultsDiffCommand": {
+				if (!message?.selectedTestNumber) {
+					DialogHelper.showError('Номер теста не передан в запросе на back-end');
+					return;
+				}
+
 				try {
+					const selectedTestNumber = parseInt(message?.selectedTestNumber);
+					if (!selectedTestNumber) {
+						throw new XpException(`Переданное значение ${message?.activeTestNumber} не является номером интеграционного теста`);
+					}
+
+					const currTest = await this.saveTestFromUI(message);
+
+					const command = new ShowTestResultsDiffCommand( {
+							config : this.config,
+							rule: this.rule,
+							test: currTest,
+							tmpDirPath: this.testsTmpFilesPath,
+							testNumber: selectedTestNumber
+						}
+					);
+					await command.execute();
+				}
+				catch (error) {
+					ExceptionHelper.show(error, "Ошибка сравнения фактического и ожидаемого события");
+				}
+				break;
+			}
+
+			case "GetExpectedEventCommand": {
+				if (!message?.selectedTestNumber) {
+					DialogHelper.showError('Внутренняя ошибка. Номер теста не передан в запросе на backend');
+					return;
+				}
+
+				try {
+					const selectedTestNumber = parseInt(message?.selectedTestNumber);
+					if (!selectedTestNumber) {
+						throw new XpException(`Переданное значение ${message?.activeTestNumber} не является номером интеграционного теста`);
+					}
+
 					const currTest = await this.saveTestFromUI(message);
 					const command = new GetExpectedEventCommand({
 						config: this.config,
 						rule: this.rule,
 						test: currTest,
+						testNumber: selectedTestNumber,
 						tmpDirPath: this.testsTmpFilesPath
 					});
 
@@ -423,6 +439,37 @@ export class IntegrationTestEditorViewProvider {
 				}
 				break;
 			}
+
+			case "ShowActualEventCommand": {
+				if (!message?.selectedTestNumber) {
+					DialogHelper.showError('Внутренняя ошибка. Номер теста не передан в запросе на backend');
+					return;
+				}
+
+				try {
+					const selectedTestNumber = parseInt(message?.selectedTestNumber);
+					if (!selectedTestNumber) {
+						throw new XpException(`Переданное значение ${message?.activeTestNumber} не является номером интеграционного теста`);
+					}
+
+					
+					const currTest = await this.saveTestFromUI(message);
+					const command = new ShowActualEventCommand({
+						config: this.config,
+						rule: this.rule,
+						test: currTest,
+						testNumber: selectedTestNumber,
+						tmpDirPath: this.testsTmpFilesPath
+					});
+
+					await command.execute();
+					return true;
+				}
+				catch(error) {
+					ExceptionHelper.show(error, 'Ошибка обновления ожидаемого события');
+				}
+				break;
+			}			
 
 			case "RunIntegrationTestsCommand": {
 				// Сохраняем актуальное состояние тестов из вьюшки.
@@ -465,7 +512,7 @@ export class IntegrationTestEditorViewProvider {
 
 	private async saveAllTests(message: any) : Promise<RuleBaseItem> {
 		if (!message?.activeTestNumber) {
-			DialogHelper.showError('Номер теста не передан в запросе на back-end');
+			DialogHelper.showError('Внутренняя ошибка. Номер теста не передан в запросе на backend');
 			return;
 		}
 
