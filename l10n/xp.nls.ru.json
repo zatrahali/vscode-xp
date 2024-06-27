@@ -16,6 +16,7 @@
     "Error.IncorrectOutputDirectoryPath": "Не удалось создать папку в {0}. Укажите корректный путь [в параметре](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath'])",
     "Error.CommonBuilding": "Не удалось выполнить операцию. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
     "Error.LocalizationBuilding": "Не удалось скомпилировать правила локализации. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
+    "Error.InvalidPath": "Обнаружены недопустимые символы в пути {0}. Исправьте путь и повторите",
 
     "View.ObjectTree.Message.TheKnowledgeBaseIsNotInitialized": "База знаний не найдена. Создать стандартные папки для продукта {0}?",
     "View.ObjectTree.Message.NeedToOpenKnowledgeBase": "Для выполнения команды нужно [открыть базу знаний](command:xp.contentTree.openKnowledgebaseCommand)",

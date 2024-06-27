@@ -16,6 +16,7 @@
     "Error.IncorrectOutputDirectoryPath": "Failed to create an output directory on the path '{0}'. Set the correct path to the output directory [in the settings](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath'])",
     "Error.CommonBuilding": "The operation failed. Fix [file errors](command:workbench.action.showErrorsWarnings). If there are no errors, check the [output](command:xp.commonCommands.showOutputChannel)",
     "Error.LocalizationBuilding": "Localization could not be compiled. Fix [file errors](command:workbench.action.showErrorsWarnings). If there are no errors, check the [output](command:xp.commonCommands.showOutputChannel)",
+    "Error.InvalidPath": "Invalid characters were found in the path {0}. Correct the path and repeat",
 
     "View.ObjectTree.Message.TheKnowledgeBaseIsNotInitialized": "The knowledge base was not found. Create standard folders for {0}?",
     "View.ObjectTree.Message.NeedToOpenKnowledgeBase": "To run the command, you must [open the knowledge base](command:xp.contentTree.openKnowledgebaseCommand)",

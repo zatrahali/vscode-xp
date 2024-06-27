@@ -358,6 +358,9 @@ out=${output}`;
 	 * @returns путь к директории с временными файлами.
 	 */
 	public addTestsRun(testsRuleFullPath: string, tmpFilesPath?: string) : void {
+		if(!FileSystemHelper.isValidPath(testsRuleFullPath)) {
+			throw new XpException(this.config.getMessage('Error.InvalidPath', testsRuleFullPath));
+		}
 
 		const formulas = path.join('${output_folder}', this.config.getNormalizationsGraphFileName());
 		const enrules = path.join('${output_folder}', this.config.getEnrichmentsGraphFileName());

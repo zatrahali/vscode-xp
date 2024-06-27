@@ -56,8 +56,13 @@ export class SiemjManager {
 			throw new FileSystemException(`Файл сырых событий '${rawEventsFilePath}' не существует`);
 		}
 
+		// Ограничения KBT
+		if(!FileSystemHelper.isValidPath(rawEventsFilePath)) {
+			throw new XpException(this.config.getMessage('Error.InvalidPath', rawEventsFilePath));
+		}
+
 		const contentFullPath = rule.getPackagePath(this.config);
-		if(!fs.existsSync(contentFullPath)) {
+		if(!FileSystemHelper.isValidPath(contentFullPath)) {
 			throw new FileSystemException(`Директория контента '${contentFullPath}' не существует`);
 		}
 
@@ -99,6 +104,11 @@ export class SiemjManager {
 	public async normalizeAndEnrich(rule: RuleBaseItem, rawEventsFilePath: string) : Promise<string> {
 		if(!fs.existsSync(rawEventsFilePath)) {
 			throw new FileSystemException(`Файл сырых событий '${rawEventsFilePath}' не существует`);
+		}
+
+		// Ограничения KBT
+		if(!FileSystemHelper.isValidPath(rawEventsFilePath)) {
+			throw new XpException(`Обнаружены недопустимые символы в пути ${rawEventsFilePath}. Исправьте путь и повторите`);
 		}
 
 		const contentFullPath = rule.getPackagePath(this.config);
