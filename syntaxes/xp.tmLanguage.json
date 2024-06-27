@@ -143,7 +143,7 @@
         },
         {
             "name": "meta.insert_into.xp",
-            "match": "\\b(insert_into)\\s+([a-zA-Z0-9_.]*)\\s*",
+            "match": "\\b(insert_into|remove_from|clear_table)\\s+([a-zA-Z0-9_.]*)\\s*",
             "captures": {
                 "1": {
                     "name": "keyword.other.insert_into.xp"

@@ -1,20 +1,12 @@
-event Event_for_Table_Edition:
+event Event:
     filter {
         # TODO: задать логику фильтрации нормализованного или корреляционного события
         filter::NotFromCorrelator()
         and object.id != null
     }
 
-event Event_for_Enrichment:
-    filter {
-        # TODO: задать логику фильтрации нормализованного или корреляционного события
-        filter::NotFromCorrelator()
-        and object.id != null
-    }    
-
-enrichment Universal
-
-    enrich Event_for_Table_Edition:
+enrichment With_the_Table_Edition
+    enrich Event:
         enrich_fields {
             # TODO: определение переменных для вставки или удаления записей из табличного списка
             $columnValue1 = object.id
@@ -40,13 +32,4 @@ enrichment Universal
     remove_from TableName {
         column::columnName1 == lower(object.id)
     }
-
-    enrich Event_for_Enrichment:
-        enrich_fields {
-            # TODO: определить логику обогащения события
-            datafield10 = "enriched object.id: " + string($object.id)
-            datafield11 = "enriched event_src.host: " + string($event_src.host)
-            datafield12 = "enriched event_src.hostname: " + string($event_src.hostname)
-        }
-
 
