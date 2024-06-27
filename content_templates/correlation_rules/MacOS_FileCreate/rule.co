@@ -26,7 +26,7 @@ rule MacOS_FileCreate: EventName
         $subject.process.path = subject.process.path
         $subject.process.fullpath = subject.process.fullpath
 
-		$object.fullpath = object.fullpath
+        $object.fullpath = object.fullpath
         $object.name = object.name
         $object.path = object.path
         
@@ -69,14 +69,14 @@ rule MacOS_FileCreate: EventName
         $event_src.subsys = event_src.subsys
         $event_src.category = event_src.category
 
-		$datafield1 = datafield1
-		$datafield2 = datafield2
-		$datafield3 = datafield3
-		$datafield4 = datafield4
-		$datafield5 = datafield5
-		$datafield6 = datafield6
-		$datafield7 = datafield7
-		$datafield8 = datafield8
+        $datafield1 = datafield1
+        $datafield2 = datafield2
+        $datafield3 = datafield3
+        $datafield4 = datafield4
+        $datafield5 = datafield5
+        $datafield6 = datafield6
+        $datafield7 = datafield7
+        $datafield8 = datafield8
 
         # other
         $alert.context = 
