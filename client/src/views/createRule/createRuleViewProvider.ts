@@ -9,6 +9,8 @@ import { RuleBaseItem } from '../../models/content/ruleBaseItem';
 import { Configuration } from '../../models/configuration';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { ContentHelper } from '../../helpers/contentHelper';
+import { RegExpHelper } from '../../helpers/regExpHelper';
+import { NameValidator } from '../../models/nameValidator';
 
 enum CreateType {
     createCorrelation = "createCorrelation",
@@ -218,7 +220,7 @@ export class CreateRuleViewProvider {
         }
 
         // Валидация на допустимые символы.
-        const validationResult = ContentHelper.validateContentItemName(ruleName);
+        const validationResult = NameValidator.validate(ruleName, this.config, ruleParentPath);
         if(validationResult) {
             DialogHelper.showError(validationResult);
             return;
@@ -278,23 +280,22 @@ export class CreateRuleViewProvider {
         await vscode.commands.executeCommand(ContentTreeProvider.refreshTreeCommand);
         await ContentTreeProvider.selectItem(rule);
         
-        DialogHelper.showInfo(`Правило ${ruleName} создано`);
+        DialogHelper.showInfo(this.config.getMessage("View.CreateRule.Message.RuleCreated", ruleName));
         this.view.dispose();
     }
 
     private parseMessageFromFrontEnd(message: any) : [string, string, string]  {
         // Проверка имени корреляции.
         let ruleName = message.rule.Name as string;
-
         ruleName = ruleName.trim();
-
-        if(ruleName.includes(" ")) {
-            DialogHelper.showError("Название правила не должно содержать пробел");
-            return;
-        }
 
         // Проверка пути родительской директории и директории корреляции.
         const ruleParentPath = message.rule.Path;
+        const validationResult = NameValidator.validate(ruleName, this.config, ruleParentPath);
+        if(validationResult) {
+            DialogHelper.showError(validationResult);
+            return;
+        }
 
         // Имя шаблона.
         const templateType = message.rule.TemplateType;

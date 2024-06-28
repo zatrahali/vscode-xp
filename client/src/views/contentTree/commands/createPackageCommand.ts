@@ -11,6 +11,7 @@ import { YamlHelper } from '../../../helpers/yamlHelper';
 import { MetaInfo } from '../../../models/metaInfo/metaInfo';
 import { ContentFolder } from '../../../models/content/contentFolder';
 import { ViewCommand } from '../../../models/command/command';
+import { NameValidator } from '../../../models/nameValidator';
 
 export class CreatePackageCommand extends ViewCommand {
 
@@ -23,34 +24,10 @@ export class CreatePackageCommand extends ViewCommand {
 		const userInput = await vscode.window.showInputBox(
 			{
 				ignoreFocusOut: true,
-				placeHolder: 'Название пакета',
-				prompt: 'Название пакета',
-				// TODO: убрать дублирование кода валидации
-				// Учесть отличие локализации
-				validateInput: (v) => {
-					const trimmed = v.trim();
-					// Корректность имени директории с точки зрения ОС.
-					if(trimmed.includes(">") || trimmed.includes("<") || trimmed.includes(":") || trimmed.includes("\"") || trimmed.includes("/") || trimmed.includes("|") || trimmed.includes("?") || trimmed.includes("*"))
-						return "Название пакета содержит недопустимые символы";
-
-					if(trimmed === '')
-						return "Название пакета должно содержать хотя бы один символ";
-
-					// Не используем штатные директории контента.
-					const contentSubDirectories = KbHelper.getContentSubDirectories();
-					if(contentSubDirectories.includes(trimmed))
-						return "Это название пакета зарезервировано и не может быть использовано";
-
-					// Английский язык
-					const englishAlphabet = /^[a-z0-9_]*$/;
-					if(!englishAlphabet.test(trimmed)) {
-						return "Используйте только строчные английские буквы, цифры и символ подчеркивания";
-					}
-
-					// Невозможность создать уже созданную директорию.
-					const newFolderPath = path.join(this.selectedItem.getParentPath(), trimmed);
-					if(fs.existsSync(newFolderPath))
-						return "Пакет с таким названием уже существует";
+				placeHolder: this.config.getMessage("NameOfNewPackage"),
+				prompt: this.config.getMessage("NameOfNewPackage"),
+				validateInput: (ruleName) => {
+					return NameValidator.validate(ruleName, this.config, this.selectedItem.getDirectoryPath());
 				}
 			}
 		);

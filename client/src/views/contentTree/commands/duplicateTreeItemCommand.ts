@@ -4,9 +4,9 @@ import * as vscode from 'vscode';
 import { ContentTreeProvider } from '../contentTreeProvider';
 import { RuleBaseItem } from '../../../models/content/ruleBaseItem';
 import { DialogHelper } from '../../../helpers/dialogHelper';
-import { ContentHelper } from '../../../helpers/contentHelper';
 import { Configuration } from '../../../models/configuration';
 import { ViewCommand } from '../../../models/command/command';
+import { NameValidator } from '../../../models/nameValidator';
 
 export class DuplicateTreeItemCommand extends ViewCommand {
 
@@ -41,8 +41,8 @@ export class DuplicateTreeItemCommand extends ViewCommand {
 				value : oldRuleName,
 				placeHolder: this.config.getMessage("NameOfNewRule"),
 				prompt: this.config.getMessage("NameOfNewRule"),
-				validateInput: (v) => {
-					return ContentHelper.validateContentItemName(v);
+				validateInput: (ruleName) => {
+					return NameValidator.validate(ruleName, this.config, this.selectedItem.getDirectoryPath());
 				}
 			}
 		);

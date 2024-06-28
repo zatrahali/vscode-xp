@@ -9,6 +9,8 @@
     "WaitForCommandToFinishExecuting": "Wait for the operation to complete or cancel it, and try again. If this did not help, restart VSCode.",
 
     "NameOfNewRule": "New rule name",
+    "NameOfNewFolder": "Name of the new folder",
+    "NameOfNewPackage": "The name of the new package",
 
     "CouldNotGenerateSiemjConf": "Failed to create the siemj.conf file",
     "UnexpectedError": "Unexpected error",
@@ -160,6 +162,8 @@
     "View.CreateRule.CreateEnrichmentHeader": "Create enrichment rule",
     "View.CreateRule.CreateNormalizationHeader": "Create normalization rule",
     "View.CreateRule.CreateAggregationHeader": "Create aggregation rule",
+
+    "View.CreateRule.Message.RuleCreated": "Rule {0} has been created",
     
     "View.CreateRule.Template": "Template",
     "View.CreateRule.NameLabel": "Name"

@@ -2,12 +2,16 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { KbHelper } from '../helpers/kbHelper';
-import { ContentTreeBaseItem } from './content/contentTreeBaseItem';
 import { Configuration } from './configuration';
 
 
 export class NameValidator {
-	public static validate(name: string, parentItem: ContentTreeBaseItem, config: Configuration) : string {
+	/**
+     * Проверяет единицу контента на удовлетворение ограничением по именованию и возвращает ошибку в виде строки.
+     * @param name имя item-а
+     * @returns описание ошибки
+     */
+	public static validate(name: string, config: Configuration, parentPath: string) : string {
 		const trimmed = name.trim();
 
 		if(trimmed === '') {
@@ -35,7 +39,7 @@ export class NameValidator {
 			return config.getMessage("NameReserved");
 
 		// Невозможность создать уже созданную директорию.
-		const newFolderPath = path.join(parentItem.getParentPath(), trimmed);
+		const newFolderPath = path.join(parentPath, trimmed);
 		if(fs.existsSync(newFolderPath))
 			return config.getMessage("AlreadyExists");
 	}

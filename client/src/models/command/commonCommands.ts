@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 
 import { Configuration } from '../configuration';
 import { ShowExtensionOutputChannelCommand } from './showExtensionOutputChannelCommand';
-import { ShowExtensionSettingsCommand } from './showExtentionSettingsCommand';
+import { ShowExtensionSettingsCommand } from './showExtensionSettingsCommand';
 
 export class CommonCommands {
 	public static init(config: Configuration) : void {

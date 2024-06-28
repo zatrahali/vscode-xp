@@ -14,14 +14,13 @@ export class CreateMacroCommand extends ViewCommand {
 	}
 
 	public async execute() : Promise<void> {
-
 		const userInput = await vscode.window.showInputBox(
 			{
 				ignoreFocusOut: true,
 				placeHolder: this.config.getMessage("MacrosName"),
 				prompt: this.config.getMessage("MacrosName"),
-				validateInput: (v) => {
-					return NameValidator.validate(v, this.parentItem, this.config);
+				validateInput: (ruleName) => {
+					return NameValidator.validate(ruleName, this.config, this.parentItem.getDirectoryPath());
 				}
 			}
 		);

@@ -5,9 +5,9 @@ import * as vscode from 'vscode';
 import { ContentTreeProvider } from '../contentTreeProvider';
 import { RuleBaseItem } from '../../../models/content/ruleBaseItem';
 import { DialogHelper } from '../../../helpers/dialogHelper';
-import { ContentHelper } from '../../../helpers/contentHelper';
 import { Configuration } from '../../../models/configuration';
 import { ViewCommand } from '../../../models/command/command';
+import { NameValidator } from '../../../models/nameValidator';
 
 export class RenameTreeItemCommand extends ViewCommand {
 
@@ -40,10 +40,10 @@ export class RenameTreeItemCommand extends ViewCommand {
 			{
 				ignoreFocusOut: true,
 				value : oldRuleName,
-				placeHolder: 'Новое название правила',
-				prompt: 'Новое название правила',
-				validateInput: (v) => {
-					return ContentHelper.validateContentItemName(v);
+				placeHolder: this.config.getMessage("NameOfNewRule"),
+				prompt: this.config.getMessage("NameOfNewRule"),
+				validateInput: (ruleName) => {
+					return NameValidator.validate(ruleName, this.config, this.selectedItem.getDirectoryPath());
 				}
 			}
 		);

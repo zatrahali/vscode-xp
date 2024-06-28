@@ -9,6 +9,8 @@
     "WaitForCommandToFinishExecuting": "Подождите окончания операции или прервите ее, а затем повторите попытку. Если это не помогло, перезапустите VSCode",
 
     "NameOfNewRule": "Название нового правила",
+    "NameOfNewFolder": "Название новой папки",
+    "NameOfNewPackage": "Название нового пакета",
 
     "CouldNotGenerateSiemjConf": "Не удалось создать файл siemj.conf",
     "UnexpectedError": "Непредвиденная ошибка",
@@ -17,6 +19,8 @@
     "Error.CommonBuilding": "Не удалось выполнить операцию. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
     "Error.LocalizationBuilding": "Не удалось скомпилировать правила локализации. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
     "Error.InvalidPath": "Обнаружены недопустимые символы в пути {0}. Исправьте путь и повторите",
+
+    "Error.ContentNameValidation.": "Название правила не должно содержать пробел",
 
     "View.ObjectTree.Message.TheKnowledgeBaseIsNotInitialized": "База знаний не найдена. Создать стандартные папки для продукта {0}?",
     "View.ObjectTree.Message.NeedToOpenKnowledgeBase": "Для выполнения команды нужно [открыть базу знаний](command:xp.contentTree.openKnowledgebaseCommand)",
@@ -160,6 +164,8 @@
     "View.CreateRule.CreateEnrichmentHeader": "Создать правило обогащения",
     "View.CreateRule.CreateNormalizationHeader": "Создать правило нормализации",
     "View.CreateRule.CreateAggregationHeader": "Создать правила агрегации",
+
+    "View.CreateRule.Message.RuleCreated": "Правило {0} создано",
     
     "View.CreateRule.Template": "Шаблон",
     "View.CreateRule.NameLabel": "Название"
