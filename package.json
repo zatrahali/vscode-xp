@@ -427,7 +427,7 @@
         },
         {
           "command": "xp.contentTree.renameItemCommand",
-          "when": "view == KnowledgebaseTree && (viewItem == Correlation || viewItem == Normalization || viewItem == Enrichment)",
+          "when": "view == KnowledgebaseTree && (viewItem == Correlation || viewItem == Normalization || viewItem == Enrichment || viewItem == PackageFolder || viewItem == AuxiliaryFolder || viewItem == ContentRoot || viewItem == AnotherFolder)",
           "group": "ZCommonItems@2"
         },
         {

@@ -55,7 +55,7 @@ export class UnpackKbCommand extends ViewCommand {
 			location: vscode.ProgressLocation.Notification,
 			cancellable: true,
 		}, async (progress, cancellationToken) => {
-			Log.progress(progress, "Распаковка пакета");
+			Log.progress(progress, this.config.getMessage("View.ObjectTree.Progress.UnpackKbFile"));
 			const kbFilePath = kbUris[0].fsPath; 
 
 			// Получаем путь к директории пакетов.
@@ -110,7 +110,7 @@ export class UnpackKbCommand extends ViewCommand {
 			}
 
 			if(!executeResult.output.includes(this.SUCCESS_SUBSTRING)) {
-				DialogHelper.showError(`Не удалось распаковать пакет. [Смотри Output](command:xp.commonCommands.showOutputChannel)`);
+				DialogHelper.showError(this.config.getMessage("View.ObjectTree.Message.UnpackKbFile.Failed"));
 				return;
 			} 
 
@@ -121,7 +121,7 @@ export class UnpackKbCommand extends ViewCommand {
 			await this.correctPackageNameFromLocalizationFile(outputDirPath);
 
 			// Меняем новые строки \n для текущей ОС
-			Log.info("Преобразование новых строк под текущую ОС");
+			Log.info("Converting new lines to the current OS");
 			const contentFullPaths = FileSystemHelper.getRecursiveFilesSync(outputDirPath);
 			for(const contentFullPath of contentFullPaths) {
 				let content = await FileSystemHelper.readContentFile(contentFullPath);
@@ -132,7 +132,7 @@ export class UnpackKbCommand extends ViewCommand {
 			// Если внутри несколько пакетов.
 			const packagesPackagePath = path.join(outputDirPath, ContentTreeProvider.PACKAGES_DIRNAME);
 			if(fs.existsSync(packagesPackagePath)) {
-				Log.progress(progress, "Копирование распакованного пакета в целевую директорию");
+				Log.info("Copying the unpacked package to the target directory");
 				await fse.copy(packagesPackagePath, packageDirPath, { overwrite: true });
 			}
 			
@@ -142,23 +142,16 @@ export class UnpackKbCommand extends ViewCommand {
 				await fse.copy(objectsPackagePath, packageDirPath, { overwrite: true });
 			}
 
-			// Распаковка контрактов, для пользователя не требуется.
-			// const contractsTmpPath = path.join(outputDirPath, this.CONTRACTS_UNPACKED_DIRNAME);
-			// const contractsPackagePath = path.join(rootContentDirPath, this.CONTRACTS_UNPACKED_DIRNAME);
-			// if(fs.existsSync(contractsTmpPath)) {
-			// 	await fse.copy(contractsTmpPath, contractsPackagePath, { overwrite: true });
-			// }
-
 			// Обновляем макросы
 			const macroPackagePath = path.join(outputDirPath, ContentTreeProvider.MACRO_DIRNAME);
 			if(fs.existsSync(macroPackagePath)) {
-				Log.progress(progress, "Распаковка макросов из пакета");
+				Log.info("Unpacking macros from a package");
 				const marcoDirPath = path.join(rootContentDirPath, ContentTreeProvider.MACRO_DIRNAME);
 				await fse.copy(macroPackagePath, marcoDirPath);
 			}
 
-			await ContentTreeProvider.refresh();
-			DialogHelper.showInfo(`Пакет успешно распакован`);
+			ContentTreeProvider.refresh();
+			DialogHelper.showInfo(this.config.getMessage("View.ObjectTree.Message.UnpackKbFile.CompletedSuccessfully"));
 		});
 	}
 

@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
+import * as fse from 'fs-extra';
 
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { ContentTreeBaseItem } from './contentTreeBaseItem';
@@ -30,7 +31,8 @@ export class ContentFolder extends ContentTreeBaseItem {
 	}
 
 	public async rename(newName: string): Promise<void> {
-		throw new XpException('Method not implemented.');
+		this.oldName = this.getName();
+		this.setName(newName);
 	}
 
 	public getRuleFileName(): string {
@@ -50,7 +52,14 @@ export class ContentFolder extends ContentTreeBaseItem {
 	}
 
 	public async save(fullPath?: string): Promise<void> {
-		throw new Error('Method not implemented.');
+		if(!this.oldName) {
+			throw new XpException('Не задано новое имя директории');
+		}
+
+		const oldPath = path.join(this.getParentPath(), this.oldName);
+		const newPath = path.join(this.getParentPath(), this.getName());
+		await fse.move(oldPath, newPath, {overwrite : true});
+		this.oldName = undefined;
 	}
 
 	constructor(directoryName: string, type: ContentFolderType, hasNestedElements: boolean) {
@@ -107,6 +116,8 @@ export class ContentFolder extends ContentTreeBaseItem {
 		contentFolder.contextValue = ContentFolderType[newFolderType];
 		return contentFolder;
 	}
+
+	private oldName = undefined;
 
 	public static PACKAGE_METAINFO_DIRNAME = "_meta";
 }

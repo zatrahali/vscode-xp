@@ -39,6 +39,10 @@
     "View.ObjectTree.Progress.BuildAllNormalizations": "Компиляция всех правил нормализации",
     "View.ObjectTree.Progress.BuildAllWlds": "Компиляция всех WLD-файлов",
 
+    "View.ObjectTree.Progress.UnpackKbFile": "Распаковка пакета",
+    "View.ObjectTree.Message.UnpackKbFile.CompletedSuccessfully": "Пакет успешно распакован",
+    "View.ObjectTree.Message.UnpackKbFile.Failed": "Не удалось распаковать пакет. [Смотри Output](command:xp.commonCommands.showOutputChannel)",
+
     "View.ObjectTree.Progress.ContentChecking.GetDependencies": "Создание графа корреляции: поиск вспомогательных правил для {0}",
     "View.ObjectTree.Progress.ContentChecking.BuildAllArtifacts": "Создание артефактов для всех правил",
     "View.ObjectTree.Progress.ContentChecking.NormalizationChecking": "Тестирование правила нормализации {0}",

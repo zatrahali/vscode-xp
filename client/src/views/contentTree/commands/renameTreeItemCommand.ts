@@ -16,7 +16,6 @@ export class RenameTreeItemCommand extends ViewCommand {
 	}
 
 	public async execute(): Promise<void> {
-
 		const ruleDirPath = this.selectedItem.getDirectoryPath();
 
 		let stopExecution = false;
@@ -65,7 +64,10 @@ export class RenameTreeItemCommand extends ViewCommand {
 			const oldRuleNameLowerCase = oldRuleName.toLocaleLowerCase();
 			if(newRuleName.toLocaleLowerCase() !== oldRuleNameLowerCase) {
 				// Удаляем старое правило и сохраняем новое.
-				await fs.promises.rmdir(oldRuleDirectoryPath, { recursive: true });
+				// TODO: лишняя логика, это должно происходить при сохранении Item-а.
+				if(fs.existsSync(oldRuleDirectoryPath)) {
+					await fs.promises.rmdir(oldRuleDirectoryPath, { recursive: true });
+				}
 			}
 	
 			// Обновить дерево и открыть корреляцию.
@@ -73,7 +75,7 @@ export class RenameTreeItemCommand extends ViewCommand {
 			await vscode.commands.executeCommand(ContentTreeProvider.onRuleClickCommand, this.selectedItem);
 		}
 		catch(error) {
-			DialogHelper.showInfo("Не удалось переименовать объект");
+			DialogHelper.showError("Не удалось переименовать объект", error);
 			return;
 		}
 	}

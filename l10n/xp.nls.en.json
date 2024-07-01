@@ -37,6 +37,10 @@
     "View.ObjectTree.Progress.BuildAllNormalizations": "Compiling all normalization rules",
     "View.ObjectTree.Progress.BuildAllWlds": "Compiling all WLD files",
 
+    "View.ObjectTree.Progress.UnpackKbFile": "Unpacking the package",
+    "View.ObjectTree.Message.UnpackKbFile.CompletedSuccessfully": "The package has been successfully unpacked",
+    "View.ObjectTree.Message.UnpackKbFile.Failed": "The package could not be unpacked. [Watch Output](command:xp.commonCommands.showOutputChannel)",
+
     "View.ObjectTree.Progress.ContentChecking.GetDependencies": "Creating a correlation graph: searching for subrules for {0}",
     "View.ObjectTree.Progress.ContentChecking.BuildAllArtifacts": "Creating artifacts for all rules",
     "View.ObjectTree.Progress.ContentChecking.NormalizationChecking": "Testing normalization rule {0}",
