@@ -55,7 +55,7 @@
 
 	"xp.xpConfig.originDescription": "Supplier information. Used when packing content into a KB file",
 	"xp.xpConfig.origin.contentPrefixDescription": "The ObjectId prefix, as well as the system prefix for specifying the content provider. For example, user rules with the ability to edit have the prefix LOC, system rules PT. If the prefix is not specified, the ObjectId is not generated for the created rules",
-	"xp.xpConfig.origin.ruDescription": "Отображаемое имя (RU)",
+	"xp.xpConfig.origin.ruDescription": "Display name (RU)",
 	"xp.xpConfig.origin.enDescription": "Display name (EN)",
 	"xp.xpConfig.origin.idDescription": "The supplier's unique identifier, which is a GUID (globally unique identifier)",
 

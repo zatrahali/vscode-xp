@@ -8,27 +8,29 @@ import { EventMimeType, TestHelper } from '../helpers/testHelper';
 import { XpException } from './xpException';
 import { StringHelper } from '../helpers/stringHelper';
 import { Configuration } from './configuration';
+import { Log } from '../extension';
 
 export class Enveloper {
+	constructor(private config : Configuration) {}
 	/**
 	 * Оборачивает события без конверта в конверт с соответствующим mimeType и раскладывает их в одну строку.
 	 * @param rawEvents сырые события
 	 * @param mimeType тип конверта для не обернутых событий
 	 * @returns события без конверта обернуты в конверт и разложены в одну строку каждое
 	 */
-	public static addEnvelope(rawEvents: string, mimeType : EventMimeType): string[] {
-		if(!rawEvents) {
-			throw new XpException("В тест не добавлены сырые события. Добавьте их и повторите действие");
+	public addEnvelope(rawEvents: string, mimeType : EventMimeType): string[] {
+		let rawEventsTrimmed = rawEvents.trim();
+		if(!rawEventsTrimmed) {
+			throw new XpException(this.config.getMessage("View.IntegrationTests.Message.NoRawEventsEnveloping"));
 		}
 
 		if(!mimeType) {
-			throw new XpException("Не задан MIME-тип события. Добавьте его и повторите действие");
+			throw new XpException("The MIME type of the event is not set. Add it and repeat the action");
 		}
 
 		// Проверяем, если исходное событие в формате xml (EventViewer)
-		let rawEventsTrimmed = rawEvents.trim();
-		if(this.isRawEventXml(rawEventsTrimmed) && mimeType == "application/x-pt-eventlog") {
-			rawEventsTrimmed = this.convertEventLogXmlRawEventsToJson(rawEventsTrimmed);
+		if(Enveloper.isRawEventXml(rawEventsTrimmed) && mimeType == "application/x-pt-eventlog") {
+			rawEventsTrimmed = Enveloper.convertEventLogXmlRawEventsToJson(rawEventsTrimmed);
 		} else {
 			// Сжимаем json-события.
 			rawEventsTrimmed = TestHelper.compressJsonRawEvents(rawEventsTrimmed);
@@ -36,23 +38,22 @@ export class Enveloper {
 		
 		const compressedRawEvents = rawEventsTrimmed.split(Enveloper.END_OF_LINE).filter(e => e);
 
-		if(!this.thereAreUnEnvelopedEvents(compressedRawEvents)) {
-			throw new XpException(Configuration.get().getMessage("View.IntegrationTests.Message.EnvelopeHasAlreadyAdded"));
+		if(!Enveloper.thereAreUnEnvelopedEvents(compressedRawEvents)) {
+			throw new XpException(this.config.getMessage("View.IntegrationTests.Message.EnvelopeHasAlreadyAdded"));
 		}
 
 		// Добавляем каждому конверт
-		const envelopedRawEvents = this.addEventsToEnvelope(compressedRawEvents, mimeType);
+		const envelopedRawEvents = Enveloper.addEventsToEnvelope(compressedRawEvents, mimeType);
 		return envelopedRawEvents;
 	}
 
-	public static async streamEnvelopeForXmlEvents(rawEventsFilePath: string, envelopedEventsFilePath: string): Promise<number> {
-		
+	public async streamEnvelopeForXmlEvents(rawEventsFilePath: string, envelopedEventsFilePath: string): Promise<number> {
 		if(!rawEventsFilePath) {
-			throw new XpException("В тест не добавлены сырые события. Добавьте их и повторите действие");
+			throw new XpException("No raw events have been added to the test. Add them and repeat the action");
 		}
 
 		// Проверяем, если исходное событие в формате xml (EventViewer)
-		return this.streamConvertXmlRawEventsToJson(rawEventsFilePath, envelopedEventsFilePath);
+		return Enveloper.streamConvertXmlRawEventsToJson(rawEventsFilePath, envelopedEventsFilePath);
 	}
 
 	public static isRawEventXml(rawEvent : string) : any {
@@ -64,7 +65,7 @@ export class Enveloper {
 		rawEvents = rawEvents.trim();
 
 		// Одно событие.
-		if(!rawEvents.includes("\n")) {
+		if(!rawEvents.includes(Enveloper.END_OF_LINE)) {
 			try {
 				const newRawEvent = JSON.parse(rawEvents);
 				if(newRawEvent.body) {
@@ -112,11 +113,11 @@ export class Enveloper {
 				}
 			}
 			catch (error) {
-				let var1: string;
+				Log.debug(error);
 			}
 		}
 
-		if(rawEvents.length === envelopedEvents) {
+		if(envelopedEvents != 0 && rawEvents.length === envelopedEvents) {
 			return false;
 		}
 

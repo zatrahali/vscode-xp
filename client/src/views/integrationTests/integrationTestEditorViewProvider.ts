@@ -476,10 +476,10 @@ export class IntegrationTestEditorViewProvider {
 				let rule: RuleBaseItem;
 				try {
 					rule = await this.saveAllTests(message);
-					Log.info(`Все тесты правила ${this.rule.getName()} сохранены`);
+					Log.info(`All tests of the rule are ${this.rule.getName()} saved`);
 				}
 				catch (error) {
-					ExceptionHelper.show(error, `Не удалось сохранить тесты`);
+					ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.FailedToSaveTests"));
 					return true;
 				}
 
@@ -573,7 +573,8 @@ export class IntegrationTestEditorViewProvider {
 	public async addEnvelope(rawEvents: string, mimeType: EventMimeType): Promise<void> {
 		let envelopedRawEventsString: string;
 		try {
-			const envelopedEvents = Enveloper.addEnvelope(rawEvents, mimeType);
+			const enveloper = new Enveloper(this.config);
+			const envelopedEvents = enveloper.addEnvelope(rawEvents, mimeType);
 			envelopedRawEventsString = envelopedEvents.join(IntegrationTestEditorViewProvider.TEXTAREA_END_OF_LINE);
 		}
 		catch (error) {

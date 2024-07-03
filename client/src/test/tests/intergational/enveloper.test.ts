@@ -1,5 +1,6 @@
 import assert = require('assert');
 import { Enveloper } from '../../../models/enveloper';
+import { Configuration } from '../../../models/configuration';
 
 suite('Enveloper', () => {
 
@@ -17,8 +18,8 @@ suite('Enveloper', () => {
 	}
 }
 `;
-
-		const envelopedEvents = await Enveloper.addEnvelope(events, "application/json");
+		const enveloper = new Enveloper(Configuration.get());
+		const envelopedEvents = enveloper.addEnvelope(events, "application/json");
 		assert.strictEqual(envelopedEvents.length, 1);
 	});
 	
@@ -41,8 +42,8 @@ suite('Enveloper', () => {
 		]
 	}
 }`;
-
-		const envelopedEvents = await Enveloper.addEnvelope(events, "application/json");
+		const enveloper = new Enveloper(Configuration.get());
+		const envelopedEvents = enveloper.addEnvelope(events, "application/json");
 
 		assert.strictEqual(envelopedEvents.length, 1);
 	});
@@ -53,7 +54,8 @@ suite('Enveloper', () => {
 `{"recv_ipv4": "192.168.40.146", "recv_time": "2020-01-27T06:12:53Z", "body": "{\\"Event\\":{\\"xmlns\\":\\"http://schemas.microsoft.com/win/2004/08/events/event\\",\\"System\\":{\\"Provider\\":{\\"Name\\":\\"Microsoft-Windows-Security-Auditing\\",\\"Guid\\":\\"{54849625-5478-4994-A5BA-3E3B0328C30D}\\"},\\"EventID\\":\\"4688\\",\\"Version\\":\\"2\\",\\"Level\\":\\"0\\",\\"Task\\":\\"13312\\",\\"Opcode\\":\\"0\\",\\"Keywords\\":\\"0x8020000000000000\\",\\"TimeCreated\\":{\\"SystemTime\\":\\"2020-01-23T10:18:31.616030800Z\\"},\\"EventRecordID\\":\\"6925090\\",\\"Correlation\\":null,\\"Execution\\":{\\"ProcessID\\":\\"4\\",\\"ThreadID\\":\\"5460\\"},\\"Channel\\":\\"Security\\",\\"Computer\\":\\"WIN10X64-133.testlab.org\\",\\"Security\\":null},\\"EventData\\":{\\"Data\\":[{\\"text\\":\\"S-1-5-21-3389064948-2957360831-125328159-1105\\",\\"Name\\":\\"SubjectUserSid\\"},{\\"text\\":\\"test-admin\\",\\"Name\\":\\"SubjectUserName\\"},{\\"text\\":\\"TESTLAB\\",\\"Name\\":\\"SubjectDomainName\\"},{\\"text\\":\\"0x1c3869\\",\\"Name\\":\\"SubjectLogonId\\"},{\\"text\\":\\"0xb28\\",\\"Name\\":\\"NewProcessId\\"},{\\"text\\":\\"C:\\\\Users\\\\test-admin\\\\Documents\\\\Tools for raw events\\\\mimikatz\\\\x64\\\\mimikatz.exe\\",\\"Name\\":\\"NewProcessName\\"},{\\"text\\":\\"%%1937\\",\\"Name\\":\\"TokenElevationType\\"},{\\"text\\":\\"0x1530\\",\\"Name\\":\\"ProcessId\\"},{\\"text\\":\\"\\\\"C:\\\\Users\\\\test-admin\\\\Documents\\\\Tools for raw events\\\\mimikatz\\\\x64\\\\mimikatz.exe\\\\" privilege::debug\\",\\"Name\\":\\"CommandLine\\"},{\\"text\\":\\"S-1-0-0\\",\\"Name\\":\\"TargetUserSid\\"},{\\"text\\":\\"-\\",\\"Name\\":\\"TargetUserName\\"},{\\"text\\":\\"-\\",\\"Name\\":\\"TargetDomainName\\"},{\\"text\\":\\"0x0\\",\\"Name\\":\\"TargetLogonId\\"},{\\"text\\":\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\",\\"Name\\":\\"ParentProcessName\\"},{\\"text\\":\\"S-1-16-12288\\",\\"Name\\":\\"MandatoryLabel\\"}]}}}", "mime": "application/x-pt-eventlog", "tag": "wineventlog", "uuid": "00000005-e2e7-0f65-f000-0000119dd0a4", "input_id": "d8c86b6f-83bf-4c13-921b-a8403077119a", "job_id": "a4d09d11-927a-4cb6-9f4f-971106247fdd", "normalized": false, "corrections": {}, "historical": false}
 <14>Jul 25 14:34:28 gitlab-runner1 gitlab-runner[850]: {"level":"warning","msg":"Checking for jobs... failed","runner":"on_Jbdre","status":"couldn't execute POST against http://gitlab.rf.domain.com/api/v4/jobs/request: Post http://gitlab.domain.com/api/v4/jobs/request: dial tcp 10.125.136.4:80: connect: connection refused","time":"2023-07-25T14:34:28Z"}`;
 
-		const envelopedEvents = await Enveloper.addEnvelope(events, "application/x-pt-eventlog");
+		const enveloper = new Enveloper(Configuration.get());
+		const envelopedEvents = enveloper.addEnvelope(events, "application/x-pt-eventlog");
 
 		assert.strictEqual(envelopedEvents.length, 2);
 		const json1 = JSON.parse(envelopedEvents[0]);
@@ -69,7 +71,8 @@ suite('Enveloper', () => {
 		const xmlEvent =
 		`2023-07-13 16:01:43.978 +03:00 [INF] General-100156 Received AccessRequest from 10.10.8.16:49521 id=237 user='sivanov' client 'General' {"CallingStationId":"11.22.33.44"}`;
 
-		const envelopedEvents = await Enveloper.addEnvelope(xmlEvent, "text/plain");
+		const enveloper = new Enveloper(Configuration.get());
+		const envelopedEvents = await enveloper.addEnvelope(xmlEvent, "text/plain");
 
 		assert.strictEqual(envelopedEvents.length, 1);
 		const json = JSON.parse(envelopedEvents[0]);
@@ -90,7 +93,8 @@ suite('Enveloper', () => {
 `{"body":"2023-07-13 16:01:43.978 +03:00 [INF] General-100156 Received AccessRequest from 10.10.8.16:49521 id=237 user='sivanov' client 'General' {\\"CallingStationId\\":\\"11.222.33.44\\"}","recv_ipv4":"127.0.0.1","recv_time":"2023-07-25T10:37:56.519Z","task_id":"00000000-0000-0000-0000-000000000000","tag":"some_tag","mime":"text/plain","normalized":false,"input_id":"00000000-0000-0000-0000-000000000000","type":"raw","uuid":"2a514acd-6c9d-408b-84eb-793896c240ca"}
 {"body":"2023-07-13 16:01:43.978 +03:00 [INF] General-100156 Received AccessRequest from 10.10.8.16:49521 id=237 user='sivanov' client 'General' {\\"CallingStationId\\":\\"11.222.33.44\\"}","recv_ipv4":"127.0.0.1","recv_time":"2023-07-25T10:37:56.519Z","task_id":"00000000-0000-0000-0000-000000000000","tag":"some_tag","mime":"text/plain","normalized":false,"input_id":"00000000-0000-0000-0000-000000000000","type":"raw","uuid":"2a514acd-6c9d-408b-84eb-793896c240ca"}`;
 
-		assert.rejects(async() => await Enveloper.addEnvelope(xmlEvent, "text/plain"));
+		const enveloper = new Enveloper(Configuration.get());
+		assert.rejects(async() => enveloper.addEnvelope(xmlEvent, "text/plain"));
 	});
 
 	test('Оборачивание в конверт события без конверта, когда уже есть событие в конверте', async () => {
@@ -98,7 +102,8 @@ suite('Enveloper', () => {
 `{"body":"2023-07-13 16:01:43.978 +03:00 [INF] General-100156 Received AccessRequest from 10.10.8.16:49521 id=237 user='sivanov' client 'General' {\\"CallingStationId\\":\\"11.222.33.44\\"}","recv_ipv4":"127.0.0.1","recv_time":"2023-07-25T10:37:56.519Z","task_id":"00000000-0000-0000-0000-000000000000","tag":"some_tag","mime":"text/plain","normalized":false,"input_id":"00000000-0000-0000-0000-000000000000","type":"raw","uuid":"2a514acd-6c9d-408b-84eb-793896c240ca"}
 2023-07-13 16:01:43.978 +03:00 [INF] General-100156 Received AccessRequest from 10.10.8.16:49521 id=237 user='sivanov' client 'General' {"CallingStationId":"11.222.33.44"}`;
 
-		const envelopedEvents = await Enveloper.addEnvelope(xmlEvent, "text/plain");
+		const enveloper = new Enveloper(Configuration.get());
+		const envelopedEvents = enveloper.addEnvelope(xmlEvent, "text/plain");
 
 		assert.strictEqual(envelopedEvents.length, 2);
 
@@ -127,7 +132,8 @@ suite('Enveloper', () => {
 		const compressedRawEvents = 
 		`{"Event":{"xmlns":"http://schemas.microsoft.com/win/2004/08/events/event","System":{"Provider":{"Name":"MSSQLSERVER"},"EventID":{"text":"18453","Qualifiers":"16384"},"Level":"0","Task":"4","Keywords":"0xa0000000000000","TimeCreated":{"SystemTime":"2022-06-24T15:50:01.779402300Z"},"EventRecordID":"6490211","Channel":"Application","Computer":"dc.domain.com","Security":{"UserID":"S-1-5-21-231231-123123-123123-123123"}},"EventData":{"Data":["DOMAIN\\Svc"," [CLIENT: 12.14.32.242]"],"Binary":"436127235725400025130510230612034601230460103460713047013047010234070123"}}}`;
 		
-		const envelopedEvents = await Enveloper.addEnvelope(compressedRawEvents, "application/x-pt-eventlog");
+		const enveloper = new Enveloper(Configuration.get());
+		const envelopedEvents = await enveloper.addEnvelope(compressedRawEvents, "application/x-pt-eventlog");
 
 		assert.strictEqual(envelopedEvents.length, 1);
 		const actualObject = JSON.parse(envelopedEvents[0]);
@@ -152,7 +158,8 @@ suite('Enveloper', () => {
 `{"Event":{"xmlns":"http://schemas.microsoft.com/win/2004/08/events/event","System":{"Provider":{"Name":"MSSQLSERVER"},"EventID":{"text":"18453","Qualifiers":"16384"},"Level":"0","Task":"4","Keywords":"0xa0000000000000","TimeCreated":{"SystemTime":"2022-06-24T15:50:01.779402300Z"},"EventRecordID":"6490211","Channel":"Application","Computer":"dc.domain.com","Security":{"UserID":"S-1-5-21-1023000730-721111127-3110000192-11233"}},"EventData":{"Data":["DOMAIN\\Svc"," [CLIENT: 10.10.56.31]"],"Binary":"436127235725400025130510230612034601230460103460713047013047010234070123"}}}
 {"Event":{"xmlns":"http://schemas.microsoft.com/win/2004/08/events/event","System":{"Provider":{"Name":"MSSQLSERVER"},"EventID":{"text":"18453","Qualifiers":"16384"},"Level":"0","Task":"4","Keywords":"0xa0000000000000","TimeCreated":{"SystemTime":"2022-06-24T15:50:01.779402300Z"},"EventRecordID":"6490211","Channel":"Application","Computer":"dc.domain.com","Security":{"UserID":"S-1-5-21-1023000730-721111127-3110000192-11233"}},"EventData":{"Data":["DOMAIN\\Svc"," [CLIENT: 10.10.56.31]"],"Binary":"436127235725400025130510230612034601230460103460713047013047010234070123"}}}`;
 		
-		const envelopedEvents = await Enveloper.addEnvelope(compressedRawEvents, "application/x-pt-eventlog");
+		const enveloper = new Enveloper(Configuration.get());
+		const envelopedEvents = enveloper.addEnvelope(compressedRawEvents, "application/x-pt-eventlog");
 
 		assert.strictEqual(envelopedEvents.length, 2);
 		const firstEvent = JSON.parse(envelopedEvents[0]);
@@ -187,7 +194,9 @@ suite('Enveloper', () => {
 	test('Добавление конверта для текстового события', async () => {
 
 		const compressedRawEvents = `2022-07-20 07:03:38 W3SVC2 mail-srv 10.0.25.16 POST /Microsoft-Server-ActiveSync/Proxy/default.eas User=user@domain.com&DeviceId=JUQGGDFCDD29R3H003TJA63E10&DeviceType=iPhone&Cmd=Ping&Log=SC1:1_PrxFrom:10.0.22.211_Ver1:161_HH:mail.domain.com_SmtpAdrs:User%domain.com_Hb:600_Rto:2_Cpo:656_Fet:600000_Mbx:mail.domain.com_Cafe:MBX-SRV.DOMAIN.COM_Dc:dc-srv.domain.com_Throttle:0_SBkOffD:L%2f-470_TmRcv:06:53:38.4480003_TmSt:06:53:38.4519947_TmFin:06:53:38.4519947_TmCmpl:07:03:38.440522_TmCnt:07:03:37.7834641_Budget:(A)Owner%3aS-1-5-21-1023191730-727829927-3110000192-14176%5FJUQGGDFCDD29R3H003TJA63E10%5FiPhone%2cConn%3a0%2cMaxConn%3a10%2cMaxBurst%3a480000%2cBalance%3a480000%2cCutoff%3a600000%2cRechargeRate%3a1800000%2cPolicy%3aGlobalThrottlingPolicy%5F5c9d3d31-7f05-4e14-b8f8-05780608b52f%2cIsServiceAccount%3aFalse%2cLiveTime%3a00%3a00%3a30.6952647%3b(D)Owner%3aS-1-5-21-1023191730-727829927-3110000192-14176%5FJUQGGDFCDD29R3H003TJA63E10%5FiPhone%2cConn%3a0%2cMaxConn%3a10%2cMaxBurst%3a480000%2cBalance%3a480000%2cCutoff%3a600000%2cRechargeRate%3a1800000%2cPolicy%3aGlobalThrottlingPolicy%5F5c9d3d31-7f05-4e14-b8f8-05780608b52f%2cIsServiceAccount%3aFalse%2cLiveTime%3a00%3a00%3a00.6580618_ActivityContextData:ActivityID%3d0483abd0-f1d6-44e7-bfe8-e951e242b7bd%3bI32%3aADS.C%5bdc-srv%5d%3d1%3bF%3aADS.AL%5bdc-srv%5d%3d1.62791%3bI32%3aATE.C%5bdc.domain.com%5d%3d1%3bF%3aATE.AL%5bdc.domain.com%5d%3d0%3bS%3aWLM.Bal%3d480000%3bS%3aWLM.BT%3dEas_ 444 DOMAIN\\USER 23.12.22.38 HTTP/1.1 Apple-iPhone11C6/1905.258 - - dc.domain.com:444 200 0 0 600013 44.29.25.201,+10.140.11.12,+10.140.12.14,10.140.14.15`;
-		const envelopedEvents = await Enveloper.addEnvelope(compressedRawEvents, "text/plain");
+
+		const enveloper = new Enveloper(Configuration.get());
+		const envelopedEvents = enveloper.addEnvelope(compressedRawEvents, "text/plain");
 
 		assert.strictEqual(envelopedEvents.length, 1);
 		const firstEvent = JSON.parse(envelopedEvents[0]);

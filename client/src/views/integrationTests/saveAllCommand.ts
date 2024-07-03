@@ -20,28 +20,23 @@ export class SaveAllCommand extends Command {
 
 	public async execute(): Promise<boolean> {
 		const config = this.params.config;
-		try {
-			// Номер активного теста.
-			const activeTestNumberString = this.params.testNumber;
-			if (!activeTestNumberString) {
-				// TODO: внутренняя ошибка
-				throw new XpException(`Не задан номер активного теста`);
-			}
 
-			// В данном руле сохраняются в памяти нормализованные события.
-			const rule = this.params.rule;
-			const newTests = await this.getNewTests();
-
-			rule.setIntegrationTests(newTests);
-			await rule.saveIntegrationTests();
-
-			DialogHelper.showInfo(config.getMessage("View.IntegrationTests.Message.TestsSavedSuccessfully"));
-			return true;
+		// Номер активного теста.
+		const activeTestNumberString = this.params.testNumber;
+		if (!activeTestNumberString) {
+			// TODO: внутренняя ошибка
+			throw new XpException(`Не задан номер активного теста`);
 		}
-		catch (error) {
-			ExceptionHelper.show(error, config.getMessage("View.IntegrationTests.Message.FailedToSaveTests"));
-			return false;
-		}
+
+		// В данном руле сохраняются в памяти нормализованные события.
+		const rule = this.params.rule;
+		const newTests = await this.getNewTests();
+
+		rule.setIntegrationTests(newTests);
+		await rule.saveIntegrationTests();
+
+		DialogHelper.showInfo(config.getMessage("View.IntegrationTests.Message.TestsSavedSuccessfully"));
+		return true;
 	}
 	
 	private async getNewTests(): Promise<IntegrationTest[]> {

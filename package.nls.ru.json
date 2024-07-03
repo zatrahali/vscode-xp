@@ -56,9 +56,9 @@
 	"xp.xpConfig.originDescription": "Информация о поставщике. Используется при экспорте объектов в KB-файл",
 	"xp.xpConfig.origin.contentPrefixDescription": "Префикс поставщика объектов. Должен совпадать с ObjectId. По умолчанию, пользовательским правилам соответствует префикс LOC, системным — PT. Если не указать префикс, у создаваемых правил не будет ObjectId",
 	"xp.xpConfig.origin.ruDescription": "Отображаемое имя (RU)",
-	"xp.xpConfig.origin.enDescription": "Display Name (EN)",
-	"xp.xpConfig.origin.idDescription": "Уникальный идентификатор поставщика, который представляет собой GUID (глобальный уникальный идентификатор).",
+	"xp.xpConfig.origin.enDescription": "Отображаемое имя (EN)",
+	"xp.xpConfig.origin.idDescription": "GUID поставщика (глобальный уникальный идентификатор)",
 
-	"xp.xpConfig.logLevelDescription": "Уровень получаемой информации об ошибках. По умолчанию Info"
+	"xp.xpConfig.logLevelDescription": "Уровень журналирования"
 }
 

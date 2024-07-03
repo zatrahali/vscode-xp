@@ -186,8 +186,8 @@ export class RunningCorrelationGraphProvider {
 		
 		let envelopedRawEventsString : string;
 		try {
-            const rawEvents = rawEventsString.split(RunningCorrelationGraphProvider.TEXTAREA_END_OF_LINE);
-            const envelopedEvents = Enveloper.addEnvelope(rawEventsString, mimeType);
+            const enveloper = new Enveloper(this.config);
+            const envelopedEvents = enveloper.addEnvelope(rawEventsString, mimeType);
 			envelopedRawEventsString = envelopedEvents.join(RunningCorrelationGraphProvider.TEXTAREA_END_OF_LINE);
 		}
 		catch(error) {
