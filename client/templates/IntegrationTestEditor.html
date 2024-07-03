@@ -580,7 +580,7 @@
 				$(document).on("click",'[name="show_actual_event"]', function () {
 					// Получаем текущий тест.
 					const selectedTestNumber = $("#active_test_number").val();
-					var baseTestElement = $("#" + activeTestNumber); 
+					var baseTestElement = $("#" + selectedTestNumber); 
 
 					// Передает тест как параметр запроса.
 					const test = baseTestElement.data("test");
@@ -597,7 +597,7 @@
 				$(document).on("click",'[name="update_expect_event"]', function () {
 					// Получаем текущий тест.
 					const selectedTestNumber = $("#active_test_number").val();
-					var baseTestElement = $("#" + activeTestNumber); 
+					var baseTestElement = $("#" + selectedTestNumber); 
 
 					// Передает тест как параметр запроса.
 					const test = baseTestElement.data("test");
@@ -607,14 +607,13 @@
 						selectedTestNumber : selectedTestNumber,
 						rawEvents : rawEvents,
 						test: test
-						
 					});
 				});
 
 				$(document).on("click",'#open_result_diff', function () {
 					// Получаем текущий тест.
 					const selectedTestNumber = $("#active_test_number").val();
-					var baseTestElement = $("#" + activeTestNumber); 
+					var baseTestElement = $("#" + selectedTestNumber); 
 
 					// Передает тест как параметр запроса.
 					const test = baseTestElement.data("test");
