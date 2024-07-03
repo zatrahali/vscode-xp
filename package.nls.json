@@ -1,17 +1,17 @@
 {
 	"xp.commonCommandCategory": "VSCode-XP",
+	
+	"xp.commonCommands.showOutputChannel": "Show Output Data",
 
-	"xp.commonCommands.showOutputChannel": "Show Extension Output",
-
-	"xp.commonCommands.showExtensionSettings" : "Show Extension Settings", 
+	"xp.commonCommands.showExtensionSettings" : "Extension Settings",
 
 	"xp.views.knowledgebaseTree.title": "Object Tree",
-	"xp.views.knowledgebaseTree.refreshContentTreeCommand": "Refresh Tree",
+	"xp.views.knowledgebaseTree.refreshContentTreeCommand": "Refresh",
 	"xp.views.knowledgebaseTree.openKnowledgebaseCommand": "Open Knowledge Base",
 	"xp.views.knowledgebaseTree.correlateEventsCommand": "Correlate Events",
 
 	"xp.views.knowledgebaseTree.createSubmenu": "Create",
-	"xp.views.knowledgebaseTree.createPackageCommand": "New Package",
+	"xp.views.knowledgebaseTree.createPackageCommand": "New Expertise Pack",
 	"xp.views.knowledgebaseTree.createCorrelationCommand": "New Correlation Rule",
 	"xp.views.knowledgebaseTree.createEnrichmentCommand": "New Enrichment Rule",
 	"xp.views.knowledgebaseTree.createNormalizationCommand": "New Normalization Rule",
@@ -23,41 +23,42 @@
 	"xp.views.knowledgebaseTree.verifyFolderCommand": "Run Validation",
 	"xp.views.knowledgebaseTree.deleteCommand": "Delete",
 	"xp.views.knowledgebaseTree.renameCommand": "Rename",
-	"xp.views.knowledgebaseTree.duplicateCommand": "Duplicate",
+	"xp.views.knowledgebaseTree.duplicateCommand": "Copy",
 
 	"xp.views.knowledgebaseTree.showIntegrationTestsCommand": "Integration Tests",
 	"xp.views.knowledgebaseTree.showMetainfoCommand": "Metadata",
 	"xp.views.knowledgebaseTree.showLocalizationCommand": "Localization",
-	"xp.views.knowledgebaseTree.showTableDefaultValuesCommand": "Edit defaults",
+	"xp.views.knowledgebaseTree.showTableDefaultValuesCommand": "Default Values",
 
-	"xp.views.knowledgebaseTree.buildAllGraphsCommand": "Compile all Rules and Lists",
-	"xp.views.knowledgebaseTree.buildAllLocalizationsCommand": "Compile all Localizations",
-	"xp.views.knowledgebaseTree.buildAllNormalizationsCommand": "Compile all Normalizations",
-	"xp.views.knowledgebaseTree.buildAllWldsCommand": "Compile all wld Files",
-
+	"xp.views.knowledgebaseTree.buildAllGraphsCommand": "Compile All Rules and Lists",
+	"xp.views.knowledgebaseTree.buildAllLocalizationsCommand": "Compile All Localization Rules",
+	"xp.views.knowledgebaseTree.buildAllNormalizationsCommand": "Compile All Normalization Rules",
+	"xp.views.knowledgebaseTree.buildAllWldsCommand": "Compile All WLD Files",
+	
 	"xp.views.knowledgebaseTree.showRetroCorrelationCommand": "Correlate Events from Files",
 
-	"xp.views.knowledgebaseTree.importKbFileCommand": "Import Packages from kb file",
-	"xp.views.knowledgebaseTree.exportKbFileCommand": "Export Package to kb file",
+	"xp.views.knowledgebaseTree.importKbFileCommand": "Import from KB File",
+	"xp.views.knowledgebaseTree.exportKbFileCommand": "Export to KB File",
 
-	"xp.views.knowledgebaseTree.defaultContent": "Welcome! This extension will help you develop rules in the eXtraction and Processing (XP) language. To get started, open the knowledge base.\n[Open Knowledge Base](command:xp.contentTree.openKnowledgebaseCommand)\nHave fun!",
+	"xp.views.knowledgebaseTree.defaultContent": "This extension helps you develop rules for event processing using the eXtraction and Processing (XP) language.\nTo start, [open a knowledge base](command:xp.contentTree.openKnowledgebaseCommand) or create a new one.\nEnjoy!",
 
 	"xp.views.modularTestsListView.title": "Unit Tests",
-	"xp.views.modularTestsListView.defaultContent": "No Unit Tests yet",
-	"xp.views.modularTestsListView.runAll": "Run all",
+	"xp.views.modularTestsListView.defaultContent": "No unit tests yet",
+	"xp.views.modularTestsListView.runAll": "Run All",
 	"xp.views.modularTestsListView.create": "Create",
-	"xp.views.modularTestsListView.remove": "Remove",
+	"xp.views.modularTestsListView.remove": "Delete",
 	"xp.views.modularTestsListView.refresh": "Refresh",
 
-	"xp.xpConfig.kbtBaseDirectoryDescription": "Path to directory c [Knowledge Base Toolkit](https://github.com/vxcontrol/xp-kbt/releases)",
-	"xp.xpConfig.outputDirectoryPathDescription": "Path to the output directory into which all content artifacts are compiled: graphs, table lists, table list databases, and others. This directory is cleared when the extension starts",
-	"xp.xpConfig.correlatorTimeoutDescription": "Correlator timeout in seconds",
+	"xp.xpConfig.kbtBaseDirectoryDescription": "Path of the folder with the [Knowledge Base Toolkit](https://github.com/vxcontrol/xp-kbt/releases)",
+	"xp.xpConfig.outputDirectoryPathDescription": "Path of the folder where temporary objects are saved. The folder is emptied automatically every time you start the extension.",
+	"xp.xpConfig.correlatorTimeoutDescription": "Max correlation time in seconds. If the time is exceeded, the correlation will be canceled.",
 
-	"xp.xpConfig.originDescription": "Supplier information. Used when packing content into a KB file",
-	"xp.xpConfig.origin.contentPrefixDescription": "The ObjectId prefix, as well as the system prefix for specifying the content provider. For example, user rules with the ability to edit have the prefix LOC, system rules PT. If the prefix is not specified, the ObjectId is not generated for the created rules",
+	"xp.xpConfig.originDescription": "Vendor information. Used to export objects to a KB file.",
+	"xp.xpConfig.origin.contentPrefixDescription": "Object vendor prefix. Must match ObjectId. By default, custom rules have the LOC prefix, and system rules have the PT prefix. If no prefix is specified, the rules you create will not have ObjectId either.",
 	"xp.xpConfig.origin.ruDescription": "Display name (RU)",
 	"xp.xpConfig.origin.enDescription": "Display name (EN)",
-	"xp.xpConfig.origin.idDescription": "The supplier's unique identifier, which is a GUID (globally unique identifier)",
+	"xp.xpConfig.origin.idDescription": "Vendor GUID (global unique identifier)",
 
-	"xp.xpConfig.logLevelDescription": "Level of error information received. Default Info"
+	"xp.xpConfig.logLevelDescription": "Log level"
 }
+
