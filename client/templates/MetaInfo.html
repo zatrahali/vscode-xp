@@ -132,6 +132,8 @@
 				<div style="display: none;">
 					<vscode-dropdown name="provider" aria-required="true" class="vscode-dropdown">
 						<vscode-option>Microsoft-Windows-Security-Auditing</vscode-option>
+						<vscode-option>Microsoft-Windows-System</vscode-option>
+						<vscode-option>Microsoft-Windows-Application</vscode-option>
 						<vscode-option>Microsoft-Windows-Sysmon</vscode-option>
 						<vscode-option>Microsoft-Windows-PowerShell</vscode-option>
 						<vscode-option>Microsoft-Windows-IIS</vscode-option>
@@ -141,6 +143,7 @@
 						<vscode-option>MSSQL</vscode-option>
 						<vscode-option>Unix</vscode-option>
 						<vscode-option>auditd</vscode-option>
+						<vscode-option>syslog</vscode-option>
 						<vscode-option>MacOS</vscode-option>
 					</vscode-dropdown>
 				</div>
@@ -154,6 +157,8 @@
 							<div class="dropdown-group">
 							<vscode-dropdown name="provider" value="{{Provider}}" aria-required="true" class="vscode-dropdown">
 								<vscode-option>Microsoft-Windows-Security-Auditing</vscode-option>
+								<vscode-option>Microsoft-Windows-System</vscode-option>
+								<vscode-option>Microsoft-Windows-Application</vscode-option>
 								<vscode-option>Microsoft-Windows-Sysmon</vscode-option>
 								<vscode-option>Microsoft-Windows-PowerShell</vscode-option>
 								<vscode-option>Microsoft-Windows-IIS</vscode-option>
@@ -163,6 +168,7 @@
 								<vscode-option>MSSQL</vscode-option>
 								<vscode-option>Unix</vscode-option>
 								<vscode-option>auditd</vscode-option>
+								<vscode-option>syslog</vscode-option>
 								<vscode-option>MacOS</vscode-option>
 							</vscode-dropdown>
 							<input name="eventID" type="text" value="{{.}}" title="{{.}}" required>
