@@ -93,6 +93,7 @@
     "View.IntegrationTests.Message.AllTestsFailed": "No test for rule {0} passed. [Fix code errors for the rule](command:workbench.action.showErrorsWarnings) and its subrules. If no errors were found, check [output data](command:xp.commonCommands.showOutputChannel).",
     
     "View.IntegrationTests.Message.TestsSavedSuccessfully": "All tests were saved",
+    "View.IntegrationTests.Message.FailedToOpenTests": "Tests could not be opened",
     "View.IntegrationTests.Message.FailedToSaveTests": "Failed to save the tests",
     "View.IntegrationTests.Message.SuccessfulNormalization": "Successfully normalized raw events for test No {0}",
     "View.IntegrationTests.Message.SuccessfulNormalizationAndEnrichment": "Successfully normalized and enriched raw events for test No {0}",
@@ -108,12 +109,15 @@
     "View.IntegrationTests.Message.InvalidJsonInTestCode": "JSON correctness error in the test code. Make corrections and repeat",
     "View.IntegrationTests.Message.NoTestResultFound": "Integration test results not found. Run the integration tests again",
     "View.IntegrationTests.Message.NotEnoughRequiredFields": "The required field {1} was not found in the resulting test event No {0}. Add filling in this field and run the tests again",
+    "View.IntegrationTests.Message.RequiredFileWasNotFound": "Integration test files are corrupted, file {0} is not found",
 
     "View.IntegrationTests.Message.EnvelopeHasAlreadyAdded": "The envelope for all events has already been added",
     "View.IntegrationTests.Message.NoRawEventsEnveloping": "There are no raw events for adding an envelope. Add at least one event in the envelope and try again",
 
     "View.IntegrationTests.Message.DefaultErrorAddingEnvelope": "Error adding an envelope",
     "View.IntegrationTests.Message.DefaultErrorEventsNormalization": "Events could not be normalized. It is necessary to [recompile normalizations](command:xp.contentTree.buildNormalizations), check the format of the raw events and their envelopes, the availability of appropriate normalization in the knowledge base",
+
+    "View.IntegrationTests.Message.RequestToUpdateWindow": "The integration test files have been modified by another program. Do you want to update the integration test window?",
 
     "View.Metainfo": "Metadata for {0}",
     "View.Metainfo.Id" : "ID",

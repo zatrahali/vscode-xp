@@ -31,7 +31,7 @@ export class IntegrationTestEditorViewProvider {
 	public static readonly viewId = 'IntegrationTestEditorView';
 	public static readonly onTestSelectionChangeCommand = "IntegrationTestEditorView.onTestSelectionChange";
 
-	private _view?: vscode.WebviewPanel;
+	private view?: vscode.WebviewPanel;
 	private rule: RuleBaseItem;
 
 	public constructor(
@@ -79,18 +79,17 @@ export class IntegrationTestEditorViewProvider {
 
 	public static readonly showEditorCommand = "IntegrationTestEditorView.showEditor";
 	public async showEditor(rule: Correlation|Enrichment|Aggregation) : Promise<void> {
+		Log.debug(`The integration test editor is open to the ${rule.getName()}`);
 
-		Log.debug(`Редактор интеграционных тестов открыт для правила ${rule.getName()}`);
-
-		if (this._view) {
-			Log.debug(`Открытый ранее редактор интеграционных тестов для правила ${this.rule.getName()} был автоматически закрыт`);
+		if (this.view) {
+			Log.debug(`The previously opened integration test editor for the rule ${this.rule.getName()} was automatically closed`);
 
 			this.rule = null;
-			this._view.dispose();
+			this.view.dispose();
 		}
 
 		if (!(rule instanceof Correlation || rule instanceof Enrichment || rule instanceof Aggregation)) {
-			DialogHelper.showWarning(`Редактор интеграционных тестов не поддерживает правил кроме корреляций, обогащений и агрегаций`);
+			DialogHelper.showWarning(`The Integration test editor does not support rules other than correlations, enrichments, and aggregations`);
 			return;
 		}
 
@@ -98,7 +97,7 @@ export class IntegrationTestEditorViewProvider {
 
 		// Создать и показать панель.
 		const viewTitle = this.config.getMessage("View.IntegrationTests.Title", this.rule.getName());
-		this._view = vscode.window.createWebviewPanel(
+		this.view = vscode.window.createWebviewPanel(
 			IntegrationTestEditorViewProvider.viewId,
 			viewTitle,
 			vscode.ViewColumn.One,
@@ -112,22 +111,56 @@ export class IntegrationTestEditorViewProvider {
 		// Создаем временную директорию для результатов тестов, которая посмотреть почему не прошли тесты.
 		this.testsTmpFilesPath = this.config.getRandTmpSubDirectoryPath();
 
-		this._view.onDidDispose(async (e: void) => {
-			this._view = undefined;
-			await FileSystemHelper.recursivelyDeleteDirectory(this.testsTmpFilesPath);
-		},
-			this);
+		// Очистка временных файлов после закрытия вьюшки.
+		this.view.onDidDispose(
+			async (e: void) => {
+				this.view = undefined;
+				await FileSystemHelper.recursivelyDeleteDirectory(this.testsTmpFilesPath);
+			},
+			this
+		);
 
-		this._view.webview.options = {
+		// Запрос на обновление вьюшки если файлы поменялись.
+		const testsWatcher = vscode.workspace.createFileSystemWatcher(
+			new vscode.RelativePattern(
+				this.rule.getTestsPath(),
+				'*.{tc,json}')
+		);
+		this.config.getContext().subscriptions.push(testsWatcher);
+		testsWatcher.onDidChange(this.onExternalTestFilesModification, this);
+		testsWatcher.onDidCreate(this.onExternalTestFilesModification, this);
+		testsWatcher.onDidDelete(this.onExternalTestFilesModification, this);
+
+		this.view.webview.options = {
 			enableScripts: true
 		};
 
-		this._view.webview.onDidReceiveMessage(
+		this.view.webview.onDidReceiveMessage(
 			this.receiveMessageFromWebView,
 			this
 		);
 
 		await this.updateView();
+	}
+
+	private async onExternalTestFilesModification(uri: vscode.Uri) : Promise<void>{
+		if(this.savingInProgress) {
+			return;
+		}
+
+		this.rule.reloadIntegrationTests();
+		const usersResponse = await DialogHelper.showInfo(
+			this.config.getMessage("View.IntegrationTests.Message.RequestToUpdateWindow"),
+			this.config.getMessage("Yes"),
+			this.config.getMessage("No")
+		);
+
+		if(!usersResponse || usersResponse === this.config.getMessage("No")) {
+			return;
+		}
+
+		this.rule.reloadIntegrationTests();
+		this.updateView();
 	}
 
 	/**
@@ -136,17 +169,15 @@ export class IntegrationTestEditorViewProvider {
 	private async updateView(focusTestNumber?: number): Promise<void> {
 
 		// Пользователь уже закрыл вьюшку.
-		if (!this._view) {
+		if (!this.view) {
 			return;
 		}
 
 		const resultFocusTestNumber = focusTestNumber ?? 1;
-		Log.debug(`WebView ${IntegrationTestEditorViewProvider.name} была загружена/обновлена. Текущий тест №${resultFocusTestNumber ?? "1"}`);
+		Log.debug(`The integration test webview has been uploaded/updated. Current Test #${resultFocusTestNumber ?? "1"}`);
 
 		const resourcesUri = this.config.getExtensionUri();
-		const extensionBaseUri = this._view.webview.asWebviewUri(resourcesUri);
-
-		const webviewUri = FileSystemHelper.getUri(this._view.webview, this.config.getExtensionUri(), ["client", "out", "ui.js"]);
+		const extensionBaseUri = this.view.webview.asWebviewUri(resourcesUri);
 
 		const plain = {
 			"IntegrationTests": [],
@@ -213,10 +244,10 @@ export class IntegrationTestEditorViewProvider {
 			const template = await FileSystemHelper.readContentFile(this._templatePath);
 			const formatter = new MustacheFormatter(template);
 			const htmlContent = formatter.format(plain);
-			this._view.webview.html = htmlContent;
+			this.view.webview.html = htmlContent;
 		}
 		catch (error) {
-			DialogHelper.showError("Не удалось открыть интеграционные тесты", error);
+			DialogHelper.showError(this.config.getMessage("View.IntegrationTests.Message.FailedToOpenTests"), error);
 		}
 	}
 
@@ -279,47 +310,20 @@ export class IntegrationTestEditorViewProvider {
 	private async executeCommand(message: any) {
 		// События, не требующие запуска утилит.
 		switch (message.command) {
-			// TODO: не используется, надо удалить
-			case 'saveTest': {
-				const currTest = IntegrationTest.convertFromObject(message.test);
+			case 'saveAllTests': {
 				try {
-					await this.saveTest(message);
+					this.savingInProgress = true;
+					this.rule = await this.saveAllTests(message);
+					Log.info(`All tests of the rule are ${this.rule.getName()} saved`);
 				}
 				catch (error) {
-					ExceptionHelper.show(error, `Не удалось сохранить тест №${currTest}.`);
-					return;
+					ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.FailedToSaveTests"));
+					return true;
+				}
+				finally {
+					this.savingInProgress = false;
 				}
 
-				const activeTestNumber = this.getSelectedTestNumber(message);
-				this.updateView(activeTestNumber);
-				return;
-			}
-
-			case 'saveAllTests': {
-				if (!message?.activeTestNumber) {
-					DialogHelper.showError('Внутренняя ошибка. Номер теста не передан в запросе на backend');
-					return;
-				}
-
-				const activeTestNumber = parseInt(message?.activeTestNumber);
-				if (!activeTestNumber) {
-					throw new XpException(`Переданное значение ${message?.activeTestNumber} не является номером интеграционного теста`);
-				}
-
-				const command = new SaveAllCommand( {
-						config : this.config,
-						rule: this.rule,
-						tmpDirPath: this.testsTmpFilesPath,
-						testNumber: activeTestNumber,
-						tests: message.tests}
-				);
-				
-				const result = await command.execute();
-				// Если сохранение прошло успешно, тогда обновляем окно.
-				if(result) {
-					this.updateView(activeTestNumber);
-				}
-				
 				break;
 			}
 
@@ -347,16 +351,11 @@ export class IntegrationTestEditorViewProvider {
 				return;
 			}
 
-			// case 'cleanTestCode': {
-			// 	return this.cleanTestCode(message);
-			// }
-
-
 			// Команды с запуском утилит.
 			case "NormalizeRawEventsCommand": {
 				try {
 					if (typeof message?.isEnrichmentRequired !== "boolean" ) {
-						DialogHelper.showInfo("Не задан параметр обогащения событий");
+						DialogHelper.showInfo("The event enrichment parameter is not set");
 						return true;
 					}
 					const isEnrichmentRequired = message?.isEnrichmentRequired as boolean;
@@ -375,7 +374,7 @@ export class IntegrationTestEditorViewProvider {
 					return true;
 				}
 				catch(error) {
-					ExceptionHelper.show(error, 'Ошибка нормализации событий');
+					ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.DefaultErrorEventsNormalization"));
 				}
 				break;
 			}
@@ -475,12 +474,16 @@ export class IntegrationTestEditorViewProvider {
 				// Сохраняем актуальное состояние тестов из вьюшки.
 				let rule: RuleBaseItem;
 				try {
+					this.savingInProgress = true;
 					rule = await this.saveAllTests(message);
 					Log.info(`All tests of the rule are ${this.rule.getName()} saved`);
 				}
 				catch (error) {
 					ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.FailedToSaveTests"));
 					return true;
+				}
+				finally {
+					this.savingInProgress = false;
 				}
 
 				try {
@@ -593,7 +596,7 @@ export class IntegrationTestEditorViewProvider {
 	}
 
 	public async updateTestCode(newTestCode: string, testNumber?: number): Promise<boolean> {
-		return this._view.webview.postMessage({
+		return this.view.webview.postMessage({
 			'command': 'updateTestCode',
 			'newTestCode': newTestCode,
 			'testNumber': testNumber
@@ -601,13 +604,14 @@ export class IntegrationTestEditorViewProvider {
 	}
 
 	public async updateCurrentTestRawEvent(rawEvents: string): Promise<boolean> {
-		return this._view.webview.postMessage({
+		return this.view.webview.postMessage({
 			'command': 'updateRawEvents',
 			'rawEvents': rawEvents
 		});
 	}
 
 	private testsTmpFilesPath: string;
+	private savingInProgress = false;
 
 	public static TEXTAREA_END_OF_LINE = "\n";
 }

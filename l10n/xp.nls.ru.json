@@ -95,6 +95,7 @@
     "View.IntegrationTests.Message.AllTestsFailed": "Ни один тест для правила {0} не пройден. Исправьте [ошибки в коде](command:workbench.action.showErrorsWarnings) правила и его вспомогательных правил. Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
     
     "View.IntegrationTests.Message.TestsSavedSuccessfully": "Все тесты сохранены",
+    "View.IntegrationTests.Message.FailedToOpenTests": "Не удалось открыть тесты",
     "View.IntegrationTests.Message.FailedToSaveTests": "Не удалось сохранить тесты",
     "View.IntegrationTests.Message.SuccessfulNormalization": "Нормализация необработанных событий для теста №{0} завершена успешно",
     "View.IntegrationTests.Message.SuccessfulNormalizationAndEnrichment": "Нормализация и обогащение необработанных событий для теста №{0} завершены успешно",
@@ -110,12 +111,15 @@
     "View.IntegrationTests.Message.InvalidJsonInTestCode": "Ошибка корректности JSON в коде теста. Внесите исправления и повторите",
     "View.IntegrationTests.Message.NoTestResultFound": "Результаты интеграционных тестов не найдена. Запустите интеграционные тесты еще раз",
     "View.IntegrationTests.Message.NotEnoughRequiredFields": "В результирующем событии теста №{0} не найдено обязательное поле {1}. Добавьте заполнение данного поля и повторите запуск тестов",
+    "View.IntegrationTests.Message.RequiredFileWasNotFound": "Повреждены файлы интеграционных тестов, не найден файл {0}",
 
     "View.IntegrationTests.Message.EnvelopeHasAlreadyAdded": "Конверт для всех событий уже добавлен",
     "View.IntegrationTests.Message.NoRawEventsEnveloping": "Нет необработанных событий для добавления конверта. Добавьте хотя бы одно событие в конверте и повторите попытку",
 
     "View.IntegrationTests.Message.DefaultErrorAddingEnvelope": "Ошибка добавления конверта на необработанные события",
     "View.IntegrationTests.Message.DefaultErrorEventsNormalization": "Не удалось нормализовать события. Необходимо [перекомпилировать нормализации](command:xp.contentTree.buildNormalizations), проверить формат необработанных событий и их конвертов, наличие соответствующей нормализации в базе знаний",
+
+    "View.IntegrationTests.Message.RequestToUpdateWindow": "Файлы интеграционных тестов были изменены другой программой. Хотите обновить окно интеграционных тестов?",
 
     "View.Metainfo": "Метаданные {0}",
     "View.Metainfo.Id" : "Идентификатор",

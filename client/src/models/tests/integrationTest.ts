@@ -5,6 +5,7 @@ import { TestStatus } from './testStatus';
 import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { XpException } from '../xpException';
 import { RuleBaseItem } from '../content/ruleBaseItem';
+import { Configuration } from '../configuration';
 
 // TODO: вынести общие методы из класс BaseUnitTest.
 export class IntegrationTest {
@@ -45,7 +46,7 @@ export class IntegrationTest {
 				const testCodeFileName = `test_conds_${testNumber}.tc`;
 				const testCodeFilePath = path.join(testsDirectoryFullPath, testCodeFileName);
 				if(!fs.existsSync(testCodeFilePath)) {
-					throw new XpException(`Повреждены файлы тестов, не найден файл '${testCodeFilePath}'`);
+					throw new XpException(Configuration.get().getMessage("View.IntegrationTests.Message.RequiredFileWasNotFound", testCodeFilePath));
 				}
 				const testCodeContent = fs.readFileSync(testCodeFilePath, "utf8");
 				test.setTestCode(testCodeContent);			
@@ -54,7 +55,7 @@ export class IntegrationTest {
 				const rawEventsFileName = `raw_events_${testNumber}.json`;				
 				const rawEventsFullPath = path.join(testsDirectoryFullPath, rawEventsFileName);
 				if(!fs.existsSync(rawEventsFullPath)) {
-					throw new XpException(`Повреждены файлы тестов, не найден файл '${rawEventsFullPath}'`);
+					throw new XpException(Configuration.get().getMessage("View.IntegrationTests.Message.RequiredFileWasNotFound", rawEventsFullPath));
 				}
 				const rawEvents = fs.readFileSync(rawEventsFullPath, "utf8");
 				test.setRawEvents(rawEvents);
