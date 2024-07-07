@@ -125,13 +125,13 @@ export class FileSystemHelper {
      */
     public static ruleFilePathToDirectory(ruleFilePath: string) : string {
         // Код правила или табличного списка.
-        if(ruleFilePath.endsWith(".co")     ||
-           ruleFilePath.endsWith(".en")     ||
-           ruleFilePath.endsWith(".xp")     ||
-           ruleFilePath.endsWith(".agr")    ||
-           ruleFilePath.endsWith(".tl")     ||
-           ruleFilePath.endsWith(".flt")
-           ) {
+        if( ruleFilePath.endsWith(".co")     ||
+            ruleFilePath.endsWith(".en")     ||
+            ruleFilePath.endsWith(".xp")     ||
+            ruleFilePath.endsWith(".agr")    ||
+            ruleFilePath.endsWith(".tl")     ||
+            ruleFilePath.endsWith(".flt")
+            ) {
             const ruleDirectoryPath = path.dirname(ruleFilePath);
             return ruleDirectoryPath;
         }

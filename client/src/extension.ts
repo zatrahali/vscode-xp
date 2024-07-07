@@ -40,7 +40,6 @@ import { LocalizationEditorViewProvider } from './views/localization/localizatio
 import { CommonCommands } from './models/command/commonCommands';
 import mainPackageFile from '../../package.json';
 import { ToolsManager } from './models/content/toolsManager';
-import { DialogHelper } from './helpers/dialogHelper';
 
 export let Log: Logger;
 let client: LanguageClient;

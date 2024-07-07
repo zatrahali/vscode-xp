@@ -17,7 +17,7 @@ export class LocalizationsBuildingOptions {
  */
 export class SiemjConfBuilder {
 
-	constructor(private config : Configuration, private _contentRootPath: string) {
+	constructor(private config : Configuration, private contentRootPath: string) {
 		// BUILD_TABLES_DATABASE [Err] :: [412] Failed to execute script 'fpta_filler' due to unhandled exception!
 		// BUILD_TABLES_DATABASE [Err] :: Traceback (most recent call last):
 		// BUILD_TABLES_DATABASE [Err] ::   File "fpta_filler.py", line 1089, in <module>
@@ -47,17 +47,17 @@ export class SiemjConfBuilder {
 			throw new XpException(`Путь к выходной директории '${baseOutputDirPath}' содержит недопустимые символы. Для корректной работы необходимо использовать только латинские буквы, цифры и другие корректные для путей символы`);
 		}
 
-		this._contentRootFolder = path.basename(this._contentRootPath);
-		this._outputFolder = this.config.getOutputDirectoryPath(this._contentRootFolder);
+		this.contentRootFolder = path.basename(this.contentRootPath);
+		this.outputFolder = this.config.getOutputDirectoryPath(this.contentRootFolder);
 
 		// Заполнение конфига по умолчанию.
-		this._siemjConfigSection = 
+		this.siemjConfigSection = 
 `[DEFAULT]
 ptsiem_sdk=${this.config.getSiemSdkDirectoryPath()}
 build_tools=${this.config.getBuildToolsDirectoryFullPath()}
 taxonomy=${this.config.getTaxonomyFullPath()}
-output_folder=${this._outputFolder}
-temp=${this.config.getTmpDirectoryPath(this._contentRootFolder)}`;
+output_folder=${this.outputFolder}
+temp=${this.config.getTmpDirectoryPath(this.contentRootFolder)}`;
 	}
 
 	/**
@@ -66,14 +66,14 @@ temp=${this.config.getTmpDirectoryPath(this._contentRootFolder)}`;
 	 */
 	public addNormalizationsGraphBuilding(force = true) : void {
 
-		if(this._scenarios.includes(SiemjConfBuilder.MAKE_NFGRAPH_SCENARIO)) {
+		if(this.scenarios.includes(SiemjConfBuilder.MAKE_NFGRAPH_SCENARIO)) {
 			throw new XpException(`Дублирование сценария ${SiemjConfBuilder.MAKE_NFGRAPH_SCENARIO} при генерации конфигурационного файла siemj.conf`);
 		}
 
 		const xpAppendixPath = this.config.getAppendixFullPath();
 
 		if (!force){
-			const normGraphFilePath = this.config.getNormalizationsGraphFilePath(this._contentRootFolder);
+			const normGraphFilePath = this.config.getNormalizationsGraphFilePath(this.contentRootFolder);
 			if(fs.existsSync(normGraphFilePath)) {
 				return;
 			}
@@ -85,12 +85,12 @@ temp=${this.config.getTmpDirectoryPath(this._contentRootFolder)}`;
 [make-nfgraph]
 type=BUILD_RULES
 rcc_lang=n
-rules_src=${this._contentRootPath}
+rules_src=${this.contentRootPath}
 xp_appendix=${xpAppendixPath}
 out=${output}`;
 
-		this._siemjConfigSection += nfgraphBuildingSection;
-		this._scenarios.push(SiemjConfBuilder.MAKE_NFGRAPH_SCENARIO);
+		this.siemjConfigSection += nfgraphBuildingSection;
+		this.scenarios.push(SiemjConfBuilder.MAKE_NFGRAPH_SCENARIO);
 	}
 
 	/**
@@ -99,12 +99,12 @@ out=${output}`;
 	 */
 	public addAggregationGraphBuilding(force = true) : void {
 
-		if(this._scenarios.includes(SiemjConfBuilder.MAKE_ARGRAPH_SCENARIO)) {
+		if(this.scenarios.includes(SiemjConfBuilder.MAKE_ARGRAPH_SCENARIO)) {
 			throw new XpException(`Дублирование сценария ${SiemjConfBuilder.MAKE_ARGRAPH_SCENARIO} при генерации конфигурационного файла siemj.conf`);
 		}
 
 		if (!force){
-			const arGraphFilePath = this.config.getAggregationsGraphFilePath(this._contentRootFolder);
+			const arGraphFilePath = this.config.getAggregationsGraphFilePath(this.contentRootFolder);
 			if(fs.existsSync(arGraphFilePath)) {
 				return;
 			}
@@ -122,11 +122,11 @@ out=${output}`;
 [make-argraph]
 type=BUILD_RULES
 rcc_lang=a
-rules_src=${this._contentRootPath}
+rules_src=${this.contentRootPath}
 out=${output}`;
 
-		this._siemjConfigSection += argraphBuildingSection;
-		this._scenarios.push(SiemjConfBuilder.MAKE_ARGRAPH_SCENARIO);
+		this.siemjConfigSection += argraphBuildingSection;
+		this.scenarios.push(SiemjConfBuilder.MAKE_ARGRAPH_SCENARIO);
 	}
 
 // `[make-argraph]
@@ -144,14 +144,14 @@ out=${output}`;
 	public addTablesSchemaBuilding(force = true) : void {
 		// Если нет табличных списков, то не собираем схему		
 		// TODO: данная логика тут лишняя, вынести на уровень выше.
-		if (!FileSystemHelper.checkIfFilesIsExisting(this._contentRootPath, /\.tl$/)) {
+		if (!FileSystemHelper.checkIfFilesIsExisting(this.contentRootPath, /\.tl$/)) {
 			Log.info("Компиляция схемы не требуется, так как в дереве контента не найдено ни одного файла с расширением .tl");
 			return;
 		}
 
 		// Не собираем схему, если она уже есть.
 		if(!force) {
-			const schemaFilePath = this.config.getSchemaFullPath(this._contentRootFolder);
+			const schemaFilePath = this.config.getSchemaFullPath(this.contentRootFolder);
 			if(fs.existsSync(schemaFilePath)) {
 				Log.info("Компиляция схемы не требуется, так как файл схемы уже существует");
 				return;
@@ -163,19 +163,19 @@ out=${output}`;
 `
 [make-tables-schema]
 type=BUILD_TABLES_SCHEMA
-table_list_schema_src=${this._contentRootPath}
+table_list_schema_src=${this.contentRootPath}
 contract=${contract}
 out=\${output_folder}`;
 
-		this._siemjConfigSection += tablesSchemaBuildingSection;
-		this._scenarios.push("make-tables-schema");
+		this.siemjConfigSection += tablesSchemaBuildingSection;
+		this.scenarios.push("make-tables-schema");
 	}
 
 	public addTablesDbBuilding(force = true) : void {
 
 		// Не собираем схему, если она уже есть.
 		if(!force) {
-			const fptaDbFilePath = this.config.getFptaDbFilePath(this._contentRootFolder);
+			const fptaDbFilePath = this.config.getFptaDbFilePath(this.contentRootFolder);
 			if(fs.existsSync(fptaDbFilePath)) {
 				return;
 			}
@@ -193,8 +193,8 @@ table_list_schema=${table_list_schema}
 table_list_defaults=${table_list_defaults}
 out=${output}`;
 
-		this._siemjConfigSection += tablesDatabaseBuildingSection;
-		this._scenarios.push("make-tables-db");
+		this.siemjConfigSection += tablesDatabaseBuildingSection;
+		this.scenarios.push("make-tables-db");
 	}
 
 	/**
@@ -207,7 +207,7 @@ out=${output}`;
 		
 		// Не собираем граф, если он уже есть.
 		if(!force) {
-			const enrichGraphFilePath = this.config.getEnrichmentsGraphFilePath(this._contentRootFolder);
+			const enrichGraphFilePath = this.config.getEnrichmentsGraphFilePath(this.contentRootFolder);
 			if(fs.existsSync(enrichGraphFilePath)) {
 				return;
 			}
@@ -222,7 +222,7 @@ out=${output}`;
 			}
 		}
 		else {
-			rulesSrcPath = this._contentRootPath;
+			rulesSrcPath = this.contentRootPath;
 		}
 
 		const rulesFilters = this.config.getRulesDirFilters();
@@ -238,14 +238,14 @@ rfilters_src=${rulesFilters}
 table_list_schema=${table_list_schema}
 out=${output}`;
 
-		this._siemjConfigSection += cfgraphBuildingSection;
-		this._scenarios.push("make-crgraph");
+		this.siemjConfigSection += cfgraphBuildingSection;
+		this.scenarios.push("make-crgraph");
 	}
 
 	public addEnrichmentsGraphBuilding(force = true) : void {
 		// Не собираем граф, если он уже есть.
 		if(!force) {
-			const enrichGraphFilePath = this.config.getEnrichmentsGraphFilePath(this._contentRootFolder);
+			const enrichGraphFilePath = this.config.getEnrichmentsGraphFilePath(this.contentRootFolder);
 			if(fs.existsSync(enrichGraphFilePath)) {
 				return;
 			}
@@ -260,20 +260,20 @@ out=${output}`;
 [make-ergraph]
 type=BUILD_RULES
 rcc_lang=e
-rules_src=${this._contentRootPath}
+rules_src=${this.contentRootPath}
 rfilters_src=${rulesFilters}
 table_list_schema=${table_list_schema}
 out=${output}`;
 
-		this._siemjConfigSection += efgraphBuildingSection;
-		this._scenarios.push("make-ergraph");
+		this.siemjConfigSection += efgraphBuildingSection;
+		this.scenarios.push("make-ergraph");
 	}
 
 	public addLocalizationsBuilding(options? : LocalizationsBuildingOptions) : void {
 
 		if(options && !options.force) {
-			const enLangFilePath = this.config.getRuLangFilePath(this._contentRootFolder);
-			const ruLangFilePath = this.config.getEnLangFilePath(this._contentRootFolder);
+			const enLangFilePath = this.config.getRuLangFilePath(this.contentRootFolder);
+			const ruLangFilePath = this.config.getEnLangFilePath(this.contentRootFolder);
 			if(fs.existsSync(enLangFilePath) && fs.existsSync(ruLangFilePath)) {
 				return;
 			}
@@ -281,7 +281,7 @@ out=${output}`;
 
 		let rulesSrcPathResult : string;
 		if(!options?.rulesSrcPath) {
-			rulesSrcPathResult = this._contentRootPath;
+			rulesSrcPathResult = this.contentRootPath;
 		} else {
 			rulesSrcPathResult = options.rulesSrcPath;
 		}
@@ -294,8 +294,8 @@ type=BUILD_EVENT_LOCALIZATION
 rules_src=${rulesSrcPathResult}
 out=${output}`;
 
-		this._siemjConfigSection += localizationBuildingSection;
-		this._scenarios.push("make-loca");
+		this.siemjConfigSection += localizationBuildingSection;
+		this.scenarios.push("make-loca");
 	}
 
 	public addEventsNormalization(options: {rawEventsFilePath : string, mime?: EventMimeType}) : void {
@@ -330,8 +330,8 @@ not_norm_events=${not_norm_events}
 out=${output}`;
 		}
 
-		this._siemjConfigSection += eventNormalizationSection;
-		this._scenarios.push("run-normalize");
+		this.siemjConfigSection += eventNormalizationSection;
+		this.scenarios.push("run-normalize");
 	}
 
 	public addEventsEnrichment() : void {
@@ -347,8 +347,8 @@ enrules=${enrules}
 in=${input}
 out=${output}`;
 
-		this._siemjConfigSection += eventEnrichSection;
-		this._scenarios.push("run-enrich");
+		this.siemjConfigSection += eventEnrichSection;
+		this.scenarios.push("run-enrich");
 	}
 
 	/**
@@ -389,8 +389,8 @@ temp=${tmpFilesPath}
 keep_temp_files=yes`;
 		}
 
-		this._siemjConfigSection += rulesTestsSection;
-		this._scenarios.push("rules-tests");
+		this.siemjConfigSection += rulesTestsSection;
+		this.scenarios.push("rules-tests");
 	}	
 
 	public addCorrelateEnrichedEvents() : void {
@@ -408,8 +408,8 @@ in=${input}
 table_list_database=${table_list_database}
 out=${output}`;
 
-		this._siemjConfigSection += eventEnrichSection;
-		this._scenarios.push("run-correlate");
+		this.siemjConfigSection += eventEnrichSection;
+		this.scenarios.push("run-correlate");
 	}
 
 	public addCorrelateNormalizedEvents() : void {
@@ -427,8 +427,8 @@ in=${input}
 table_list_database=${table_list_database}
 out=${output}`;
 
-		this._siemjConfigSection += eventEnrichSection;
-		this._scenarios.push("run-correlate");
+		this.siemjConfigSection += eventEnrichSection;
+		this.scenarios.push("run-correlate");
 	}
 
 	/**
@@ -463,28 +463,28 @@ locarules=${locaRulesDir}
 in=${resultCorrelatedEventsFilePath}
 out=${enOutput}`;
 
-		this._siemjConfigSection += ruLocalization;
-		this._scenarios.push("run-loca-ru");
-		this._scenarios.push("run-loca-en");
+		this.siemjConfigSection += ruLocalization;
+		this.scenarios.push("run-loca-ru");
+		this.scenarios.push("run-loca-en");
 	}
 
 	public build() : string {
 		const resultConfig = 
-`${this._siemjConfigSection}
+`${this.siemjConfigSection}
 [main]
 type=SCENARIO
-scenario=${this._scenarios.join(" ")}
+scenario=${this.scenarios.join(" ")}
 `;
 		Log.info(Configuration.SIEMJ_CONFIG_FILENAME);
 		Log.info(resultConfig);
 		return resultConfig;
 	}
 
-	private _contentRootFolder : string;
-	private _outputFolder : string;
+	private contentRootFolder : string;
+	private outputFolder : string;
 
-	private _siemjConfigSection : string;
-	private _scenarios : string[] = [];
+	private siemjConfigSection : string;
+	private scenarios : string[] = [];
 
 	private static MAKE_NFGRAPH_SCENARIO = "make-nfgraph";
 

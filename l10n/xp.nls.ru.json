@@ -97,6 +97,7 @@
     "View.IntegrationTests.Message.TestsSavedSuccessfully": "Все тесты сохранены",
     "View.IntegrationTests.Message.FailedToOpenTests": "Не удалось открыть тесты",
     "View.IntegrationTests.Message.FailedToSaveTests": "Не удалось сохранить тесты",
+    "View.IntegrationTests.Message.FailedToExecutionTests": "Не удалось выполнить тесты",
     "View.IntegrationTests.Message.SuccessfulNormalization": "Нормализация необработанных событий для теста №{0} завершена успешно",
     "View.IntegrationTests.Message.SuccessfulNormalizationAndEnrichment": "Нормализация и обогащение необработанных событий для теста №{0} завершены успешно",
 

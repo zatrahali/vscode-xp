@@ -95,6 +95,7 @@
     "View.IntegrationTests.Message.TestsSavedSuccessfully": "All tests were saved",
     "View.IntegrationTests.Message.FailedToOpenTests": "Tests could not be opened",
     "View.IntegrationTests.Message.FailedToSaveTests": "Failed to save the tests",
+    "View.IntegrationTests.Message.FailedToExecutionTests": "Failed to run the tests",
     "View.IntegrationTests.Message.SuccessfulNormalization": "Successfully normalized raw events for test No {0}",
     "View.IntegrationTests.Message.SuccessfulNormalizationAndEnrichment": "Successfully normalized and enriched raw events for test No {0}",
 

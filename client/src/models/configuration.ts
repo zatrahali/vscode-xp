@@ -35,19 +35,19 @@ export class Configuration {
 		context.subscriptions.push(this.diagnosticCollection);
 	}
 
-	public getRulesDirFilters() : string { return this._pathHelper.getRulesDirFilters(); }
-	public getContentRoots() : string[] { return this._pathHelper.getContentRoots(); } 
-	public getPackages(): string[] { return this._pathHelper.getPackages(); }
-	public isKbOpened() : boolean { return this._pathHelper.isKbOpened(); }
-	public getRootByPath(directory: string): string { return this._pathHelper.getRootByPath(directory); } 
-	public getRequiredRootDirectories(): string[] { return this._pathHelper.getRequiredRootDirectories(); }
+	public getRulesDirFilters() : string { return this.pathHelper.getRulesDirFilters(); }
+	public getContentRoots() : string[] { return this.pathHelper.getContentRoots(); } 
+	public getPackages(): string[] { return this.pathHelper.getPackages(); }
+	public isKbOpened() : boolean { return this.pathHelper.isKbOpened(); }
+	public getRootByPath(directory: string): string { return this.pathHelper.getRootByPath(directory); } 
+	public getRequiredRootDirectories(): string[] { return this.pathHelper.getRequiredRootDirectories(); }
 
 	public setContentType(contentType: ContentType): void {
 		if (contentType === ContentType.EDR) {
-			this._pathHelper = EDRPathHelper.get();
+			this.pathHelper = EDRPathHelper.get();
 		}
 		else {
-			this._pathHelper = SIEMPathHelper.get(); 
+			this.pathHelper = SIEMPathHelper.get(); 
 		}
 		this.context.workspaceState.update("ContentType", contentType);
 	}
@@ -65,7 +65,7 @@ export class Configuration {
     }
 
 	public getKbFullPath() : string {
-		return this._pathHelper.getKbPath(); 
+		return this.pathHelper.getKbPath(); 
 	}
 
 	public static getContentTypeBySubDirectories(subDirectories: string[]): ContentType | undefined {
@@ -497,23 +497,23 @@ export class Configuration {
 	// При смене режима SIEM/EDR заменяется реализация _pathHelper
 
 	public getNormalizationsGraphFileName() : string {
-		return this._pathHelper.getNormalizationsGraphFileName();
+		return this.pathHelper.getNormalizationsGraphFileName();
 	}
 
 	public getAggregationGraphFileName() : string {
-		return this._pathHelper.getAggregationsGraphFileName();
+		return this.pathHelper.getAggregationsGraphFileName();
 	}
 	
 	public getEnrichmentsGraphFileName() : string {
-		return this._pathHelper.getEnrichmentsGraphFileName();
+		return this.pathHelper.getEnrichmentsGraphFileName();
 	}
 
 	public getCorrelationsGraphFileName() : string {
-		return this._pathHelper.getCorrelationsGraphFileName();
+		return this.pathHelper.getCorrelationsGraphFileName();
 	}
 
 	public getNormalizationsGraphFilePath(rootFolder: string) : string {
-		return path.join(this.getOutputDirectoryPath(rootFolder), this._pathHelper.getNormalizationsGraphFileName());
+		return path.join(this.getOutputDirectoryPath(rootFolder), this.pathHelper.getNormalizationsGraphFileName());
 	}
 	
 	public getEnrichmentsGraphFilePath(rootFolder: string) : string {
@@ -529,7 +529,7 @@ export class Configuration {
 	}
 
 	public getLocalizationsFolder() : string {
-		return this._pathHelper.getLocalizationsFolder();	
+		return this.pathHelper.getLocalizationsFolder();	
 	}
 	
 	public getFptaDbFileName() : string {
@@ -799,7 +799,7 @@ export class Configuration {
 
 	private static _instance : Configuration;
 
-	private _pathHelper: PathLocator;
+	private pathHelper: PathLocator;
 	private outputChannel : vscode.OutputChannel;
 	private context: vscode.ExtensionContext;
 	private diagnosticCollection: vscode.DiagnosticCollection;

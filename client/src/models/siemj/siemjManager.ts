@@ -31,7 +31,7 @@ export class SiemjManager {
 		const outputFolder = this.config.getOutputDirectoryPath(contentRootFolder);
 
 		if(!fs.existsSync(outputFolder)) {
-			fs.mkdirSync(outputFolder, {recursive: true});
+			await fs.promises.mkdir(outputFolder, {recursive: true});
 		}
 		
 		// Получаем нужный конфиг для нормализации событий.

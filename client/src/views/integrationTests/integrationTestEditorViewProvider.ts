@@ -111,34 +111,27 @@ export class IntegrationTestEditorViewProvider {
 		// Создаем временную директорию для результатов тестов, которая посмотреть почему не прошли тесты.
 		this.testsTmpFilesPath = this.config.getRandTmpSubDirectoryPath();
 
-		// Очистка временных файлов после закрытия вьюшки.
-		this.view.onDidDispose(
-			async (e: void) => {
-				this.view = undefined;
-				await FileSystemHelper.recursivelyDeleteDirectory(this.testsTmpFilesPath);
-			},
-			this
-		);
-
 		// Запрос на обновление вьюшки если файлы поменялись.
-		const testFilesWatcher = vscode.workspace.createFileSystemWatcher(
+		this.testFilesWatcher = vscode.workspace.createFileSystemWatcher(
 			new vscode.RelativePattern(
 				this.rule.getDirectoryPath(),
 				'**/*.{tc,json}'
 			)
 		);
-		this.config.getContext().subscriptions.push(testFilesWatcher);
-		const directoriesFilesWatcher = vscode.workspace.createFileSystemWatcher(
+
+		this.config.getContext().subscriptions.push(this.testFilesWatcher);
+		this.testFilesWatcher.onDidChange(this.onExternalTestFilesModification, this);
+		this.testFilesWatcher.onDidCreate(this.onExternalTestFilesModification, this);
+		this.testFilesWatcher.onDidDelete(this.onExternalTestFilesModification, this);
+
+		this.directoriesFilesWatcher = vscode.workspace.createFileSystemWatcher(
 			new vscode.RelativePattern(
 				this.rule.getParentPath(),
 				`{${this.rule.getName()},${this.rule.getName()}/tests}`
 			)
 		);
-		this.config.getContext().subscriptions.push(directoriesFilesWatcher);
-		
-		directoriesFilesWatcher.onDidChange(this.onExternalTestFilesModification, this);
-		directoriesFilesWatcher.onDidCreate(this.onExternalTestFilesModification, this);
-		directoriesFilesWatcher.onDidDelete(this.onExternalTestFilesModification, this);
+		this.config.getContext().subscriptions.push(this.directoriesFilesWatcher);
+		this.directoriesFilesWatcher.onDidDelete(this.onExternalTestFilesModification, this);
 
 		this.view.webview.options = {
 			enableScripts: true
@@ -146,6 +139,17 @@ export class IntegrationTestEditorViewProvider {
 
 		this.view.webview.onDidReceiveMessage(
 			this.receiveMessageFromWebView,
+			this
+		);
+
+		// Очистка временных файлов после закрытия вьюшки.
+		this.view.onDidDispose(
+			async (e: void) => {
+				this.view = undefined;
+				await FileSystemHelper.recursivelyDeleteDirectory(this.testsTmpFilesPath);
+				this.testFilesWatcher.dispose();
+				this.directoriesFilesWatcher.dispose();
+			},
 			this
 		);
 
@@ -509,6 +513,7 @@ export class IntegrationTestEditorViewProvider {
 				}
 
 				try {
+					this.savingInProgress = true;
 					await FileSystemHelper.recursivelyDeleteDirectory(this.testsTmpFilesPath);
 
 					const command = new RunIntegrationTestsCommand({
@@ -524,7 +529,10 @@ export class IntegrationTestEditorViewProvider {
 					}
 				}
 				catch(error) {
-					ExceptionHelper.show(error, `Не удалось выполнить тесты`);
+					ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.FailedToExecutionTests"));
+				}
+				finally {
+					this.savingInProgress = false;
 				}
 
 				return true;
@@ -631,6 +639,9 @@ export class IntegrationTestEditorViewProvider {
 			'rawEvents': rawEvents
 		});
 	}
+
+	private testFilesWatcher: vscode.FileSystemWatcher;
+	private directoriesFilesWatcher: vscode.FileSystemWatcher;
 
 	private testsTmpFilesPath: string;
 	private savingInProgress = false;

@@ -67,6 +67,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 
 		const contentTreeAutoUpdateCallback = async () => {
 			contentTreeProvider.refresh();
+			Log.info(`The object tree was updated after the creation or deletion of the rule file was detected`);
 		};
 		testFilesWatcher.onDidCreate(contentTreeAutoUpdateCallback);
 		testFilesWatcher.onDidDelete(contentTreeAutoUpdateCallback);
