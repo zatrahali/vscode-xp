@@ -118,6 +118,7 @@
     "View.IntegrationTests.Message.DefaultErrorEventsNormalization": "Events could not be normalized. It is necessary to [recompile normalizations](command:xp.contentTree.buildNormalizations), check the format of the raw events and their envelopes, the availability of appropriate normalization in the knowledge base",
 
     "View.IntegrationTests.Message.RequestToUpdateWindow": "The integration test files have been modified by another program. Do you want to update the integration test window?",
+    "View.IntegrationTests.Message.RuleWasRemoved": "The rule files were deleted by another program. Do you want to close the integration test window?",
 
     "View.Metainfo": "Metadata for {0}",
     "View.Metainfo.Id" : "ID",

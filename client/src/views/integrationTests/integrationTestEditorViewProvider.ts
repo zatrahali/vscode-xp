@@ -36,7 +36,7 @@ export class IntegrationTestEditorViewProvider {
 
 	public constructor(
 		private readonly config: Configuration,
-		private readonly _templatePath: string) {
+		private readonly templatePath: string) {
 	}
 
 	public static init(config: Configuration) : void {
@@ -121,15 +121,24 @@ export class IntegrationTestEditorViewProvider {
 		);
 
 		// Запрос на обновление вьюшки если файлы поменялись.
-		const testsWatcher = vscode.workspace.createFileSystemWatcher(
+		const testFilesWatcher = vscode.workspace.createFileSystemWatcher(
 			new vscode.RelativePattern(
-				this.rule.getTestsPath(),
-				'*.{tc,json}')
+				this.rule.getDirectoryPath(),
+				'**/*.{tc,json}'
+			)
 		);
-		this.config.getContext().subscriptions.push(testsWatcher);
-		testsWatcher.onDidChange(this.onExternalTestFilesModification, this);
-		testsWatcher.onDidCreate(this.onExternalTestFilesModification, this);
-		testsWatcher.onDidDelete(this.onExternalTestFilesModification, this);
+		this.config.getContext().subscriptions.push(testFilesWatcher);
+		const directoriesFilesWatcher = vscode.workspace.createFileSystemWatcher(
+			new vscode.RelativePattern(
+				this.rule.getParentPath(),
+				`{${this.rule.getName()},${this.rule.getName()}/tests}`
+			)
+		);
+		this.config.getContext().subscriptions.push(directoriesFilesWatcher);
+		
+		directoriesFilesWatcher.onDidChange(this.onExternalTestFilesModification, this);
+		directoriesFilesWatcher.onDidCreate(this.onExternalTestFilesModification, this);
+		directoriesFilesWatcher.onDidDelete(this.onExternalTestFilesModification, this);
 
 		this.view.webview.options = {
 			enableScripts: true
@@ -143,14 +152,27 @@ export class IntegrationTestEditorViewProvider {
 		await this.updateView();
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private async onExternalTestFilesModification(uri: vscode.Uri) : Promise<void>{
 		if(this.savingInProgress) {
 			return;
 		}
 
-		this.rule.reloadIntegrationTests();
+		// Правило удалили
+		if(!fs.existsSync(this.rule.getDirectoryPath())) {
+			const usersResponse = await DialogHelper.showInfo(
+				this.config.getMessage("View.IntegrationTests.Message.RuleWasRemoved", this.rule.getName()),
+				this.config.getMessage("Yes"),
+				this.config.getMessage("No")
+			);
+			if(usersResponse === this.config.getMessage("Yes")) {
+				this.view.dispose();
+				return;
+			}
+		}
+
 		const usersResponse = await DialogHelper.showInfo(
-			this.config.getMessage("View.IntegrationTests.Message.RequestToUpdateWindow"),
+			this.config.getMessage("View.IntegrationTests.Message.RequestToUpdateWindow", this.rule.getName()),
 			this.config.getMessage("Yes"),
 			this.config.getMessage("No")
 		);
@@ -241,7 +263,7 @@ export class IntegrationTestEditorViewProvider {
 				}
 			}
 
-			const template = await FileSystemHelper.readContentFile(this._templatePath);
+			const template = await FileSystemHelper.readContentFile(this.templatePath);
 			const formatter = new MustacheFormatter(template);
 			const htmlContent = formatter.format(plain);
 			this.view.webview.html = htmlContent;

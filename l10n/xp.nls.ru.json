@@ -119,7 +119,8 @@
     "View.IntegrationTests.Message.DefaultErrorAddingEnvelope": "Ошибка добавления конверта на необработанные события",
     "View.IntegrationTests.Message.DefaultErrorEventsNormalization": "Не удалось нормализовать события. Необходимо [перекомпилировать нормализации](command:xp.contentTree.buildNormalizations), проверить формат необработанных событий и их конвертов, наличие соответствующей нормализации в базе знаний",
 
-    "View.IntegrationTests.Message.RequestToUpdateWindow": "Файлы интеграционных тестов были изменены другой программой. Хотите обновить окно интеграционных тестов?",
+    "View.IntegrationTests.Message.RequestToUpdateWindow": "Файлы интеграционных тестов правила {0} были изменены другой программой. Хотите обновить окно интеграционных тестов?",
+    "View.IntegrationTests.Message.RuleWasRemoved": "Файлы правила {0} были удалены другой программой. Хотите закрыть окно интеграционных тестов?",
 
     "View.Metainfo": "Метаданные {0}",
     "View.Metainfo.Id" : "Идентификатор",
