@@ -58,6 +58,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 		const contentTree = vscode.window.createTreeView(
 			ContentTreeProvider.KnowledgebaseTreeId, {
 				treeDataProvider: contentTreeProvider,
+				showCollapseAll: true
 			}
 		);
 
