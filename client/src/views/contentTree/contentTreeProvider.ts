@@ -13,7 +13,7 @@ import { Aggregation } from '../../models/content/aggregation';
 import { Macros } from '../../models/content/macros';
 import { RuleBaseItem } from '../../models/content/ruleBaseItem';
 import { VsCodeApiHelper } from '../../helpers/vsCodeApiHelper';
-import { API, APIState } from '../../@types/vscode.git';
+import { API } from '../../@types/vscode.git';
 import { Configuration } from '../../models/configuration';
 import { OpenKnowledgebaseCommand } from './commands/openKnowledgebaseCommand';
 import { UnitTestsListViewProvider } from '../unitTestEditor/unitTestsListViewProvider';
@@ -27,7 +27,6 @@ import { BuildAllGraphsAndTableListsCommand } from './commands/buildAllGraphsAnd
 import { UnpackKbCommand } from './commands/unpackKbCommand';
 import { ContentType } from '../../contentType/contentType';
 import { SetContentTypeCommand } from '../../contentType/setContentTypeCommand';
-import { GitHooks } from './gitHooks';
 import { InitKBRootCommand } from './commands/initKnowledgebaseRootCommand';
 import { ExceptionHelper } from '../../helpers/exceptionHelper';
 import { ContentTreeBaseItem } from '../../models/content/contentTreeBaseItem';
@@ -43,6 +42,7 @@ import { LocalizationEditorViewProvider } from '../localization/localizationEdit
 import { CommandHelper } from '../../helpers/commandHelper';
 import { SortHelper } from '../../helpers/sortHelper';
 import { OpenTableDefaultsCommand } from './commands/openTableDefaultValuesCommand';
+import { Log } from '../../extension';
 
 export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeBaseItem> {
 
@@ -61,22 +61,31 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 			}
 		);
 
-		if(gitApi) {
-			// Обновляем дерево при смене текущей ветки.
-			const gitHooks = new GitHooks(gitApi, config);
-			gitApi.onDidOpenRepository( (r) => {
-				r.state.onDidChange( (e) => {
-					gitHooks.update();
-				});
-			});
+		// Запрос на обновление вьюшки если добавляются или удаляются правила.
+		const testFilesWatcher = vscode.workspace.createFileSystemWatcher('**/*.{co,en,xp,agr,tl,flt}');
+		config.getContext().subscriptions.push(testFilesWatcher);
 
-			gitApi.onDidChangeState( (e: APIState) => {
-				gitHooks.update();
-			});
-		} else {
-			DialogHelper.showError(`Необходимо наличие системы контроля версии [git](https://git-scm.com/). Требования можно посмотреть [здесь](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#id3)`);
-		}
+		const contentTreeAutoUpdateCallback = async () => {
+			contentTreeProvider.refresh();
+		};
+		testFilesWatcher.onDidCreate(contentTreeAutoUpdateCallback);
+		testFilesWatcher.onDidDelete(contentTreeAutoUpdateCallback);
 
+		// Удаление выходных файлов (прежде всего нормализаций) при их обновлении, 
+		// чтобы при запуске тестов и прочего граф пересобрался.
+		const normalizationFilesWatcher = vscode.workspace.createFileSystemWatcher('**/*.xp');
+		config.getContext().subscriptions.push(normalizationFilesWatcher);
+
+		const normalizationGraphInvalidatorCallback = async () => {
+			const outputDirectoryPath = config.getBaseOutputDirectoryPath();
+			if(fs.existsSync(outputDirectoryPath)) {
+				await FileSystemHelper.deleteAllSubDirectoriesAndFiles(outputDirectoryPath);
+			}
+			Log.info(`The output directory ${outputDirectoryPath} was cleared after detecting a change in the formula code`);
+		};
+		normalizationFilesWatcher.onDidCreate(normalizationGraphInvalidatorCallback);
+		normalizationFilesWatcher.onDidDelete(normalizationGraphInvalidatorCallback);
+		normalizationFilesWatcher.onDidChange(normalizationGraphInvalidatorCallback);
 
 		// Ручное или автоматическое обновление дерева контента
 		vscode.commands.registerCommand(
