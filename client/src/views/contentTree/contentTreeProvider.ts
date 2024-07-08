@@ -492,11 +492,12 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentTreeB
 			const directoryPath = path.join(subFolderPath, dirName);
 			try {
 				const contentItem = await ContentTreeProvider.createContentElement(directoryPath, this.knowledgebaseDirectoryPath);
-				if(contentItem instanceof RuleBaseItem) {
-					if(await LocalizationEditorViewProvider.provider.updateRule(contentItem)) {
-						DialogHelper.showInfo(`Правило ${contentItem.getName()} было обновлено в редакторе локализаций`);
-					}
-				}
+				// TODO: переделать через File Watcher
+				// if(contentItem instanceof RuleBaseItem) {
+				// 	if(await LocalizationEditorViewProvider.provider.updateRule(contentItem)) {
+				// 		DialogHelper.showInfo(`Правило ${contentItem.getName()} было обновлено в редакторе локализаций`);
+				// 	}
+				// }
 
 				childrenItems.push(contentItem);
 			}

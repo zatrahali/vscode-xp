@@ -110,7 +110,7 @@
     "View.IntegrationTests.Message.InvalidJsonInTestCode": "JSON correctness error in the test code. Make corrections and repeat",
     "View.IntegrationTests.Message.NoTestResultFound": "Integration test results not found. Run the integration tests again",
     "View.IntegrationTests.Message.NotEnoughRequiredFields": "The required field {1} was not found in the resulting test event No {0}. Add filling in this field and run the tests again",
-    "View.IntegrationTests.Message.RequiredFileWasNotFound": "Integration test files are corrupted, file {0} is not found",
+    "View.IntegrationTests.Message.RequiredFileWasNotFound": "Integration test #{0} is corrupted: required file {1} was not found",
 
     "View.IntegrationTests.Message.EnvelopeHasAlreadyAdded": "The envelope for all events has already been added",
     "View.IntegrationTests.Message.NoRawEventsEnveloping": "There are no raw events for adding an envelope. Add at least one event in the envelope and try again",

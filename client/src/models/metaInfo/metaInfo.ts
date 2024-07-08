@@ -395,7 +395,6 @@ export class MetaInfo {
 
 		if (this.Name) metaInfoObject["ContentAutoName"] = this.Name;
 
-
 		if (!metaInfoObject["ExpertContext"]) {
 			metaInfoObject["ExpertContext"] = {};
 		}
