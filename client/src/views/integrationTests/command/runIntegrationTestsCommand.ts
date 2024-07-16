@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
-import { Command, RuleCommandParams } from '../../models/command/command';
-import { TestHelper } from '../../helpers/testHelper';
-import { DialogHelper } from '../../helpers/dialogHelper';
-import { RunIntegrationTestDialog } from '../runIntegrationDialog';
-import { SiemJOutputParser } from '../../models/siemj/siemJOutputParser';
-import { IntegrationTestRunner } from '../../models/tests/integrationTestRunner';
-import { TestStatus } from '../../models/tests/testStatus';
-import { ContentItemStatus } from '../../models/content/ruleBaseItem';
-import { Log } from '../../extension';
-import { ContentTreeProvider } from '../contentTree/contentTreeProvider';
-import { FileSystemHelper } from '../../helpers/fileSystemHelper';
-import { RegExpHelper } from '../../helpers/regExpHelper';
+import { Command, RuleCommandParams } from '../../../models/command/command';
+import { TestHelper } from '../../../helpers/testHelper';
+import { DialogHelper } from '../../../helpers/dialogHelper';
+import { RunIntegrationTestDialog } from '../../runIntegrationDialog';
+import { SiemJOutputParser } from '../../../models/siemj/siemJOutputParser';
+import { IntegrationTestRunner } from '../../../models/tests/integrationTestRunner';
+import { TestStatus } from '../../../models/tests/testStatus';
+import { ContentItemStatus } from '../../../models/content/ruleBaseItem';
+import { Log } from '../../../extension';
+import { ContentTreeProvider } from '../../contentTree/contentTreeProvider';
+import { FileSystemHelper } from '../../../helpers/fileSystemHelper';
+import { RegExpHelper } from '../../../helpers/regExpHelper';
 
 export class RunIntegrationTestsCommand extends Command {
 

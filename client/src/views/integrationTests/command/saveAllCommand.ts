@@ -1,12 +1,12 @@
 import * as os from 'os';
 
-import { DialogHelper } from '../../helpers/dialogHelper';
-import { ExceptionHelper } from '../../helpers/exceptionHelper';
-import { TestHelper } from '../../helpers/testHelper';
-import { Command, RuleCommandParams } from '../../models/command/command';
-import { RuleBaseItem } from '../../models/content/ruleBaseItem';
-import { XpException } from '../../models/xpException';
-import { IntegrationTest } from '../../models/tests/integrationTest';
+import { DialogHelper } from '../../../helpers/dialogHelper';
+import { ExceptionHelper } from '../../../helpers/exceptionHelper';
+import { TestHelper } from '../../../helpers/testHelper';
+import { Command, RuleCommandParams } from '../../../models/command/command';
+import { RuleBaseItem } from '../../../models/content/ruleBaseItem';
+import { XpException } from '../../../models/xpException';
+import { IntegrationTest } from '../../../models/tests/integrationTest';
 
 export interface SaveAllCommandParams extends RuleCommandParams {
 	testNumber: number;

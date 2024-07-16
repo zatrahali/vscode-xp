@@ -3,19 +3,19 @@ import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs';
 
-import { IntegrationTestParams} from '../../models/command/command';
-import { DialogHelper } from '../../helpers/dialogHelper';
-import { FileSystemHelper } from '../../helpers/fileSystemHelper';
-import { RegExpHelper } from '../../helpers/regExpHelper';
-import { TestHelper } from '../../helpers/testHelper';
-import { XpException } from '../../models/xpException';
-import { FileSystemException } from '../../models/fileSystemException';
-import { FastTest } from '../../models/tests/fastTest';
-import { TestStatus } from '../../models/tests/testStatus';
-import { IntegrationTestEditorViewProvider } from './integrationTestEditorViewProvider';
-import { JsHelper } from '../../helpers/jsHelper';
-import { Correlation } from '../../models/content/correlation';
-import { Enrichment } from '../../models/content/enrichment';
+import { IntegrationTestParams} from '../../../models/command/command';
+import { DialogHelper } from '../../../helpers/dialogHelper';
+import { FileSystemHelper } from '../../../helpers/fileSystemHelper';
+import { RegExpHelper } from '../../../helpers/regExpHelper';
+import { TestHelper } from '../../../helpers/testHelper';
+import { XpException } from '../../../models/xpException';
+import { FileSystemException } from '../../../models/fileSystemException';
+import { FastTest } from '../../../models/tests/fastTest';
+import { TestStatus } from '../../../models/tests/testStatus';
+import { IntegrationTestEditorViewProvider } from '../integrationTestEditorViewProvider';
+import { JsHelper } from '../../../helpers/jsHelper';
+import { Correlation } from '../../../models/content/correlation';
+import { Enrichment } from '../../../models/content/enrichment';
 
 // TODO: вынести под общий интерфейс провайдеров
 export class GetExpectedEventCommand  {

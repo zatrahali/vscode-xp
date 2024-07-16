@@ -17,14 +17,14 @@ import { XpException } from '../../models/xpException';
 import { Enveloper } from '../../models/enveloper';
 import { ExtensionState } from '../../models/applicationState';
 import { Log } from '../../extension';
-import { ShowTestResultsDiffCommand } from './showTestResultsDiffCommand';
-import { RunIntegrationTestsCommand } from './runIntegrationTestsCommand';
-import { NormalizeRawEventsCommand } from './normalizeRawEventsCommand';
-import { GetExpectedEventCommand } from './getExpectEventCommand';
+import { ShowTestResultsDiffCommand } from './command/showTestResultsDiffCommand';
+import { RunIntegrationTestsCommand } from './command/runIntegrationTestsCommand';
+import { NormalizeRawEventsCommand } from './command/normalizeRawEventsCommand';
+import { GetExpectedEventCommand } from './command/getExpectEventCommand';
 import { StringHelper } from '../../helpers/stringHelper';
-import { SaveAllCommand } from './saveAllCommand';
+import { SaveAllCommand } from './command/saveAllCommand';
 import { Aggregation } from '../../models/content/aggregation';
-import { ShowActualEventCommand } from './showActualEventCommand';
+import { ShowActualEventCommand } from './command/showActualEventCommand';
 
 export class IntegrationTestEditorViewProvider {
 
@@ -380,6 +380,7 @@ export class IntegrationTestEditorViewProvider {
 			// Команды с запуском утилит.
 			case "NormalizeRawEventsCommand": {
 				try {
+					this.savingInProgress = true;
 					if (typeof message?.isEnrichmentRequired !== "boolean" ) {
 						DialogHelper.showInfo("The event enrichment parameter is not set");
 						return true;
@@ -401,6 +402,9 @@ export class IntegrationTestEditorViewProvider {
 				}
 				catch(error) {
 					ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.DefaultErrorEventsNormalization"));
+				}
+				finally {
+					this.savingInProgress = false;
 				}
 				break;
 			}

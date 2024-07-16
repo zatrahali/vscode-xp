@@ -3,14 +3,14 @@ import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs';
 
-import { Command, IntegrationTestParams} from '../../models/command/command';
-import { DialogHelper } from '../../helpers/dialogHelper';
-import { FileSystemHelper } from '../../helpers/fileSystemHelper';
-import { TestHelper } from '../../helpers/testHelper';
-import { XpException } from '../../models/xpException';
-import { Log } from '../../extension';
-import { FileSystemException } from '../../models/fileSystemException';
-import { VsCodeApiHelper } from '../../helpers/vsCodeApiHelper';
+import { Command, IntegrationTestParams} from '../../../models/command/command';
+import { DialogHelper } from '../../../helpers/dialogHelper';
+import { FileSystemHelper } from '../../../helpers/fileSystemHelper';
+import { TestHelper } from '../../../helpers/testHelper';
+import { XpException } from '../../../models/xpException';
+import { Log } from '../../../extension';
+import { FileSystemException } from '../../../models/fileSystemException';
+import { VsCodeApiHelper } from '../../../helpers/vsCodeApiHelper';
 
 export class ShowActualEventCommand extends Command {
 	constructor(private params: IntegrationTestParams) {
