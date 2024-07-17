@@ -169,13 +169,13 @@ export async function setTestContent(content: string): Promise<boolean> {
 	return editor.edit(eb => eb.replace(all, content));
 }
 
-export function toRange(sLine: number, sChar: number, eLine: number, eChar: number) {
+export function toRange(sLine: number, sChar: number, eLine: number, eChar: number): vscode.Range  {
 	const start = new vscode.Position(sLine, sChar);
 	const end = new vscode.Position(eLine, eChar);
 	return new vscode.Range(start, end);
 }
 
-export async function testDiagnostics(docUri: vscode.Uri, expectedDiagnostics: vscode.Diagnostic[]) {
+export async function testDiagnostics(docUri: vscode.Uri, expectedDiagnostics: vscode.Diagnostic[]) : Promise<void> {
 	await activate(docUri);
 
 	const actualDiagnostics = vscode.languages.getDiagnostics(docUri);

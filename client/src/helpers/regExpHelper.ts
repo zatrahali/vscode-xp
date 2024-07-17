@@ -190,6 +190,7 @@ export class RegExpHelper {
 				continue;
 			}
 
+			// TODO: добавить валидацию lineNumber, если будет меньше нуля, то будет исключение.
 			functionCalls.push(new vscode.Range(
 				new vscode.Position(lineNumber, beginIndex), 
 				new vscode.Position(lineNumber, endIndex)

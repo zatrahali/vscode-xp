@@ -5,6 +5,7 @@ import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { TestHelper } from '../../helpers/testHelper';
 import { Log } from '../../extension';
 import { Configuration } from '../configuration';
+import { VsCodeApiHelper } from '../../helpers/vsCodeApiHelper';
 
 export class FileDiagnostics {
 	public uri : vscode.Uri;
@@ -85,23 +86,16 @@ export class SiemJOutputParser {
 			}
 
 			const ruleFilePath = (m[1] as string).trim();
-			const ruleLineNumber = parseInt(m[2]) - 1;
-			const ruleCharNumber = parseInt(m[3]);
+			const fileLineNumber = parseInt(m[2]) - 1;
+			const fileCharNumber = parseInt(m[3]);
 			const errorDescription = (m[4] as string).trim();
 
 			// Выделяем строку с начала, так как в выводе координаты только одного символа.
-			const startPosition = new vscode.Position(ruleLineNumber, 0);
-			const endPosition = new vscode.Position(ruleLineNumber, ruleCharNumber);
-
-			const diagnostic = new vscode.Diagnostic(
-				new vscode.Range(
-					startPosition,
-					endPosition
-				),
+			const diagnostic = VsCodeApiHelper.createDiagnostic(
+				fileLineNumber, 0,
+				fileLineNumber, fileCharNumber,
 				errorDescription
 			);
-
-			diagnostic.source = 'xp';
 
 			if(errorDescription.includes("warning: ")) {
 				diagnostic.severity = vscode.DiagnosticSeverity.Warning;
@@ -149,17 +143,8 @@ export class SiemJOutputParser {
 			const filePath = (m[2] as string).trim();
 
 			// В ошибке нет информации, где именно ошибка, указываем на начало файла.
-			const startPosition = new vscode.Position(0, 0);
-			const endPosition = new vscode.Position(0, 0);
-
-			const diagnostic = new vscode.Diagnostic(
-				new vscode.Range(
-					startPosition,
-					endPosition
-				),
-				errorDescription,
-				vscode.DiagnosticSeverity.Error
-			);
+			const diagnostic = VsCodeApiHelper.createDiagnostic(0, 0, 0, 0, errorDescription);
+			diagnostic.severity = vscode.DiagnosticSeverity.Error;
 
 			const newRuleFileDiag = this.addFileDiagnostics(result, filePath, diagnostic);
 			fileDiagnostics.push(newRuleFileDiag);
@@ -250,21 +235,24 @@ export class SiemJOutputParser {
 
 	/**
 	 * Меняет начальное смещение ошибки на первый не пробельный символ, так как исходная ошибка возвращается в виде одного символа.
-	 * @param FileDiagnostics список диагностик для файлов.
+	 * @param fileDiagnostics список диагностик для файлов.
 	 * @returns скорректированные диагностики.
 	 */
-	private async correctDiagnosticBeginCharRanges(FileDiagnostics : FileDiagnostics[]) : Promise<FileDiagnostics[]> {
-		for(const rfd of FileDiagnostics) {
+	private async correctDiagnosticBeginCharRanges(fileDiagnostics : FileDiagnostics[]) : Promise<FileDiagnostics[]> {
+		for(const rfd of fileDiagnostics) {
 			const ruleFilePath = rfd.uri.fsPath;
 			if(!fs.existsSync(ruleFilePath)) {
+				Log.warn(`The path to the file ${ruleFilePath} from the error does not exist`);
 				continue;
 			}
 			
 			const ruleContent = await FileSystemHelper.readContentFile(ruleFilePath);
-			rfd.diagnostics = TestHelper.correctWhitespaceCharacterFromErrorLines(ruleContent, rfd.diagnostics);
+			if(ruleContent) {
+				rfd.diagnostics = TestHelper.correctWhitespaceCharacterFromErrorLines(ruleContent, rfd.diagnostics);
+			}
 		}
 
-		return FileDiagnostics;
+		return fileDiagnostics;
 	}
 
 	private readonly TESTS_SUCCESS_SUBSTRING = "All tests OK";

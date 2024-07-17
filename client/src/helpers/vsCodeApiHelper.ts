@@ -7,6 +7,39 @@ import { FileSystemHelper } from './fileSystemHelper';
 
 export class VsCodeApiHelper {
 
+	public static createDiagnostic(
+		startLine: number,
+		startOffset: number,
+		endLine: number,
+		endOffset: number,
+		description: string) : vscode.Diagnostic {
+		
+		// Если файл пусто, KBT возвращает не one-based offset, а zero-based
+		let startLineAfterCorrection = startLine;
+		if(startLine < 0) {
+			startLineAfterCorrection = 0;
+		}
+
+		let endLineAfterCorrection = endLine;
+		if(endLine < 0) {
+			endLineAfterCorrection = 0;
+		}
+
+		const startPosition = new vscode.Position(startLineAfterCorrection, startOffset);
+		const endPosition = new vscode.Position(endLineAfterCorrection, endOffset);
+
+		const diagnostic = new vscode.Diagnostic(
+			new vscode.Range(
+				startPosition,
+				endPosition
+			),
+			description
+		);
+
+		diagnostic.source = 'xp';
+		return diagnostic;
+	}
+
 	public static showDifferencesBetweenTwoFiles(leftFileUri: vscode.Uri, rightFileUri: vscode.Uri, title?: string) : Thenable<unknown> {
 		return vscode.commands.executeCommand("vscode.diff", 
 			leftFileUri,

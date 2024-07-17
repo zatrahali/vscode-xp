@@ -13,6 +13,7 @@ import { Log } from '../../../extension';
 import { ContentTreeProvider } from '../../contentTree/contentTreeProvider';
 import { FileSystemHelper } from '../../../helpers/fileSystemHelper';
 import { RegExpHelper } from '../../../helpers/regExpHelper';
+import { VsCodeApiHelper } from '../../../helpers/vsCodeApiHelper';
 
 export class RunIntegrationTestsCommand extends Command {
 
@@ -126,9 +127,10 @@ export class RunIntegrationTestsCommand extends Command {
 
 					this.params.config.addDiagnosticCollection(
 						ruleFilePath,
-						new vscode.Diagnostic(
-							// TODO: указывать в какое-то более разумное место.
-							new vscode.Range(new vscode.Position(0,0), new vscode.Position(0,0)), 
+						// TODO: указывать в какое-то более разумное место.
+						VsCodeApiHelper.createDiagnostic(
+							0, 0,
+							0, 0,
 							this.params.config.getMessage(`View.IntegrationTests.Message.NotEnoughRequiredFields`, testNumber, requiredCorrField)
 						)
 					);

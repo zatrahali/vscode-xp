@@ -2,6 +2,7 @@ import * as vscode  from 'vscode';
 import { UnitTestOutputParser } from './unitTestOutputParser';
 import { TestHelper } from '../../helpers/testHelper';
 import { diffJson } from 'diff';
+import { VsCodeApiHelper } from '../../helpers/vsCodeApiHelper';
 
 export class CorrelationUnitTestOutputParser implements UnitTestOutputParser {
 	
@@ -96,19 +97,11 @@ export class CorrelationUnitTestOutputParser implements UnitTestOutputParser {
 			const errorDescription = (m[4] as string).trim();
 
 			// Выделяем строку с начала, так как в выводе координаты только одного символа.
-			const startPosition = new vscode.Position(ruleLineNumber, 0);
-			const endPosition = new vscode.Position(ruleLineNumber, ruleCharNumber);
-
-			// TODO: обернуть для избежания копипаста.
-			const diagnostic: vscode.Diagnostic = {
-				severity: vscode.DiagnosticSeverity.Error,
-				range: new vscode.Range(
-					startPosition,
-					endPosition
-				),
-				message: errorDescription,
-				source: 'xp'
-			};
+			const diagnostic = VsCodeApiHelper.createDiagnostic(
+				ruleLineNumber, 0, 
+				ruleLineNumber, ruleCharNumber,
+				errorDescription);
+			diagnostic.severity = vscode.DiagnosticSeverity.Error;
 			diagnostics.push(diagnostic);
 		}
 		return diagnostics;

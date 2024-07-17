@@ -1,6 +1,7 @@
 import * as vscode  from 'vscode';
 import { UnitTestOutputParser } from './unitTestOutputParser';
 import { XpException } from '../xpException';
+import { VsCodeApiHelper } from '../../helpers/vsCodeApiHelper';
 
 export class NormalizationUnitTestOutputParser implements UnitTestOutputParser {
 	parseFailedOutput(output: string, expectation: string): string {
@@ -10,7 +11,7 @@ export class NormalizationUnitTestOutputParser implements UnitTestOutputParser {
 		throw new XpException('Method not implemented.');
 	}
 	
-	private _diagnostics: vscode.Diagnostic[];
+	private diagnostics: vscode.Diagnostic[];
 	
 	/**
 	 * Разбирает ошибки из вывода модульных тестов нормализаций.
@@ -18,9 +19,9 @@ export class NormalizationUnitTestOutputParser implements UnitTestOutputParser {
 	 * @returns список локаций ошибок.
 	 */
 	public parse(testOutput : string) : vscode.Diagnostic[] {
-		this._diagnostics = [];
+		this.diagnostics = [];
 		this.patterns.forEach((handler) => {handler(testOutput);});		
-		return this._diagnostics;
+		return this.diagnostics;
 	}
 
 	private constructDiagnostics(ruleLineNumber: number, ruleCharNumber: number, errorDescription: string) {
@@ -46,8 +47,8 @@ export class NormalizationUnitTestOutputParser implements UnitTestOutputParser {
 					const ruleLineNumber = 0;
 					const ruleCharNumber = 0;
 					const errorDescription = (m[1] as string).trim();					
-					const diagnostic = this.constructDiagnostics(ruleLineNumber, ruleCharNumber, errorDescription);
-					this._diagnostics.push(diagnostic);
+					const diagnostic = VsCodeApiHelper.createDiagnostic(ruleLineNumber, ruleCharNumber, ruleLineNumber, ruleCharNumber, errorDescription);
+					this.diagnostics.push(diagnostic);
 				}			
 			},
 			(testOutput: string) => {
@@ -57,8 +58,8 @@ export class NormalizationUnitTestOutputParser implements UnitTestOutputParser {
 					const ruleCharNumber = parseInt(m[2]);
 					const errorDescription = (m[3] as string).trim();
 					// Почему-то интерфейс прибавляет 1 к строке и столбцу, вычтем для точности
-					const diagnostic = this.constructDiagnostics(ruleLineNumber, ruleCharNumber, errorDescription);
-					this._diagnostics.push(diagnostic);
+					const diagnostic = VsCodeApiHelper.createDiagnostic(ruleLineNumber, ruleCharNumber, ruleLineNumber, ruleCharNumber, errorDescription);
+					this.diagnostics.push(diagnostic);
 				}
 			}
 	]
