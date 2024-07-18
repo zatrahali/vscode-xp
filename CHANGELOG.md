@@ -1,5 +1,10 @@
 # Change Log
 
+## 3.17.15 (Pre-Release)
+
+- улучшена локализация (special thanks @feelstacy, @eugzolotukhin);
+- доработана фича выявления изменений файлов интеграционных тестов (special thanks @Bobyboba18).
+
 ## 3.17.14 (Pre-Release)
 
 - исправлена ошибка из-за которой в окне Проблемы (Problems) не выводилась информация о неуспешной сборке графа корреляции при пустом файле rule.co (special thanks @jjack_the_reaper).

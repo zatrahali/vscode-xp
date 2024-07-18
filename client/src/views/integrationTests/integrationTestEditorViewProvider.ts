@@ -120,9 +120,9 @@ export class IntegrationTestEditorViewProvider {
 		);
 
 		this.config.getContext().subscriptions.push(this.testFilesWatcher);
-		this.testFilesWatcher.onDidChange(this.onExternalTestFilesModification, this);
-		this.testFilesWatcher.onDidCreate(this.onExternalTestFilesModification, this);
-		this.testFilesWatcher.onDidDelete(this.onExternalTestFilesModification, this);
+		this.testFilesWatcher.onDidChange(this.onExternalTestFilesModification);
+		this.testFilesWatcher.onDidCreate(this.onExternalTestFilesModification);
+		this.testFilesWatcher.onDidDelete(this.onExternalTestFilesModification);
 
 		this.directoriesFilesWatcher = vscode.workspace.createFileSystemWatcher(
 			new vscode.RelativePattern(
@@ -131,7 +131,7 @@ export class IntegrationTestEditorViewProvider {
 			)
 		);
 		this.config.getContext().subscriptions.push(this.directoriesFilesWatcher);
-		this.directoriesFilesWatcher.onDidDelete(this.onExternalTestFilesModification, this);
+		this.directoriesFilesWatcher.onDidDelete(this.onExternalTestFilesModification);
 
 		this.view.webview.options = {
 			enableScripts: true
@@ -411,7 +411,8 @@ export class IntegrationTestEditorViewProvider {
 
 			case "ShowTestResultsDiffCommand": {
 				if (!message?.selectedTestNumber) {
-					DialogHelper.showError('Номер теста не передан в запросе на back-end');
+					Log.error('The test number was not passed in the backend request');
+					DialogHelper.showError(this.config.getMessage("UncaughtExceptionMessage"));
 					return;
 				}
 
@@ -441,11 +442,13 @@ export class IntegrationTestEditorViewProvider {
 
 			case "GetExpectedEventCommand": {
 				if (!message?.selectedTestNumber) {
-					DialogHelper.showError('Внутренняя ошибка. Номер теста не передан в запросе на backend');
+					Log.error('The test number was not passed in the backend request');
+					DialogHelper.showError(this.config.getMessage("UncaughtExceptionMessage"));
 					return;
 				}
 
 				try {
+					this.savingInProgress = true;
 					const selectedTestNumber = parseInt(message?.selectedTestNumber);
 					if (!selectedTestNumber) {
 						throw new XpException(`Переданное значение ${message?.activeTestNumber} не является номером интеграционного теста`);
@@ -466,12 +469,16 @@ export class IntegrationTestEditorViewProvider {
 				catch(error) {
 					ExceptionHelper.show(error, 'Ошибка обновления ожидаемого события');
 				}
+				finally {
+					this.savingInProgress = false;
+				}
 				break;
 			}
 
 			case "ShowActualEventCommand": {
 				if (!message?.selectedTestNumber) {
-					DialogHelper.showError('Внутренняя ошибка. Номер теста не передан в запросе на backend');
+					Log.error('The test number was not passed in the backend request');
+					DialogHelper.showError(this.config.getMessage("UncaughtExceptionMessage"));
 					return;
 				}
 
@@ -549,7 +556,8 @@ export class IntegrationTestEditorViewProvider {
 
 	private async saveAllTests(message: any) : Promise<RuleBaseItem> {
 		if (!message?.activeTestNumber) {
-			DialogHelper.showError('Внутренняя ошибка. Номер теста не передан в запросе на backend');
+			Log.error('The test number was not passed in the backend request');
+			DialogHelper.showError(this.config.getMessage("UncaughtExceptionMessage"));
 			return;
 		}
 
@@ -558,13 +566,13 @@ export class IntegrationTestEditorViewProvider {
 			throw new XpException(`Переданное значение ${message?.activeTestNumber} не является номером интеграционного теста`);
 		}
 
-		const command = new SaveAllCommand( {
-				config : this.config,
-				rule: this.rule,
-				tmpDirPath: this.testsTmpFilesPath,
-				testNumber: activeTestNumber,
-				tests: message.tests}
-		);
+		const command = new SaveAllCommand({
+			config : this.config,
+			rule: this.rule,
+			tmpDirPath: this.testsTmpFilesPath,
+			testNumber: activeTestNumber,
+			tests: message.tests
+		});
 		
 		const result = await command.execute();
 		// Если сохранение прошло успешно, тогда обновляем окно.
@@ -620,13 +628,6 @@ export class IntegrationTestEditorViewProvider {
 		}
 
 		await this.updateCurrentTestRawEvent(envelopedRawEventsString);
-	}
-
-	async saveTest(message: any): Promise<IntegrationTest> {
-		// Обновляем и сохраняем тест.
-		const test = await TestHelper.saveIntegrationTest(this.rule, message);
-		DialogHelper.showInfo(`Тест №${test.getNumber()} сохранен`);
-		return test;
 	}
 
 	public async updateTestCode(newTestCode: string, testNumber?: number): Promise<boolean> {

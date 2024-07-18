@@ -110,7 +110,7 @@ export class UnpackKbCommand extends ViewCommand {
 			}
 
 			if(!executeResult.output.includes(this.SUCCESS_SUBSTRING)) {
-				DialogHelper.showError(this.config.getMessage("View.ObjectTree.Message.UnpackKbFile.Failed"));
+				DialogHelper.showError(this.config.getMessage("View.ObjectTree.Message.UnpackKbFile.DefaultErrorAddingEnvelope"));
 				return;
 			} 
 

@@ -38,7 +38,7 @@ export class ExceptionHelper {
 				}
 
 				// prepare user message
-				const uncaughtExceptionMessage = configuration.getMessage("UncaughtExceptionMessage");
+				const uncaughtExceptionMessage = configuration.getMessage("UncaughtExceptionMessagePostfix");
 				const userMessage = StringHelper.combiningMessages(resultDefaultMessage, uncaughtExceptionMessage);
 				vscode.window.showErrorMessage(userMessage);
 

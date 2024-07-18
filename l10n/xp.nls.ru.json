@@ -14,7 +14,9 @@
 
     "CouldNotGenerateSiemjConf": "Не удалось создать файл siemj.conf",
     "UnexpectedError": "Непредвиденная ошибка",
-    "UncaughtExceptionMessage": "Если она [не встречалась раньше](https://github.com/Security-Experts-Community/vscode-xp/issues/), заведите [баг](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) и приложите [логи](command:xp.commonCommands.showOutputChannel). Кроме того, можно задать вопросы [в Telegram-чате](https://t.me/s3curity_experts_community/75)",
+    "UncaughtExceptionMessagePostfix": "Если она [не встречалась раньше](https://github.com/Security-Experts-Community/vscode-xp/issues/), заведите [баг](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) и приложите [логи](command:xp.commonCommands.showOutputChannel). Кроме того, можно задать вопрос [в Telegram-чате](https://t.me/s3curity_experts_community/75)",
+    "UncaughtExceptionMessage": "Непредвиденная ошибка. Если она [не встречалась раньше](https://github.com/Security-Experts-Community/vscode-xp/issues/), заведите [баг](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) и приложите [логи](command:xp.commonCommands.showOutputChannel). Кроме того, можно задать вопрос [в Telegram-чате](https://t.me/s3curity_experts_community/75)",
+
     "Error.IncorrectOutputDirectoryPath": "Не удалось создать папку в {0}. Укажите корректный путь [в параметре](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath'])",
     "Error.CommonBuilding": "Не удалось выполнить операцию. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
     "Error.LocalizationBuilding": "Не удалось скомпилировать правила локализации. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
@@ -39,7 +41,7 @@
 
     "View.ObjectTree.Progress.UnpackKbFile": "Импорт пакета",
     "View.ObjectTree.Message.UnpackKbFile.CompletedSuccessfully": "Пакет импортирован",
-    "View.ObjectTree.Message.UnpackKbFile.Failed": "Не удалось импортировать пакет. Проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
+    "View.ObjectTree.Message.UnpackKbFile.DefaultErrorAddingEnvelope": "Не удалось импортировать пакет. Вы можете посмотреть [выходные данные](command:xp.commonCommands.showOutputChannel) и задать вопрос [в Telegram-чате](https://t.me/s3curity_experts_community/75)",
 
     "View.ObjectTree.Progress.ContentChecking.GetDependencies": "Поиск вспомогательных правил для {0}",
     "View.ObjectTree.Progress.ContentChecking.BuildAllArtifacts": "Компиляция объектов для всех правил",
@@ -115,11 +117,11 @@
     "View.IntegrationTests.Message.EnvelopeHasAlreadyAdded": "Все необработанные события уже обернуты в конверт",
     "View.IntegrationTests.Message.NoRawEventsEnveloping": "Нет необработанных событий. Добавьте хотя бы одно событие и повторите попытку",
 
-    "View.IntegrationTests.Message.DefaultErrorAddingEnvelope": "Ошибка добавления конверта на необработанные события",
-    "View.IntegrationTests.Message.DefaultErrorEventsNormalization": "Не удалось нормализовать события. Необходимо [перекомпилировать нормализации](command:xp.contentTree.buildNormalizations), проверить формат необработанных событий и их конвертов, наличие соответствующей нормализации в базе знаний",
+    "View.IntegrationTests.Message.DefaultErrorAddingEnvelope": "Не удалось обернуть события в конверт. Вы можете посмотреть [выходные данные](command:xp.commonCommands.showOutputChannel) и задать вопрос [в Telegram-чате](https://t.me/s3curity_experts_community/75)",
+    "View.IntegrationTests.Message.DefaultErrorEventsNormalization": "Не удалось нормализовать события. Проверьте соответствующие правила нормализации в базе знаний, заново [скомпилируйте их](command:xp.contentTree.buildNormalizations), сравните MIME-типы событий и конвертов",
 
-    "View.IntegrationTests.Message.RequestToUpdateWindow": "Файлы интеграционных тестов правила {0} были изменены другой программой. Хотите обновить окно интеграционных тестов?",
-    "View.IntegrationTests.Message.RuleWasRemoved": "Файлы правила {0} были удалены другой программой. Хотите закрыть окно интеграционных тестов?",
+    "View.IntegrationTests.Message.RequestToUpdateWindow": "Файлы интеграционных тестов правила {0} были изменены другой программой. Обновить окно интеграционных тестов?",
+    "View.IntegrationTests.Message.RuleWasRemoved": "Файлы правила {0} были удалены другой программой. Закрыть окно интеграционных тестов?",
 
     "View.Metainfo": "Метаданные {0}",
     "View.Metainfo.Id" : "Идентификатор",
@@ -134,7 +136,7 @@
     "View.Metainfo.MITRE": "Тактики и техники MITRE ATT&CK",
 
     "View.Metainfo.Message.MetadataIsSaved": "Метаданные правила сохранены",
-    "View.Metainfo.Message.DefaultErrorMetaInfoSave": "Не удалось сохранить метаданные",
+    "View.Metainfo.Message.DefaultErrorMetaInfoSave": "Не удалось сохранить метаданные. Вы можете посмотреть [выходные данные](command:xp.commonCommands.showOutputChannel) и задать вопрос [в Telegram-чате](https://t.me/s3curity_experts_community/75)",
 
     "MacrosName": "Название макроса",
 

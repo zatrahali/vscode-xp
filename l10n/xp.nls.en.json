@@ -14,7 +14,9 @@
 
     "CouldNotGenerateSiemjConf": "Failed to create the siemj.conf file",
     "UnexpectedError": "Unexpected error",
-    "UncaughtExceptionMessage": "If you [have not seen this error before](https://github.com/Security-Experts-Community/vscode-xp/issues/), create an [issue](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) and attach the [logs](command:xp.commonCommands.showOutputChannel). You can also ask for advice in the [Telegram chat](https://t.me/s3curity_experts_community/75).",
+    "UncaughtExceptionMessagePostfix": "If you [have not seen this error before](https://github.com/Security-Experts-Community/vscode-xp/issues/), create an [issue](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) and attach the [logs](command:xp.commonCommands.showOutputChannel). You can also ask for advice in the [Telegram chat](https://t.me/s3curity_experts_community/75).",
+    "UncaughtExceptionMessage": "Unexpected error. If you [have not seen this error before](https://github.com/Security-Experts-Community/vscode-xp/issues/), create an [issue](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) and attach the [logs](command:xp.commonCommands.showOutputChannel). You can also ask for advice in the [Telegram chat](https://t.me/s3curity_experts_community/75).",
+
     "Error.IncorrectOutputDirectoryPath": "Failed to create an output directory on the path '{0}'. Set the correct path to the output directory [in the settings](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath'])",
     "Error.CommonBuilding": "The operation failed. Fix [file errors](command:workbench.action.showErrorsWarnings). If there are no errors, check the [output](command:xp.commonCommands.showOutputChannel)",
     "Error.LocalizationBuilding": "Localization could not be compiled. Fix [file errors](command:workbench.action.showErrorsWarnings). If there are no errors, check the [output](command:xp.commonCommands.showOutputChannel)",
@@ -39,7 +41,7 @@
 
     "View.ObjectTree.Progress.UnpackKbFile": "Unpacking the package",
     "View.ObjectTree.Message.UnpackKbFile.CompletedSuccessfully": "The package has been successfully unpacked",
-    "View.ObjectTree.Message.UnpackKbFile.Failed": "The package could not be unpacked. [Watch Output](command:xp.commonCommands.showOutputChannel)",
+    "View.ObjectTree.Message.UnpackKbFile.DefaultErrorAddingEnvelope": "The package could not be unpacked. [Watch Output](command:xp.commonCommands.showOutputChannel)",
 
     "View.ObjectTree.Progress.ContentChecking.GetDependencies": "Creating a correlation graph: searching for subrules for {0}",
     "View.ObjectTree.Progress.ContentChecking.BuildAllArtifacts": "Creating artifacts for all rules",
