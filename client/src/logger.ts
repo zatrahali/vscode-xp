@@ -41,12 +41,19 @@ export class Logger extends ILogger {
 	}
 
 	public setLogLevel (logLevel: LogLevel) : void {
-		this._level = logLevel;
+		this.level = logLevel;
 	}
 
 	debug(message: string, ...params: any[]): void {
 		const logLevel = LogLevel.Debug;
-		if (this._level < logLevel) return;
+		if (this.level < logLevel) return;
+
+		this.writeLog(logLevel, message, ...params);
+	}
+
+	trace(message: string, ...params: any[]): void {
+		const logLevel = LogLevel.Trace;
+		if (this.level < logLevel) return;
 
 		this.writeLog(logLevel, message, ...params);
 	}
@@ -54,7 +61,7 @@ export class Logger extends ILogger {
 	error(message: string, ...params: any[]): void
 	error(message: string, ex: Error, ...params: any[]): void {
 		const logLevel = LogLevel.Error;
-		if (this._level < logLevel) return;
+		if (this.level < logLevel) return;
 
 		if(ex) {
 			console.error(this.timestamp, message ?? "", ...params, ex);
@@ -70,14 +77,14 @@ export class Logger extends ILogger {
 	warn(message: string, ex?: Error, ...params: any[]): void
 	warn(message: string, ...params: any[]): void {
 		const logLevel = LogLevel.Warn;
-		if (this._level < logLevel) return;
+		if (this.level < logLevel) return;
 
 		this.writeLog(logLevel, message, ...params);
 	}
 
 	info(message: string, ...params: any[]): void  {
 		const logLevel = LogLevel.Info;
-		if (this._level < logLevel) return;
+		if (this.level < logLevel) return;
 
 		this.writeLog(logLevel, message, ...params);
 	}
@@ -167,15 +174,15 @@ export class Logger extends ILogger {
 
 	public static init(config: Configuration) : Logger {
 		const log  = new Logger(config);
-		// if(config.getExtensionMode() === vscode.ExtensionMode.Development) {
-		// 	log.setLogLevel(LogLevel.Debug);
-		// 	return log;
-		// }
+		if(config.getExtensionMode() === vscode.ExtensionMode.Development) {
+			log.setLogLevel(LogLevel.Trace);
+			return log;
+		}
 
 		log.setLogLevel(config.getLogLevel());
 		return log;
 	}
 
-	private _level: LogLevel;
+	private level: LogLevel;
 	private _output: vscode.OutputChannel;
 }

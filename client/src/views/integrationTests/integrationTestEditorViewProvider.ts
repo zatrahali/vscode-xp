@@ -120,9 +120,9 @@ export class IntegrationTestEditorViewProvider {
 		);
 
 		this.config.getContext().subscriptions.push(this.testFilesWatcher);
-		this.testFilesWatcher.onDidChange(this.onExternalTestFilesModification);
-		this.testFilesWatcher.onDidCreate(this.onExternalTestFilesModification);
-		this.testFilesWatcher.onDidDelete(this.onExternalTestFilesModification);
+		this.testFilesWatcher.onDidChange(this.onExternalTestFilesModification, this);
+		this.testFilesWatcher.onDidCreate(this.onExternalTestFilesModification, this);
+		this.testFilesWatcher.onDidDelete(this.onExternalTestFilesModification, this);
 
 		this.directoriesFilesWatcher = vscode.workspace.createFileSystemWatcher(
 			new vscode.RelativePattern(
@@ -131,7 +131,7 @@ export class IntegrationTestEditorViewProvider {
 			)
 		);
 		this.config.getContext().subscriptions.push(this.directoriesFilesWatcher);
-		this.directoriesFilesWatcher.onDidDelete(this.onExternalTestFilesModification);
+		this.directoriesFilesWatcher.onDidDelete(this.onExternalTestFilesModification, this);
 
 		this.view.webview.options = {
 			enableScripts: true
@@ -157,10 +157,13 @@ export class IntegrationTestEditorViewProvider {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	private async onExternalTestFilesModification(uri: vscode.Uri) : Promise<void>{
-		if(this.savingInProgress) {
+	private async onExternalTestFilesModification(uri: vscode.Uri) : Promise<void> {
+		if(IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS) {
+			Log.trace(`A file ${uri.fsPath} modification detected when working through the extension modification`);
 			return;
 		}
+
+		Log.trace(`A file ${uri.fsPath} modification detected by external programs modification has been detected`);
 
 		// Правило удалили
 		if(!fs.existsSync(this.rule.getDirectoryPath())) {
@@ -338,7 +341,7 @@ export class IntegrationTestEditorViewProvider {
 		switch (message.command) {
 			case 'saveAllTests': {
 				try {
-					this.savingInProgress = true;
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = true;
 					this.rule = await this.saveAllTests(message);
 					Log.info(`All tests of the rule are ${this.rule.getName()} saved`);
 				}
@@ -347,7 +350,7 @@ export class IntegrationTestEditorViewProvider {
 					return true;
 				}
 				finally {
-					this.savingInProgress = false;
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = false;
 				}
 
 				break;
@@ -380,7 +383,7 @@ export class IntegrationTestEditorViewProvider {
 			// Команды с запуском утилит.
 			case "NormalizeRawEventsCommand": {
 				try {
-					this.savingInProgress = true;
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = true;
 					if (typeof message?.isEnrichmentRequired !== "boolean" ) {
 						DialogHelper.showInfo("The event enrichment parameter is not set");
 						return true;
@@ -404,7 +407,7 @@ export class IntegrationTestEditorViewProvider {
 					ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.DefaultErrorEventsNormalization"));
 				}
 				finally {
-					this.savingInProgress = false;
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = false;
 				}
 				break;
 			}
@@ -448,7 +451,7 @@ export class IntegrationTestEditorViewProvider {
 				}
 
 				try {
-					this.savingInProgress = true;
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = true;
 					const selectedTestNumber = parseInt(message?.selectedTestNumber);
 					if (!selectedTestNumber) {
 						throw new XpException(`Переданное значение ${message?.activeTestNumber} не является номером интеграционного теста`);
@@ -470,7 +473,7 @@ export class IntegrationTestEditorViewProvider {
 					ExceptionHelper.show(error, 'Ошибка обновления ожидаемого события');
 				}
 				finally {
-					this.savingInProgress = false;
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = false;
 				}
 				break;
 			}
@@ -483,6 +486,7 @@ export class IntegrationTestEditorViewProvider {
 				}
 
 				try {
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = true;
 					const selectedTestNumber = parseInt(message?.selectedTestNumber);
 					if (!selectedTestNumber) {
 						throw new XpException(`Переданное значение ${message?.activeTestNumber} не является номером интеграционного теста`);
@@ -504,6 +508,9 @@ export class IntegrationTestEditorViewProvider {
 				catch(error) {
 					ExceptionHelper.show(error, 'Ошибка обновления ожидаемого события');
 				}
+				finally {
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = false;
+				}
 				break;
 			}			
 
@@ -511,7 +518,7 @@ export class IntegrationTestEditorViewProvider {
 				// Сохраняем актуальное состояние тестов из вьюшки.
 				let rule: RuleBaseItem;
 				try {
-					this.savingInProgress = true;
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = true;
 					rule = await this.saveAllTests(message);
 					Log.info(`All tests of the rule are ${this.rule.getName()} saved`);
 				}
@@ -520,11 +527,11 @@ export class IntegrationTestEditorViewProvider {
 					return true;
 				}
 				finally {
-					this.savingInProgress = false;
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = false;
 				}
 
 				try {
-					this.savingInProgress = true;
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = true;
 					await FileSystemHelper.recursivelyDeleteDirectory(this.testsTmpFilesPath);
 
 					const command = new RunIntegrationTestsCommand({
@@ -543,7 +550,7 @@ export class IntegrationTestEditorViewProvider {
 					ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.FailedToExecutionTests"));
 				}
 				finally {
-					this.savingInProgress = false;
+					IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS = false;
 				}
 
 				return true;
@@ -649,7 +656,7 @@ export class IntegrationTestEditorViewProvider {
 	private directoriesFilesWatcher: vscode.FileSystemWatcher;
 
 	private testsTmpFilesPath: string;
-	private savingInProgress = false;
 
+	public static SAVING_IN_PROGRESS = false;
 	public static TEXTAREA_END_OF_LINE = "\n";
 }

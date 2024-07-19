@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.17.17 (Pre-Release)
+
+- доработана фича выявления изменений файлов интеграционных тестов (special thanks @Bobyboba18).
+
 ## 3.17.16 (Pre-Release)
 
 - добавлен провайдер Microsoft-Windows-Bits-Client для заполнения метаинформации (special thanks @d3f0x0).
