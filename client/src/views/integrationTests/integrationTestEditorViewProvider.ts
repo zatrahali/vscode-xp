@@ -346,7 +346,10 @@ export class IntegrationTestEditorViewProvider {
 					Log.info(`All tests of the rule are ${this.rule.getName()} saved`);
 				}
 				catch (error) {
-					ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.FailedToSaveTests"));
+					ExceptionHelper.show(
+						error,
+						this.config.getMessage("View.IntegrationTests.Message.FailedToSaveTests")
+					);
 					return true;
 				}
 				finally {
@@ -370,7 +373,10 @@ export class IntegrationTestEditorViewProvider {
 						return this.addEnvelope(rawEvents, mimeType);
 					}
 					catch (error) {
-						ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.DefaultErrorAddingEnvelope"));
+						ExceptionHelper.show(
+							error,
+							this.config.getMessage("View.IntegrationTests.Message.DefaultErrorAddingEnvelope")
+						);
 					}
 				});
 			}
@@ -630,7 +636,10 @@ export class IntegrationTestEditorViewProvider {
 			envelopedRawEventsString = envelopedEvents.join(IntegrationTestEditorViewProvider.TEXTAREA_END_OF_LINE);
 		}
 		catch (error) {
-			ExceptionHelper.show(error, this.config.getMessage("View.IntegrationTests.Message.DefaultErrorAddingEnvelope"));
+			ExceptionHelper.show(
+				error,
+				this.config.getMessage("View.IntegrationTests.Message.DefaultErrorAddingEnvelope")
+			);
 			return;
 		}
 

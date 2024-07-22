@@ -37,7 +37,7 @@ export abstract class ILogger {
 export class Logger extends ILogger {
 	public constructor(private _config: Configuration) {
 		super();
-		this._output = this._config.getOutputChannel();
+		this.outputChannel = this._config.getOutputChannel();
 	}
 
 	public setLogLevel (logLevel: LogLevel) : void {
@@ -65,7 +65,7 @@ export class Logger extends ILogger {
 
 		if(ex) {
 			console.error(this.timestamp, message ?? "", ...params, ex);
-			this._output.appendLine(
+			this.outputChannel.appendLine(
 				`${this.timestamp} [Error] ${message ?? ""} ${this.formatParams(params)}\n${String(ex.stack)}`,
 			);
 			return;
@@ -128,7 +128,7 @@ export class Logger extends ILogger {
 			}
 		}
 
-		this._output.appendLine(
+		this.outputChannel.appendLine(
 			`${formattedMessage} ${this.formatParams(params)}`
 		);
 	}
@@ -184,5 +184,5 @@ export class Logger extends ILogger {
 	}
 
 	private level: LogLevel;
-	private _output: vscode.OutputChannel;
+	private outputChannel: vscode.OutputChannel;
 }
