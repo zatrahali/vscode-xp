@@ -46,7 +46,8 @@ export class IntegrationTest {
 				const testCodeFileName = `test_conds_${testNumber}.tc`;
 				const testCodeFilePath = path.join(testsDirectoryFullPath, testCodeFileName);
 				if(!fs.existsSync(testCodeFilePath)) {
-					throw new XpException(Configuration.get().getMessage("View.IntegrationTests.Message.RequiredFileWasNotFound", testCodeFilePath));
+					throw new XpException(
+						Configuration.get().getMessage("View.IntegrationTests.Message.RequiredFileWasNotFound", testNumber, testCodeFilePath));
 				}
 				const testCodeContent = fs.readFileSync(testCodeFilePath, "utf8");
 				test.setTestCode(testCodeContent);			
@@ -55,7 +56,7 @@ export class IntegrationTest {
 				const rawEventsFileName = `raw_events_${testNumber}.json`;				
 				const rawEventsFullPath = path.join(testsDirectoryFullPath, rawEventsFileName);
 				if(!fs.existsSync(rawEventsFullPath)) {
-					throw new XpException(Configuration.get().getMessage("View.IntegrationTests.Message.RequiredFileWasNotFound", rawEventsFullPath));
+					throw new XpException(Configuration.get().getMessage("View.IntegrationTests.Message.RequiredFileWasNotFound", testNumber, rawEventsFullPath));
 				}
 				const rawEvents = fs.readFileSync(rawEventsFullPath, "utf8");
 				test.setRawEvents(rawEvents);
