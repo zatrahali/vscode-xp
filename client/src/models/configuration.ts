@@ -211,7 +211,7 @@ export class Configuration {
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "siemj.exe"; break;
 			case OsType.Linux: appName = "siemj"; break;
-			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+			case OsType.Mac: throw new XpException(this.getMessage("Error.MacOsIsNotNativelySupported"));
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -227,7 +227,7 @@ export class Configuration {
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "siemkb_tests.exe"; break;
 			case OsType.Linux: appName = "siemkb_tests"; break;
-			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+			case OsType.Mac: throw new XpException(this.getMessage("Error.MacOsIsNotNativelySupported"));
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -243,7 +243,7 @@ export class Configuration {
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "rcc.exe"; break;
 			case OsType.Linux: appName = "rcc"; break;
-			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+			case OsType.Mac: throw new XpException(this.getMessage("Error.MacOsIsNotNativelySupported"));
 
 
 			default: throw new XpException("Платформа не поддерживается");
@@ -260,7 +260,7 @@ export class Configuration {
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "mktables.exe"; break;
 			case OsType.Linux: appName = "mktables"; break;
-			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+			case OsType.Mac: throw new XpException(this.getMessage("Error.MacOsIsNotNativelySupported"));
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -276,7 +276,7 @@ export class Configuration {
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "fpta_filler.exe"; break;
 			case OsType.Linux: appName = "fpta_filler"; break;
-			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+			case OsType.Mac: throw new XpException(this.getMessage("Error.MacOsIsNotNativelySupported"));
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -292,7 +292,7 @@ export class Configuration {
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "build_l10n_rules.exe"; break;
 			case OsType.Linux: appName = "build_l10n_rules"; break;
-			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+			case OsType.Mac: throw new XpException(this.getMessage("Error.MacOsIsNotNativelySupported"));
 			
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -308,7 +308,7 @@ export class Configuration {
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "siemkb_tests.exe"; break;
 			case OsType.Linux: appName = "siemkb_tests"; break;
-			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+			case OsType.Mac: throw new XpException(this.getMessage("Error.MacOsIsNotNativelySupported"));
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -324,7 +324,7 @@ export class Configuration {
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "normalizer-cli.exe"; break;
 			case OsType.Linux: appName = "normalizer-cli"; break;
-			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+			case OsType.Mac: throw new XpException(this.getMessage("Error.MacOsIsNotNativelySupported"));
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -340,7 +340,7 @@ export class Configuration {
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "normalize.exe"; break;
 			case OsType.Linux: appName = "normalize"; break;
-			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+			case OsType.Mac: throw new XpException(this.getMessage("Error.MacOsIsNotNativelySupported"));
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -364,7 +364,7 @@ export class Configuration {
 		switch(this.getOsType()) {
 			case OsType.Windows: appPath = path.join("win32", "evtx_converter.exe"); break;
 			case OsType.Linux: appPath = path.join("linux_gnu", "evtx_converter"); break;
-			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+			case OsType.Mac: throw new XpException(this.getMessage("Error.MacOsIsNotNativelySupported"));
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -377,7 +377,7 @@ export class Configuration {
 		switch(this.getOsType()) {
 			case OsType.Windows: appName = "ecatest.exe"; break;
 			case OsType.Linux: appName = "ecatest"; break;
-			case OsType.Mac: throw new XpException(this.MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT);
+			case OsType.Mac: throw new XpException(this.getMessage("Error.MacOsIsNotNativelySupported"));
 
 			default: throw new XpException("Платформа не поддерживается");
 		}
@@ -708,13 +708,13 @@ export class Configuration {
 
 		if (!outputDirectoryPath || outputDirectoryPath === ""){
 			throw new FileSystemException(
-				`Выходная директория не задана. Задайте путь к [ней]${this.OUTPUT_DIR_SHOW_SETTING_COMMAND}`,
+				this.getMessage("Error.OutputDirectoryPathIsNotSet"),
 				outputDirectoryPath);
 		}
 
 		if (!fs.existsSync(outputDirectoryPath)){
 			throw new FileSystemException(
-				`Выходная директория не найдена по пути ${outputDirectoryPath}. Проверьте путь к [ней]${this.OUTPUT_DIR_SHOW_SETTING_COMMAND}`,
+				this.getMessage("Error.IncorrectOutputDirectoryPath", outputDirectoryPath),
 				outputDirectoryPath);
 		}
 
@@ -759,12 +759,12 @@ export class Configuration {
 		const kbtBasePath = extensionConfig.get<string>("kbtBaseDirectory");
 		
 		if (!kbtBasePath){
-			DialogHelper.showError(`Путь к XP Knowledge Base Toolkit (KBT) не задан. ${this.KBT_CONFIG_INFO}`);
+			DialogHelper.showError(this.getMessage("Error.KbtDirectoryPathIsNotSet"));
 			return;
 		}
 
 		if (!fs.existsSync(kbtBasePath)){
-			DialogHelper.showError(`Директория к XP Knowledge Base Toolkit (KBT) не найдена по пути ${kbtBasePath}. ${this.KBT_CONFIG_INFO}`);
+			DialogHelper.showError(this.getMessage("Error.KbtDirectoryPathIsNoExist", kbtBasePath));
 			return;
 		}
 	}
@@ -773,7 +773,7 @@ export class Configuration {
 		const outputDirectoryPath = extensionConfig.get<string>("outputDirectoryPath");
 
 		if (!outputDirectoryPath){
-			DialogHelper.showError(`Выходная директория не задана. Задайте ее [в настройках]${this.OUTPUT_DIR_SHOW_SETTING_COMMAND}`);
+			DialogHelper.showError(this.getMessage("Error.OutputDirectoryPathIsNotSet"));
 			return;
 		}
 
@@ -787,7 +787,7 @@ export class Configuration {
 
 	public static get() : Configuration {
 		if(!this._instance) {
-			throw new XpException("Конфигурация расширения не получена. Возможно, она не была инициализирована");
+			throw new XpException("The extension configuration has not been received. It may not have been initialized.");
 		}
         return this._instance;
     }
@@ -807,11 +807,6 @@ export class Configuration {
 	
 	private readonly CONFIGURATION_PREFIX = "xpConfig";
 	private readonly BUILD_TOOLS_DIR_NAME = "build-tools";
-
-	private readonly KBT_BASE_DIR_SHOW_SETTING_COMMAND = `(command:workbench.action.openSettings?["${this.CONFIGURATION_PREFIX}.kbtBaseDirectory"])`;
-	private readonly KBT_CONFIG_INFO = `Загрузите актуальную версию [отсюда](https://github.com/vxcontrol/xp-kbt/releases), распакуйте архив и укажите путь к основной директории [в настройках]${this.KBT_BASE_DIR_SHOW_SETTING_COMMAND}`;
-
-	private readonly OUTPUT_DIR_SHOW_SETTING_COMMAND = `(command:workbench.action.openSettings?["${this.CONFIGURATION_PREFIX}.outputDirectoryPath"])`
 
 	private readonly MAC_OS_MESSAGE_ABOUT_MAC_OS_SUPPORT = "Платформа поддерживается только с использованием веб-версии VSCode Workspace. С документацией можно ознакомится [тут](https://vscode-xp.readthedocs.io/ru/latest/gstarted.html#vscode-xp-workspace)";
 

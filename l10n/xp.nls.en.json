@@ -17,7 +17,14 @@
     "UncaughtExceptionMessagePostfix": "If you [have not seen this error before](https://github.com/Security-Experts-Community/vscode-xp/issues/), create an [issue](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) and attach the [logs](command:xp.commonCommands.showOutputChannel). You can also ask for advice in the [Telegram chat](https://t.me/s3curity_experts_community/75).",
     "UncaughtExceptionMessage": "Unexpected error. If you [have not seen this error before](https://github.com/Security-Experts-Community/vscode-xp/issues/), create an [issue](https://github.com/Security-Experts-Community/vscode-xp/issues/new?assignees=&labels=bug&template=form_for_bugs.yml&title=%5BBUG%5D) and attach the [logs](command:xp.commonCommands.showOutputChannel). You can also ask for advice in the [Telegram chat](https://t.me/s3curity_experts_community/75).",
 
+    "Error.MacOsIsNotNativelySupported": "The platform is supported only using the web version of VS Code Workspace. You can read the documentation [here](https://vscode-xp.readthedocs.io/ru/latest/started.html#vscode-xp-workspace)",
+
+    "Error.KbtDirectoryPathIsNotSet": "The path to the XP Knowledge Base Toolkit (KBT) is not set. Download the current version [link](https://github.com/vxcontrol/xp-kbt/releases), unzip the archive and specify the path to the main directory in the [settings]((command:workbench.action.openSettings?['xpConfig.kbtBaseDirectory']))",
+    "Error.KbtDirectoryPathIsNoExist": "The directory to XP Knowledge Base Toolkit (KBT) was not found at path {0}. Download the current version [from here](https://github.com/vxcontrol/xp-kbt/releases), unzip the archive and specify the path to the main directory in the [settings]((command:workbench.action.openSettings?['xpConfig.kbtBaseDirectory']))",
+
+    "Error.OutputDirectoryPathIsNotSet": "The path to the output directory is not set. Specify the correct path [in the parameter](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath'])",
     "Error.IncorrectOutputDirectoryPath": "Could not create the folder at {0}. Specify the correct path in the [setting](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath']).",
+
     "Error.CommonBuilding": "Could not perform the operation. Fix [errors in files](command:workbench.action.showErrorsWarnings). If no errors were found, refer to [output data](command:xp.commonCommands.showOutputChannel).",
     "Error.LocalizationBuilding": "Could not compile localization rules. Fix [errors in files](command:workbench.action.showErrorsWarnings). If no errors were found, refer to [output data](command:xp.commonCommands.showOutputChannel).",
     "Error.InvalidPath": "Invalid characters in the path {0}. Fix the path and try again.",
