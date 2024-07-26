@@ -25,7 +25,7 @@
     "Error.OutputDirectoryPathIsNotSet": "Не задан путь к папке для временных объектов. Укажите путь [в параметре](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath'])",
     "Error.IncorrectOutputDirectoryPath": "Не удалось создать папку в {0}. Укажите корректный путь [в параметре](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath'])",
 
-    "Error.UtilityPathIsIncorrect": "В KBT Toolkit отсутствует утилита {0}. Скачайте [актуальную версию](https://github.com/vxcontrol/xp-kbt/releases), распакуйте архив и укажите путь к корневой папке [в параметре](command:workbench.action.openSettings?['xpConfig.kbtBaseDirectory'])",
+    "Error.UtilityPathIsIncorrect": "В XP KBT Toolkit отсутствует утилита {0}. Скачайте [актуальную версию](https://github.com/vxcontrol/xp-kbt/releases), распакуйте архив и укажите путь к корневой папке [в параметре](command:workbench.action.openSettings?['xpConfig.kbtBaseDirectory'])",
 
     "Error.CommonBuilding": "Не удалось выполнить операцию. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
     "Error.LocalizationBuilding": "Не удалось скомпилировать правила локализации. Исправьте [ошибки в файлах](command:workbench.action.showErrorsWarnings). Если ошибок нет, проверьте [выходные данные](command:xp.commonCommands.showOutputChannel)",
