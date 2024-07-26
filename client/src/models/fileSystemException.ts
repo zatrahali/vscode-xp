@@ -3,14 +3,14 @@ import { XpException } from './xpException';
 export class FileSystemException extends XpException {
 	public constructor(message: string, path?: string, inner?: Error) {
 		super(message, inner);
-		this._path = path;
+		this.path = path;
 	}
 
 	public getPath() : string {
-		return this._path;
+		return this.path;
 	}
 
-	private _path: string;
+	private path: string;
 
 	public static kbtDirectoryToolNotFoundException(filePath: string) : FileSystemException {
 		return new FileSystemException(

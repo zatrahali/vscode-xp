@@ -180,9 +180,9 @@ export class Configuration {
 	 * @returns путь к директории со всеми SDK утилитами.
 	 */
 	public getKbtBaseDirectory(): string {
-		const configuration = vscode.workspace.getConfiguration(this.CONFIGURATION_PREFIX);
+		const configuration = this.getWorkspaceConfiguration();
 		const basePath = configuration.get<string>("kbtBaseDirectory");
-		this.checkKbtToolPath("KBT", basePath);
+		this.checkKbtSetting(configuration);
 
 		return basePath;
 	}
@@ -217,7 +217,7 @@ export class Configuration {
 		}
 
 		const fullPath = path.join(this.getKbtBaseDirectory(), "extra-tools", "siemj", appName);
-		this.checkKbtToolPath(appName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -233,7 +233,7 @@ export class Configuration {
 		}
 
 		const fullPath = path.join(this.getKbtBaseDirectory(), this.BUILD_TOOLS_DIR_NAME, appName);
-		this.checkKbtToolPath(appName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -250,7 +250,7 @@ export class Configuration {
 		}
 
 		const fullPath = path.join(this.getKbtBaseDirectory(), "xp-sdk", "cli", appName);
-		this.checkKbtToolPath(appName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -266,7 +266,7 @@ export class Configuration {
 		}
 
 		const fullPath = path.join(this.getKbtBaseDirectory(), "build-tools", appName);
-		this.checkKbtToolPath(appName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -282,7 +282,7 @@ export class Configuration {
 		}
 
 		const fullPath = path.join(this.getKbtBaseDirectory(), "xp-sdk", appName);
-		this.checkKbtToolPath(appName, appName);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -298,7 +298,7 @@ export class Configuration {
 		}
 
 		const fullPath = path.join(this.getKbtBaseDirectory(), "build-tools", appName);
-		this.checkKbtToolPath(appName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -314,7 +314,7 @@ export class Configuration {
 		}
 
 		const fullPath = path.join(this.getKbtBaseDirectory(), "build-tools", appName);
-		this.checkKbtToolPath(appName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -330,7 +330,7 @@ export class Configuration {
 		}
 
 		const fullPath = path.join(this.getKbtBaseDirectory(), "xp-sdk", "cli", appName);
-		this.checkKbtToolPath(appName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -346,7 +346,7 @@ export class Configuration {
 		}
 
 		const fullPath = path.join(this.getKbtBaseDirectory(), "build-tools", appName);
-		this.checkKbtToolPath(appName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -354,7 +354,7 @@ export class Configuration {
 	public getKbPackFullPath() : string {
 		const appName = "kbpack.dll";
 		const fullPath = path.join(this.getKbtBaseDirectory(), "extra-tools", "kbpack", appName);
-		this.checkKbtToolPath(appName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -383,7 +383,7 @@ export class Configuration {
 		}
 
 		const fullPath = path.join(this.getKbtBaseDirectory(), "build-tools", appName);
-		this.checkKbtToolPath(appName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -571,7 +571,7 @@ export class Configuration {
 	public getSiemSdkDirectoryPath() : string {
 		const dirName = "xp-sdk";
 		const fullPath = path.join(this.getKbtBaseDirectory(), dirName);
-		this.checkKbtToolPath(dirName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -579,7 +579,7 @@ export class Configuration {
 	public getBuildToolsDirectoryFullPath() : string {
 		const dirName = "build-tools";
 		const fullPath = path.join(this.getKbtBaseDirectory(), dirName);
-		this.checkKbtToolPath(dirName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 
 		return fullPath;
 	}
@@ -599,7 +599,7 @@ export class Configuration {
 	public getTaxonomyFullPath() : string {
 		const taxonomyFileName = "taxonomy.json";
 		const fullPath = path.join(this.getContractsDirectory(), Configuration.TAXONOMY_DIR_NAME, taxonomyFileName);
-		this.checkKbtToolPath(taxonomyFileName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 		
 		return fullPath;
 	}
@@ -610,7 +610,7 @@ export class Configuration {
 	 */
 	public getTaxonomyDirPath() : string {
 		const fullPath = path.join(this.getContractsDirectory(), Configuration.TAXONOMY_DIR_NAME);
-		this.checkKbtToolPath(Configuration.TAXONOMY_DIR_NAME, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 		
 		return fullPath;
 	}
@@ -627,7 +627,7 @@ export class Configuration {
 	public getAppendixFullPath() : string {
 		const appendixFileName = "appendix.xp";
 		const fullPath = path.join(this.getContractsDirectory(), "xp_appendix", appendixFileName);
-		this.checkKbtToolPath(appendixFileName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 		
 		return fullPath;
 	}
@@ -639,7 +639,7 @@ export class Configuration {
 	public getTablesContract() : string {
 		const tabularContractsFileName = "tables_contract.yaml";
 		const fullPath = path.join(this.getContractsDirectory(), "tabular_lists", tabularContractsFileName);
-		this.checkKbtToolPath(tabularContractsFileName, fullPath);
+		this.checkKbtSingleToolPath(fullPath);
 		
 		return fullPath;
 	}
@@ -737,13 +737,9 @@ export class Configuration {
 		return ruLocalizationFilePath;
 	}
 
-	private checkKbtToolPath(name : string, fullPath : string) : void {
+	private checkKbtSingleToolPath(fullPath : string) : void {
 		if (!fs.existsSync(fullPath)) {
-			throw FileSystemException.kbtDirectoryToolNotFoundException(fullPath);
-		}
-
-		if (!fullPath || fullPath === "") {
-			throw FileSystemException.kbtToolNotFoundException(fullPath, name);
+			throw new XpException(this.getMessage("Error.UtilityPathIsIncorrect", fullPath));
 		}
 	}
 
@@ -759,13 +755,11 @@ export class Configuration {
 		const kbtBasePath = extensionConfig.get<string>("kbtBaseDirectory");
 		
 		if (!kbtBasePath){
-			DialogHelper.showError(this.getMessage("Error.KbtDirectoryPathIsNotSet"));
-			return;
+			throw new XpException(this.getMessage("Error.KbtDirectoryPathIsNotSet"));
 		}
 
 		if (!fs.existsSync(kbtBasePath)){
-			DialogHelper.showError(this.getMessage("Error.KbtDirectoryPathIsNoExist", kbtBasePath));
-			return;
+			throw new XpException(this.getMessage("Error.KbtDirectoryPathIsNoExist", kbtBasePath));
 		}
 	}
 

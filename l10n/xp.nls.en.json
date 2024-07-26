@@ -25,6 +25,8 @@
     "Error.OutputDirectoryPathIsNotSet": "The path to the output directory is not set. Specify the correct path [in the parameter](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath'])",
     "Error.IncorrectOutputDirectoryPath": "Could not create the folder at {0}. Specify the correct path in the [setting](command:workbench.action.openSettings?['xpConfig.outputDirectoryPath']).",
 
+    "Error.UtilityPathIsIncorrect": "The path {0} to the utility failed. Download [the current version](https://github.com/vxcontrol/xp-kbt/releases ), unzip the archive and specify the path to the root folder [in the parameter](command:workbench.action.openSettings?['xpConfig.kbtBaseDirectory'])",
+
     "Error.CommonBuilding": "Could not perform the operation. Fix [errors in files](command:workbench.action.showErrorsWarnings). If no errors were found, refer to [output data](command:xp.commonCommands.showOutputChannel).",
     "Error.LocalizationBuilding": "Could not compile localization rules. Fix [errors in files](command:workbench.action.showErrorsWarnings). If no errors were found, refer to [output data](command:xp.commonCommands.showOutputChannel).",
     "Error.InvalidPath": "Invalid characters in the path {0}. Fix the path and try again.",
