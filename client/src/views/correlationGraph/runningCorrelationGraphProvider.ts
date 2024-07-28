@@ -129,7 +129,7 @@ export class RunningCorrelationGraphProvider {
 
     private async corrGraphRun(rawEvents: string) : Promise<void> {
 
-        Log.info("Запущена корреляция событий");
+        Log.info("Event correlation started");
 
         // Прогоняем событие по графам для каждой из корневых директорий текущего режима
         const rootPaths = this.config.getContentRoots();
@@ -137,7 +137,7 @@ export class RunningCorrelationGraphProvider {
             vscode.window.withProgress({
                 location: vscode.ProgressLocation.Notification,
                 cancellable: true,
-                title: `Корреляция событий`
+                title: this.config.getMessage("View.CorrelateEvents.Title")
             }, async (progress, cancellationToken) => {
                 try {
                     const rootFolder = path.basename(rootPath);
@@ -168,7 +168,7 @@ export class RunningCorrelationGraphProvider {
                     // Очищаем от лишних полей и форматируем для вывода на FE.
                     const cleanedEvents = TestHelper.removeFieldsFromJsonl(
                         correlatedEventsString,
-                       "_rule", "generator.version", "siem_id", "uuid", "_subjects", "_objects", "subevents", "subevents.time");
+                        "_rule", "generator.version", "siem_id", "uuid", "_subjects", "_objects", "subevents", "subevents.time");
                     const formattedEvents = TestHelper.formatTestCodeAndEvents(cleanedEvents);
 
                     DialogHelper.showInfo(`Количество сработавших корреляций: ${correlationNames.length}`);
