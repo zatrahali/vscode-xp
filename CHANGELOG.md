@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.17.20 (Pre-Release)
+
+- расширена проверка локализаций в части встраивания таксономических полей (special thanks @Protenil).
+
 ## 3.17.19 (Pre-Release)
 
 - улучшена локализация (special thanks @feelstacy, @eugzolotukhin);

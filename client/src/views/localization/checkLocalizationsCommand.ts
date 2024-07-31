@@ -1,10 +1,8 @@
 import * as fs from 'fs';
-import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { TestHelper } from '../../helpers/testHelper';
-import { ContentItemStatus, RuleBaseItem } from '../../models/content/ruleBaseItem';
-import { Configuration } from '../../models/configuration';
+import { ContentItemStatus } from '../../models/content/ruleBaseItem';
 import { DialogHelper } from '../../helpers/dialogHelper';
 import { ContentTreeProvider } from '../contentTree/contentTreeProvider';
 import { SiemjManager } from '../../models/siemj/siemjManager';
@@ -42,6 +40,13 @@ export class CheckLocalizationCommand extends ViewCommand {
 					"В настоящий момент поддерживается проверка локализаций только для корреляций. Если вам требуется поддержка других правил, можете добавить или проверить наличие подобного [Issue](https://github.com/Security-Experts-Community/vscode-xp/issues).");					
 				return;
 			}
+
+			this.params.rule.getLocalizations().forEach(
+				(localization, index) => {
+					this.checkBalanceOfCurlyBraces(index, localization.getRuLocalizationText());
+					this.checkBalanceOfCurlyBraces(index, localization.getEnLocalizationText());
+				}
+			);
 
 			// Сбрасываем статус правила в исходный
 			this.params.rule.setStatus(ContentItemStatus.Default);
@@ -91,8 +96,20 @@ export class CheckLocalizationCommand extends ViewCommand {
 				await FileSystemHelper.deleteAllSubDirectoriesAndFiles(this.params.tmpDirPath);
 			}
 			catch(error) {
-				Log.warn("Ошибка очистки временных файлов интеграционных тестов", error);
+				Log.warn("Error clearing temporary integration test files", error);
 			}
+		}
+	}
+
+	private checkBalanceOfCurlyBraces(localizationNumber: number, localization: string) {
+		const numberOfOpeningCurlyBrace = localization.match(/\{/g);
+		const numberOfClosingCurlyBrace = localization.match(/\}/g);
+		if(numberOfOpeningCurlyBrace && numberOfClosingCurlyBrace && numberOfOpeningCurlyBrace.length > numberOfClosingCurlyBrace.length) {
+			throw new XpException(`Ошибка использования полей таксономии в локализации №${localizationNumber + 1}, не все открывающиеся фигурные скобки имеют соответствующие закрывающиеся`);
+		}
+
+		if(numberOfOpeningCurlyBrace && numberOfClosingCurlyBrace && numberOfOpeningCurlyBrace.length < numberOfClosingCurlyBrace.length) {
+			throw new XpException(`Ошибка использования полей таксономии в локализации №${localizationNumber + 1}, не все закрывающиеся фигурные скобки имеют соответствующие открывающиеся`);
 		}
 	}
 
