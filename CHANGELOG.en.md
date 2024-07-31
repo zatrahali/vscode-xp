@@ -8,7 +8,7 @@
 - added the ability to view actual events in integration tests without updating the expected event (special thanks @iddqdidkfa);
 - added the function of opening an unlimited number of metadata editors (special thanks @DuckDarkwing, @iddqdidkfa, @FedosovaOA, @Bobyboba18, @g4n8g and others).
 - added checking for required fields in the correlation event when running integration tests;
-- enhanced verification of the integration test code for the presence of at least one `expect 1{ check...}` or `expect table_list {...}` (special thanks @UncleSStepa);
+- enhanced verification of the integration test code for the presence of at least one `expect 1 { check...}` or `expect table_list {...}` (special thanks @UncleSStepa);
 - added rule templates for macOS: MacOS_ProcessExecution and MacOS_FileCreate;
 - expanded the number of enrichment rule templates and added comments to the code and tests (special thanks @DedInside_BA);
 - fixed bugs and improved stability (special thanks @g4n8g, @DuckDarkwing, @paran0id_34, @jjack_the_reaper and others);
@@ -105,7 +105,7 @@
 
 ## 3.17.0 (Pre-Release)
 
-- enhanced verification of the integration test code for the presence of at least one `expect 1{ check...}` or `expect table_list {...}` (special thanks @UncleSStepa);
+- enhanced verification of the integration test code for the presence of at least one `expect 1 { check...}` or `expect table_list {...}` (special thanks @UncleSStepa);
 - added basic support for aggregation rules: creation from a template, testing, filling in meta information, validation through tests, description and localization (special thanks @Protenil, @hiddenbymeeee);
 - improved localization (special thanks @feelstacy, @eugzolotukhin);
 - added a check for missing rule descriptions (special thanks @UncleSStepa).
@@ -174,7 +174,7 @@
 ## 3.15.6 (Pre-Release)
 
 - improved the logic of enrichment testing;
-- added the [Getting] section Started](https://github.com/Security-Experts-Community/vscode-xp/blob/develop/docs/GETTING_STARTED.md) with gifs on basic cases of working with extensions and content (special thanks @Yulia17_00, @GenRockeR);
+- added the [Getting section Started](https://github.com/Security-Experts-Community/vscode-xp/blob/develop/docs/GETTING_STARTED.md) with gifs on basic cases of working with extensions and content (special thanks @Yulia17_00, @GenRockeR);
 - added the ability to test individual rules in the object tree;
 - improved localization.
 
@@ -336,7 +336,7 @@
 
 - the display of the default values window when viewing changes via git in _VSCode_ has been eliminated, the text comparison of the table list file before and after editing is now displayed again (special thanks @g4n8g);
 - when you click on a tabular list, its structure editor is immediately displayed;
-- to edit the default values of the table list (only for the Reference Book), now you need to use the context menu item _ Default values_ (Default values).
+- to edit the default values of the table list (only for the Reference Book), now you need to use the context menu item _Default values_ (Default values).
 
 ## 3.13.5 (Pre-Release)
 

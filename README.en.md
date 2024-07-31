@@ -1,10 +1,10 @@
-[![Documentation Status](https://readthedocs.org/projects/vscode-xp/badge/?version=latest)](https://vscode-xp.readthedocs.io/ru/latest/?badge=latest ) [![Telegram chat](https://img.shields.io/static/v1?label=chat&message=Telegram&color=blue&logo=telegram)](https://t.me/s3curity_experts_community/75) [![en](https://img.shields.io/badge/lang-ru-green.svg)](https://github.com/Security-Experts-Community/vscode-xp/blob/develop/README.md)
+[![Documentation Status](https://readthedocs.org/projects/vscode-xp/badge/?version=latest)](https://vscode-xp.readthedocs.io/ru/latest/?badge=latest) [![Telegram chat](https://img.shields.io/static/v1?label=chat&message=Telegram&color=blue&logo=telegram)](https://t.me/s3curity_experts_community/75) [![en](https://img.shields.io/badge/lang-ru-green.svg)](https://github.com/Security-Experts-Community/vscode-xp/blob/develop/README.md)
 
 # XP language support in Visual Studio Code
 
 The [eXtraction and Processing (XP)](https://help.ptsecurity.com/en-US/projects/maxpatrol10/26.2/help/1566293515) language is used to create detection rules based on the analysis of events from endpoints, similar to [Sigma rules](https://github.com/SigmaHQ/sigma). In the XP language, you can develop rules for normalization, event aggregation, correlation and enrichment.
 
-You can quickly start [here](./docs/GETTING_STARTED_EN.md).
+You can quickly start [here](./docs/GETTING_STARTED.en.md).
 
 This extension was developed by [Dmitry Fedosov](https://github.com/DmitryOffsec) and [contributors](https://github.com/Security-Experts-Community/vscode-xp/graphs/contributors), it allows you to develop and test rules in VSCode and VSCodium, and publish them in the format required for your product.
 
