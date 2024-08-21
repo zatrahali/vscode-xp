@@ -14,6 +14,7 @@ import { UnitTestOutputParser } from './unitTestOutputParser';
 import { SiemjManager } from '../siemj/siemjManager';
 import { Log } from '../../extension';
 import { XpException } from '../xpException';
+import { RegExpHelper } from '../../helpers/regExpHelper';
 
 export class CorrelationUnitTestsRunner implements UnitTestRunner {
 
@@ -114,9 +115,16 @@ export class CorrelationUnitTestsRunner implements UnitTestRunner {
 			// Обновление статуса теста.
 			test.setStatus(TestStatus.Success);
 
+			// TODO: кажется, лишний метод. Разобраться.
+			// const expectedResult = this._outputParser.parseSuccessOutput(output.output);
+
 			// Вывод теста содержит событие, подходящее под expect секцию, поэтому извлекаем его и очищаем, как код теста.
-			const expectedResult = this._outputParser.parseSuccessOutput(output.output);
-			const clearedResult = TestHelper.cleanModularTestResult(expectedResult);
+			const jsons = RegExpHelper.parseJsonsFromMultilineString(output.output);
+			if(jsons.length != 1) {
+				throw new XpException("The actual event could not be parsed");
+			}
+			
+			const clearedResult = TestHelper.cleanModularTestResult(jsons[0]);
 
 			// Так как тест успешный, то можно сохранить отформатированный результат.
 			test.setOutput(clearedResult);
