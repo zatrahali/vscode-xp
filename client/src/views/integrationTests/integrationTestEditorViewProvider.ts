@@ -158,6 +158,9 @@ export class IntegrationTestEditorViewProvider {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private async onExternalTestFilesModification(uri: vscode.Uri) : Promise<void> {
+		// TODO: не всегда корректно обрабатывает, отключено до решения данной проблемы
+		return;
+
 		if(IntegrationTestEditorViewProvider.SAVING_IN_PROGRESS) {
 			Log.trace(`A file ${uri.fsPath} modification detected when working through the extension modification`);
 			return;
