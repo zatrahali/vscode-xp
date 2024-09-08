@@ -134,7 +134,7 @@ export class VsCodeApiHelper {
 			const openFilePath = td.fileName.toLocaleLowerCase();
 			const ruleDirectoryPath = rule.getDirectoryPath().toLocaleLowerCase();
 
-			if(openFilePath.includes(ruleDirectoryPath) && FileSystemHelper.isIncludeDirectoryInPath(openFilePath, "tests") ) {
+			if(openFilePath.includes(ruleDirectoryPath) && FileSystemHelper.isIncludeDirectoryInPath(openFilePath, RuleBaseItem.TESTS_DIRNAME) ) {
 				await td.save();
 			}
 		});

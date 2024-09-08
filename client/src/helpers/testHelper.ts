@@ -435,7 +435,7 @@ export class TestHelper {
 			}
 			catch (error) {
 				// Если не удалось отформатировать, пропускаем и пишем в лог.
-				Log.error(error, `Не удалось отформатировать событие ${compressedEvent}`, );
+				Log.error(error, `Не удалось отформатировать событие ${compressedEvent}`);
 				continue;
 			}
 		}

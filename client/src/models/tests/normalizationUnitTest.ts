@@ -7,6 +7,7 @@ import { FileSystemHelper } from '../../helpers/fileSystemHelper';
 import { Normalization } from '../content/normalization';
 import { XpException } from '../xpException';
 import { Log } from '../../extension';
+import { RuleBaseItem } from '../content/ruleBaseItem';
 
 export class NormalizationUnitTest extends BaseUnitTest {
 	public getDefaultExpectation(): string {
@@ -20,7 +21,7 @@ export class NormalizationUnitTest extends BaseUnitTest {
 	public static parseFromRuleDirectory(rule: Normalization) : NormalizationUnitTest [] {
 		
 		const ruleDirectoryFullPath = rule.getDirectoryPath();
-		const testsFullPath = path.join(ruleDirectoryFullPath, "tests");
+		const testsFullPath = path.join(ruleDirectoryFullPath, RuleBaseItem.TESTS_DIRNAME);
 		if (!fs.existsSync(testsFullPath)){
 			return [];
 		}
@@ -29,7 +30,7 @@ export class NormalizationUnitTest extends BaseUnitTest {
 			.filter(f => f.endsWith(".js"))
 			.filter(f => fs.existsSync(f))
 			.map((f, _) => {
-				const expectedNormalizedEvent = fs.readFileSync(f, "utf8");
+				const expectedNormalizedEvent = FileSystemHelper.readContentFileSync(f);
 				const regex = /norm_(\d+)\.js/.exec(f);
 				if (regex && regex.length > 0) {
 					const index = parseInt(regex[1]);
@@ -85,7 +86,7 @@ export class NormalizationUnitTest extends BaseUnitTest {
 
 	public static createFromExistFile(rule : Normalization) : NormalizationUnitTest {
 		const baseDirFullPath = rule.getDirectoryPath();
-		const testsFullPath = path.join(baseDirFullPath, "tests");
+		const testsFullPath = path.join(baseDirFullPath, RuleBaseItem.TESTS_DIRNAME);
 
 		for(let testNumber = 1; testNumber < NormalizationUnitTest.MaxTestIndex; testNumber++) {
 			const testFullPath = path.join(testsFullPath, `norm_${testNumber}.js`);

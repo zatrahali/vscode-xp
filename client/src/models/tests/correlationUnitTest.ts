@@ -9,6 +9,7 @@ import { Correlation } from '../content/correlation';
 import { XpException } from '../xpException';
 import { Enrichment } from '../content/enrichment';
 import { TestHelper } from '../../helpers/testHelper';
+import { StringHelper } from '../../helpers/stringHelper';
 
 export class CorrelationUnitTest extends BaseUnitTest {
 
@@ -47,37 +48,38 @@ export class CorrelationUnitTest extends BaseUnitTest {
 		if (!fs.existsSync(filePath)){
 			throw new XpException(`Невозможно создать тест. Файла ${filePath} нет на диске`);
 		}		
-		const testFileContent = fs.readFileSync(filePath, "utf8");
+		const testFileContent = FileSystemHelper.readContentFileSync(filePath);
 		const unitTest = rule.createNewUnitTest();
 		
-		let inputData = "";
+		const inputDataStrings : string[] = [];
 
 		const table_list_default =  /(?:^#.*$|\r?\n)*^table_list\s+default$/m.exec(testFileContent);
 		if (table_list_default && table_list_default.length === 1) {
-			inputData += '\n' + this.fixStrings(table_list_default[0]);
+			inputDataStrings.push(table_list_default[0].trim());
 		}
 
 		const table_list =  /(?:^#.*$|\r?\n)*^table_list\s+\{.*?\}$/m.exec(testFileContent);
 		if (table_list && table_list.length === 1) {
-			inputData += '\n' + this.fixStrings(table_list[0]);
+			inputDataStrings.push(table_list_default[0].trim());
 		}
 
 		let m: RegExpExecArray;
 		const event_pattern = /(?:^#.*?$|\s)*(?:^\{.*?\}$)/gm;
 		while((m = event_pattern.exec(testFileContent))) {
-			inputData += '\n' + this.fixStrings(m[0]);
+			inputDataStrings.push(m[0].trim());
 		}
 
-		if (inputData && inputData !== '') {
-			unitTest.setTestInputData(inputData.trim());
+		const inputDataResultString = inputDataStrings.join(BaseUnitTest.UNIT_TEST_NEWLINE_SYMBOL);
+		unitTest.setTestInputData(inputDataResultString);
+
+		// expected block 
+		let expectationData = testFileContent;
+		for(const ids of inputDataStrings) {
+			expectationData = StringHelper.safeReplace(expectationData, ids, "");
 		}
 
-		const pattern = /(?:^#.*$|\r?\n)*(?:^expect\s+(?:\d+|not)\s+\{.*?\}$)(?:\s*(?:^expect\s+(?:\d+|not)\s+\{.*?\}$))*/m;
-		const expectation = pattern.exec(testFileContent);
-		if(expectation && expectation.length === 1) {
-			const expectedCondition = expectation[0].replace(unitTest.getDefaultInputData(), '');
-			unitTest.setTestExpectation(this.fixStrings(expectedCondition));
-		}
+		expectationData = expectationData.trim();
+		unitTest.setTestExpectation(expectationData);
 
 		unitTest.command = { 
 			command: UnitTestContentEditorViewProvider.onTestSelectionChangeCommand,  
@@ -90,7 +92,7 @@ export class CorrelationUnitTest extends BaseUnitTest {
 
 	public static parseFromRuleDirectory(rule: Correlation | Enrichment) : CorrelationUnitTest [] {
 		const ruleDirectoryFullPath = rule.getDirectoryPath();
-		const testsFullPath = path.join(ruleDirectoryFullPath, "tests");
+		const testsFullPath = path.join(ruleDirectoryFullPath, RuleBaseItem.TESTS_DIRNAME);
 		if (!fs.existsSync(testsFullPath)){
 			return [];
 		}
@@ -113,7 +115,7 @@ export class CorrelationUnitTest extends BaseUnitTest {
 		const baseDirFullPath = rule.getDirectoryPath();
 		let testsFullPath : string;
 		if(baseDirFullPath) {
-			testsFullPath = path.join(baseDirFullPath, "tests");
+			testsFullPath = path.join(baseDirFullPath, RuleBaseItem.TESTS_DIRNAME);
 		}
 
 		for(let testNumber = 1; testNumber < CorrelationUnitTest.MAX_TEST_INDEX; testNumber++) {
@@ -147,10 +149,6 @@ export class CorrelationUnitTest extends BaseUnitTest {
 			throw new XpException("Для модульного теста не задан порядковый номер");
 		}
 
-		// if(!this.getTestExpectation()) {
-		// 	throw new XpException("Нельзя сохранять пустой тест");
-		// }
-
 		// Модульные тесты корреляций содержат условия и начальные данные в одном файле
 		const minifiedTestInput = this.getTestInputData();
 		this.setTestInputData(minifiedTestInput);
@@ -158,7 +156,7 @@ export class CorrelationUnitTest extends BaseUnitTest {
 		const minifiedTestExpectation = TestHelper.compressTestCode(this.getTestExpectation());
 		this.setTestExpectation(minifiedTestExpectation);
 
-		const fileContent = minifiedTestInput + '\n\n' + minifiedTestExpectation;
+		const fileContent = minifiedTestInput + BaseUnitTest.UNIT_TEST_NEWLINE_SYMBOL + BaseUnitTest.UNIT_TEST_NEWLINE_SYMBOL + minifiedTestExpectation;
 		const filePath = this.getTestExpectationPath();
 		
 		return fs.writeFileSync(filePath, fileContent, FileSystemHelper._fileEncoding);

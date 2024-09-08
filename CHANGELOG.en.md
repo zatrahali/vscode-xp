@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.19.2 (Pre-Release)
+
+- bug fix [#200](https://github.com/Security-Experts-Community/vscode-xp/issues/200) - saving unit tests with multiple expect blocks and comments.
+
+## 3.19.1 (Pre-Release)
+
+- the feature for updating integration tests when they change their files is temporarily disabled (special thanks @g4n8g).
+
 ## 3.19.0 (Pre-Release)
 
 - fixed the error of replacing the expected event actually in integration tests (special thanks @Bobyboba18, @GeorgeFloyd_Official).

@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import { TestFixture } from '../../helper';
 import { Enrichment } from '../../../models/content/enrichment';
+import { RuleBaseItem } from '../../../models/content/ruleBaseItem';
 
 suite('Модульный тест обогащения', () => {
 
@@ -19,7 +20,7 @@ suite('Модульный тест обогащения', () => {
 		const rule = await Enrichment.parseFromDirectory(rulePath);
 		const unitTest = rule.createNewUnitTest();
 
-		const expectTestPath = path.join(rulePath, "tests", "test_1.sc");
+		const expectTestPath = path.join(rulePath, RuleBaseItem.TESTS_DIRNAME, "test_1.sc");
 		const actualTestPath = unitTest.getTestExpectationPath();
 		assert.strictEqual(actualTestPath, expectTestPath);
 	});

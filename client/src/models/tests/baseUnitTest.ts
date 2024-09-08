@@ -35,7 +35,7 @@ export abstract class BaseUnitTest extends vscode.TreeItem {
 	}
 
 	public getTestsDirPath() : string {
-		return path.join(this.getRuleDirectoryPath(), "tests");
+		return path.join(this.getRuleDirectoryPath(), RuleBaseItem.TESTS_DIRNAME);
 	}
 
 	public abstract getTestExpectationPath() : string;
@@ -47,11 +47,11 @@ export abstract class BaseUnitTest extends vscode.TreeItem {
 	}
 
 	public setTestExpectation(testExpectation: string): void {
-		this._testExpectation = testExpectation;
+		this.testExpectation = testExpectation;
 	}
 
 	public getTestExpectation() : string {
-		return this._testExpectation;
+		return this.testExpectation;
 	}
 
 	public getActualData() : string {
@@ -116,11 +116,13 @@ export abstract class BaseUnitTest extends vscode.TreeItem {
 		return this._rule;
 	}
 
+	public static UNIT_TEST_NEWLINE_SYMBOL = '\n';
+
 	protected _rule : RuleBaseItem;
 
 	private _number: number;
 
-	private _testExpectation : string;
+	private testExpectation : string;
 	private _actualEvent : string;
 
 	private _inputData : string;

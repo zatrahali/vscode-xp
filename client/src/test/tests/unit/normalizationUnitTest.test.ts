@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import { TestFixture } from '../../helper';
 import { Normalization } from '../../../models/content/normalization';
+import { RuleBaseItem } from '../../../models/content/ruleBaseItem';
 
 suite('Модульный тест нормализации', () => {
 
@@ -19,7 +20,7 @@ suite('Модульный тест нормализации', () => {
 		const rule = await Normalization.parseFromDirectory(rulePath);
 		const unitTest = rule.createNewUnitTest();
 
-		const expectTestPath = path.join(rulePath, "tests", "norm_1.js");
+		const expectTestPath = path.join(rulePath, RuleBaseItem.TESTS_DIRNAME, "norm_1.js");
 		const actualTestPath = unitTest.getTestExpectationPath();
 		assert.strictEqual(actualTestPath, expectTestPath);
 	});

@@ -201,7 +201,7 @@ export class UnitTestContentEditorViewProvider extends WebViewProviderBase {
       }
 
       default: {
-        DialogHelper.showError("Переданная команда не поддерживается");
+        DialogHelper.showError("The transmitted command is not supported");
       }
     }
   }

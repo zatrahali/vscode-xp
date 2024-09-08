@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.19.2 (Pre-Release)
+
+- исправление ошибки [#200](https://github.com/Security-Experts-Community/vscode-xp/issues/200) - сохранение модульных тестов с несколькими блоками expect и комментариями.
+
 ## 3.19.1 (Pre-Release)
 
 - временно отключена фича по обновлению интеграционных тестов при их изменении их файлов (special thanks @g4n8g).
