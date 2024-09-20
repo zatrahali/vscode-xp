@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.19.3 (Pre-Release)
+
+- исправлена ошибка парсинга модульных тестов (special thanks @Bobyboba18).
+
 ## 3.19.2 (Pre-Release)
 
 - исправление ошибки [#200](https://github.com/Security-Experts-Community/vscode-xp/issues/200) - сохранение модульных тестов с несколькими блоками expect и комментариями.

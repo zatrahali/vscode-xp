@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.19.3 (Pre-Release)
+
+- fixed a unit test parsing bug (special thanks @Bobyboba18).
+
 ## 3.19.2 (Pre-Release)
 
 - bug fix [#200](https://github.com/Security-Experts-Community/vscode-xp/issues/200) - saving unit tests with multiple expect blocks and comments.

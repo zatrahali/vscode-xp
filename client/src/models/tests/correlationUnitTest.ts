@@ -60,7 +60,7 @@ export class CorrelationUnitTest extends BaseUnitTest {
 
 		const table_list =  /(?:^#.*$|\r?\n)*^table_list\s+\{.*?\}$/m.exec(testFileContent);
 		if (table_list && table_list.length === 1) {
-			inputDataStrings.push(table_list_default[0].trim());
+			inputDataStrings.push(table_list[0].trim());
 		}
 
 		let m: RegExpExecArray;
@@ -97,18 +97,23 @@ export class CorrelationUnitTest extends BaseUnitTest {
 			return [];
 		}
 
-		const tests = fs.readdirSync(testsFullPath)
-			.map(f => path.join(testsFullPath, f))
-			.filter(f => f.endsWith(".sc"))
-			.filter(f => fs.existsSync(f))
-			.map((f, _) => {
-				return CorrelationUnitTest.readFromFile(f, rule);
-			})
-			.filter((t): t is CorrelationUnitTest => !!t)
-			// Сортируем тесты, ибо в противном случае сначала будет 1, потом 10 и т.д.
-			.sort((a, b) => a.getNumber() - b.getNumber());
+		try {
+			const tests = fs.readdirSync(testsFullPath)
+				.map(f => path.join(testsFullPath, f))
+				.filter(f => f.endsWith(".sc"))
+				.filter(f => fs.existsSync(f))
+				.map((f, _) => {
+					return CorrelationUnitTest.readFromFile(f, rule);
+				})
+				.filter((t): t is CorrelationUnitTest => !!t)
+				// Сортируем тесты, ибо в противном случае сначала будет 1, потом 10 и т.д.
+				.sort((a, b) => a.getNumber() - b.getNumber());
 
-		return tests;
+			return tests;
+		}
+		catch (error) {
+			throw new XpException("Error parsing unit tests rules", error);
+		}
 	}
 
 	public static create(rule: RuleBaseItem) : CorrelationUnitTest {
