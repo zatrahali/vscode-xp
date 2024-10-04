@@ -565,7 +565,7 @@ export class Configuration {
 	}
 
 	public getRandTmpSubDirectoryPath(rootFolder?: string) : string {
-		return path.join(this.getTmpDirectoryPath(rootFolder), Guid.create().toString());
+		return path.join(this.getOutputDirectoryPath(rootFolder), Guid.create().toString());
 	}
 
 	public getSiemSdkDirectoryPath() : string {

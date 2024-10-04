@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.19.4 (Pre-Release)
+
+- fixed a bug when running integration tests for rules with long names (special thanks @iatrofimenko).
+
 ## 3.19.3 (Pre-Release)
 
 - fixed a unit test parsing bug (special thanks @Bobyboba18).

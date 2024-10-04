@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.19.4 (Pre-Release)
+
+- исправлена ошибка при запуске интеграционных тестов для правил с длинными названиями (special thanks @iatrofimenko).
+
 ## 3.19.3 (Pre-Release)
 
 - исправлена ошибка парсинга модульных тестов (special thanks @Bobyboba18).

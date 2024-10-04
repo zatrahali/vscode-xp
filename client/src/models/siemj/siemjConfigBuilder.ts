@@ -57,7 +57,7 @@ ptsiem_sdk=${this.config.getSiemSdkDirectoryPath()}
 build_tools=${this.config.getBuildToolsDirectoryFullPath()}
 taxonomy=${this.config.getTaxonomyFullPath()}
 output_folder=${this.outputFolder}
-temp=${this.config.getTmpDirectoryPath(this.contentRootFolder)}`;
+temp=${this.config.getOutputDirectoryPath(this.contentRootFolder)}`;
 	}
 
 	/**
