@@ -2,7 +2,8 @@
 
 ## 3.19.4 (Pre-Release)
 
-- fixed a bug when running integration tests for rules with long names (special thanks @iatrofimenko).
+- fixed a bug when running integration tests for rules with long names (special thanks @iatrofimenko);
+- added automatic addition and help for the new **(version 27.1 and above)** functions `copy_fields`, `check_bit_mask`, `get_bit` and the extension of the `regex` function.
 
 ## 3.19.3 (Pre-Release)
 

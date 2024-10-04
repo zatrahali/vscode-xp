@@ -1164,7 +1164,7 @@
 	},
 	{
 		"name" : "count",
-		"signature" : "Number count()",
+		"signature" : "Number count($1)",
 		"description": "The **count** function returns the number of elements in the results of a table list query. Used only in the qhandler statement.",
 		"params": [
 		"$1 - column name",
@@ -1188,5 +1188,95 @@
 			"$count = $get_value[\"$get_count\"]",
 			"# count = 2"
 		]
-	}
+	},
+	{
+		"name" : "copy_fields",
+		"signature" : "copy_fields(<dst_fields_prefix>, <src_fields_prefix>)",
+		"description": "The **copy_fields** function (*available from version 27.1*) copies values from a group of event schema fields with the common prefix <src_fields_prefix> in the name, to a group of fields with the common prefix <dst_fields_prefix>. Copying will be performed only for fields that have the same part of the name minus the prefix in both groups, as well as the same field type. It is allowed to use _on_, _emit_ and _init_ instructions in the operator block.",
+			"params": [
+		"<dst_fields_prefix> is the prefix of the group of target fields where values are copied. The prefix of the target group of fields must start with $",
+					"<src_fields_prefix> is the prefix of the group of source fields from which values are copied"
+		],
+				"examples" : [
+					"# $src.host = src.host",
+					"# $src.fqdn = src.fqdn",
+					"# $src.hostname = src.hostname",
+					"# $src.ip = src.ip",
+					"# $src.port = src.port",
+					"# $src.asset = src.asset",
+					"copy_fields($src, src)",
+					"",
+					"# $event_src.host = event_src.host",
+					"# $event_src.fqdn = event_src.fqdn",
+					"# $event_src.hostname = event_src.hostname",
+					"# $event_src.ip = event_src.ip",
+					"# $event_src.asset = event_src.asset",
+					"# $event_src.vendor = event_src.vendor",
+					"# $event_src.title = event_src.title",
+					"# $event_src.subsys = event_src.subsys",
+					"# $event_src.category = event_src.category",
+					"# $event_src.rule = event_src.rule",
+					"copy_fields($event_src, event_src)",
+					"",
+					"# $subject.account.domain = object.account.domain",
+					"# $subject.account.fullname = object.account.fullname",
+					"# $subject.account.name = object.account.name",
+					"# $subject.account.id = object.account.id",
+					"copy_fields($subject.account, object.account)"
+				]
+			},
+			{
+				"name" : "check_bit_mask",
+				"signature" : "Bool check_bit_mask(Number value, Number bit_mask)",
+		"description": "The **check_bit_mask** function (*available from version 27.1*) checks whether the bitmask _bit_mask_ is applicable for the number _value_, to solve the problems of checking the presence of several bits at once",
+				"params": [
+		"_value_ is a number for checking the bitmask",
+		"_bit_mask_ is a bitmask in the form of a number",
+					"Returns the result of checking the bitmask as a Bool type"
+		],
+				"examples" : [
+					"# datafield5 = \"0x6\" 110",
+					"$result = check_bit_mask(number16(datafield5), number16(\"0x2\")) # 010",
+					"# $result = true"
+				]
+			},
+			{
+				"name" : "get_bit",
+				"signature" : "Bool get_bit(Number value, Number bit_number)",
+				"description": "The **get_bit** function (*available from version 27.1*) gets the value of the bit number _bit_number_ [LBs](https://en.wikipedia.org/wiki/Bit_numbering) for the number _value_) (true == 1, false== 0)",
+				"params": [
+					"_value_ is the number for checking the bitmask",
+		"_bit_number_ is the bit number in the [LBs format](https://en.wikipedia.org/wiki/Bit_numbering)",
+		"Returns the result of checking the mask bit as a Bool type (true - bit is set, false - bit is reset)"
+		],
+				"examples" : [
+					"$var3 = 6 # 110",
+					"$datafield7 = get_bit($var3, 0)",
+					"# $datafield7 = false",
+					"$datafield8 = get_bit($var3, 1)",
+					"# $datafield8 = true",
+					"$datafield9 = get_bit($var3, 2)",
+					"# $datafield9 = true"
+				]
+			},
+			{
+				"name" : "regex",
+				"signature" : "Optional[Dictionary] regex(String value, String regex_pattern)",
+		"description": "The **regex** function (*available from version 27.1*) is used to search in a string according to a given [pattern](https://github.com/google/re2/wiki/Syntax) and returns all named groups of the regular expression template in as a dictionary in the format _{\"group1\": \"value1\", \"group2\": \"value2\"}_.",
+		"params": [
+		"_value_ - string to search for",
+		"_regex_pattern_ - template to search for (classes with the symbol \\\\a \\\\v \\\\r \\\\n \\\\t \\\\f \\\\b must have two escape characters)",
+					"Parentheses are used to combine template characters into a group. The function returns a string containing the first found sequence of characters that matches the pattern. If a non-zero number of the template character group is specified, the function returns the part of the string corresponding to this group in the template.",
+		"If any of the arguments are not specified or a matching sequence of characters is not found, the function returns null.",
+		" Returns a dictionary with the values of named groups of the regular expression template, or null if no match is found."
+				],
+				"examples" : [
+					"$var3 = \"Text: some random text. Numbers: 123. That's all.\"",
+					"$m = regex($var3, \"Text:\\s(?P<text>.+?)\\.\\sNumbers:\\s(?P<numbers>\\d+).*\")",
+					"$datafield10 = $m[\"text\"]",
+					"# $datafield10 = \"some random text\"",
+					"$numfield1 = number($m[\"numbers\"])",
+					"# $numfield1 = 123"
+				]
+			}
 ]
