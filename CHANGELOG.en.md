@@ -1,5 +1,12 @@
 # Change Log
 
+## 9.19.5 (Pre-Release)
+- Fixed the behavior of the default TL values editor: fields are correctly validated when the focus is removed, the Update file button saves the file correctly;
+- Fixed saving the table list schema, the fields are sorted in the correct order: first "name", then "type", then the rest of the fields (special thanks @paran0id_34);
+- Fixed the use cases field: added long line wrapping, the ability to insert line break by pressing Enter is added;
+- The size of the extension has been reduced: unnecessary source files and folders have been removed from the packed extension;
+- Added new event sources in the meta information editor (special thanks @paran0id_34).
+
 ## 3.19.4 (Pre-Release)
 
 - fixed a bug when running integration tests for rules with long names (special thanks @iatrofimenko);
