@@ -1,6 +1,12 @@
 # Change Log
 
+## 3.19.6 (Pre-Release)
+
+- Added snippets for enrichments and manipulation of tabular lists (special thanks @g4n8g)
+- Updated template for creating correlation based on powershell events (special thanks @Bobyboba18)
+
 ## 3.19.5 (Pre-Release)
+
 - Fixed the behavior of the default TL values editor: fields are correctly validated when the focus is removed, the Update file button saves the file correctly;
 - Fixed saving the table list schema, the fields are sorted in the correct order: first "name", then "type", then the rest of the fields (special thanks @paran0id_34);
 - Fixed the use cases field: added long line wrapping, the ability to insert line break by pressing Enter is added;
