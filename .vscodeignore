@@ -16,6 +16,7 @@
 !syntaxes/**
 !tools/**
 !l10n/**
+!content_templates/**
 
 !client/out/**/*.js
 !server/out/**/*.js

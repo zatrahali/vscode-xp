@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.19.7 (Pre-Release)
+
+- Fixed bug with missing template folder for creating new rules
+
 ## 3.19.6 (Pre-Release)
 
 - Added snippets for enrichments and manipulation of tabular lists (special thanks @g4n8g)
