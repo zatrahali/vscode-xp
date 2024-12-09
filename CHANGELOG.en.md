@@ -1,5 +1,16 @@
 # Change Log
 
+## 3.20.0 (Release)
+
+- Started migration of webviews to React SPA
+- The tabular list editor has been rewritten in React. It was merged with the default registry values editor.
+- The unit test editor has been updated, the Codemirror editor has been replaced with Monaco, and custom syntax highlighting has been configured
+- Added localizations (ru, en) for tabular list editors and unit tests webviews
+- Moved from @vscode/webview-ui-toolkit to custom UIKit components, fixed a set of icons (cod icons).
+- The latest versions of linter (ESLint 9) and formatter (more beautiful) have been added and configured.
+- Fixed the launch of the retrocorrelation view
+- Fixed replacement of expected and actual events in the integration test editor
+
 ## 3.19.7 (Pre-Release)
 
 - Fixed bug with missing template folder for creating new rules
