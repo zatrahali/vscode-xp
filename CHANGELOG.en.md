@@ -1,5 +1,14 @@
 # Change Log
 
+## 3.20.1 (Release)
+
+- Rewrote Metainfo editor in React
+- Added default author setting (default author name is automatically added to knowledge holders list every time Metainfo editor is saved)
+- Added info (name, description, link, etc.) for every MITRE technique
+- Added dependencies tab with the ability to navigate to each file
+- Fixed YAML formatting (special thanks @sanguis_meus)
+- Fixed bruteforce correlation rule template (special thanks @pantos05)
+
 ## 3.20.0 (Release)
 
 - Started migration of webviews to React SPA
