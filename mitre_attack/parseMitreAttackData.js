@@ -52,7 +52,11 @@ function extractTacticsAndTechniques(dataFilePaths) {
   };
 }
 
+parsedData = path.join(__dirname, 'data', 'parsed');
+
+fs.mkdirSync(parsedData, { recursive: true });
+
 fs.writeFileSync(
-  path.join(__dirname, 'data', 'parsed', 'attack.json'),
+  path.join(parsedData, 'attack.json'),
   JSON.stringify(extractTacticsAndTechniques(dataFilePaths))
 );
