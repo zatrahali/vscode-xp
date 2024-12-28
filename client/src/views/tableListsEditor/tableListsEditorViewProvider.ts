@@ -34,7 +34,6 @@ export class TableListsEditorViewProvider extends WebViewProviderBase {
       vscode.commands.registerCommand(
         TableListsEditorViewProvider.createTableList,
         async (parentItem: ContentFolder) => {
-          console.log('Create Table List for', parentItem);
           return provider.createTableList(parentItem);
         }
       )
@@ -81,7 +80,10 @@ export class TableListsEditorViewProvider extends WebViewProviderBase {
       TableListsEditorViewProvider.viewId,
       title,
       vscode.ViewColumn.One,
-      { retainContextWhenHidden: true }
+      {
+        retainContextWhenHidden: true,
+        enableFindWidget: true
+      }
     );
 
     this._view.webview.options = {
@@ -105,9 +107,9 @@ export class TableListsEditorViewProvider extends WebViewProviderBase {
       DateTime: getTranslation('DateTime'),
       Regex: getTranslation('Regex'),
       EditorTitle: getTranslation('View.TableList.EditorTitle'),
-      General: getTranslation('View.TableList.General'),
-      Columns: getTranslation('View.TableList.Columns'),
-      DefaultValues: getTranslation('View.TableList.DefaultValues'),
+      GeneralTab: getTranslation('View.TableList.GeneralTab'),
+      ColumnsTab: getTranslation('View.TableList.ColumnsTab'),
+      DefaultValuesTab: getTranslation('View.TableList.DefaultValuesTab'),
       DataType: getTranslation('View.TableList.DataType'),
       PrimaryKey: getTranslation('View.TableList.PrimaryKey'),
       Indexed: getTranslation('View.TableList.Indexed'),
