@@ -54,6 +54,22 @@
 	"xp.xpConfig.origin.idDescription": "Vendor GUID (global unique identifier)",
 
 	"xp.xpConfig.logLevelDescription": "Log level",
-	"xp.xpConfig.defaultAuthor": "Default author name"
+	"xp.xpConfig.defaultAuthor": "Default author name",
+
+	"xp.i18nAi.generateLocalization": "Generate Localization (AI)",
+	"xp.i18nAi.previewLocalization": "Preview AI Localization (diff)",
+	"xp.i18nAi.validateLocalizationIds": "Validate LocalizationId Alignment",
+	"xp.i18nAi.setApiKey": "Set i18n AI API Key",
+
+	"xp.xpConfig.i18nAi.openaiBaseUrl": "OpenAI-compatible API base URL for i18n AI",
+	"xp.xpConfig.i18nAi.model": "Chat model for i18n AI",
+	"xp.xpConfig.i18nAi.temperature": "Sampling temperature for i18n AI",
+	"xp.xpConfig.i18nAi.lang": "Which i18n YAML files to update (merge): ru, en, or both",
+	"xp.xpConfig.i18nAi.fetchReferences": "Whether to fetch ExpertContext.References URLs before generation",
+	"xp.xpConfig.i18nAi.referenceFetchTimeoutMs": "Per-URL timeout for reference fetch (ms)",
+	"xp.xpConfig.i18nAi.referenceMaxSources": "Max reference URLs to fetch",
+	"xp.xpConfig.i18nAi.referenceMaxCharsPerSource": "Max characters per fetched reference page",
+	"xp.xpConfig.i18nAi.logLevel": "Log level for i18n AI output channel",
+	"xp.xpConfig.i18nAi.showOutputOnError": "Show i18n AI output channel when an error occurs"
 }
 

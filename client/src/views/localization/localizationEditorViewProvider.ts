@@ -15,6 +15,9 @@ import { ContentHelper } from '../../helpers/contentHelper';
 import { CheckLocalizationCommand } from './checkLocalizationsCommand';
 import { CommandHelper } from '../../helpers/commandHelper';
 import { TestHelper } from '../../helpers/testHelper';
+import { applyI18nPayloadToRule } from './i18nPayloadMapper';
+import { I18nAiService, ruleDirectorySupportsI18nCore } from './i18nAiService';
+import { logI18nAi } from './i18nAiOutput';
 
 export class LocalizationEditorViewProvider {
   public static readonly viewId = 'LocalizationView';
@@ -185,8 +188,14 @@ export class LocalizationEditorViewProvider {
       IsTestedLocalizationsRule: TestHelper.isTestedLocalizationsRule(this.rule),
       DefaultLocalizationCriteria: await ContentHelper.getDefaultLocalizationCriteria(this.rule),
 
+      IsI18nAiRule:
+        (this.rule.contextValue === 'Correlation' ||
+          this.rule.contextValue === 'Normalization') &&
+        ruleDirectorySupportsI18nCore(this.rule.getDirectoryPath()),
+
       Locale: {
         CheckLocalizations: this.config.getMessage('View.Localization.CheckLocalizations'),
+        GenerateAi: this.config.getMessage('View.Localization.GenerateAi'),
         Description: this.config.getMessage('View.Localization.Description'),
         LocalizationCriteria: this.config.getMessage('View.Localization.LocalizationCriteria'),
         Criteria: this.config.getMessage('View.Localization.Criteria'),
@@ -205,6 +214,41 @@ export class LocalizationEditorViewProvider {
 
   async receiveMessageFromWebView(message: any): Promise<void> {
     switch (message.command) {
+      case 'generateAiLocalization': {
+        try {
+          const service = new I18nAiService(this.config);
+          await vscode.window.withProgress(
+            {
+              location: vscode.ProgressLocation.Notification,
+              title: 'i18n AI: generating localization…',
+              cancellable: true
+            },
+            async (_progress, token) => {
+              const ac = new AbortController();
+              const sub = token.onCancellationRequested(() => ac.abort());
+              try {
+                const payload = await service.generatePayloadForRule(this.rule, {
+                  signal: ac.signal,
+                  onReferenceResearchNote: (msg) => logI18nAi('info', msg)
+                });
+                applyI18nPayloadToRule(this.rule, payload);
+                await this.updateView();
+                vscode.window.showInformationMessage(
+                  this.config.getMessage('View.Localization.GenerateAiDone')
+                );
+              } finally {
+                sub.dispose();
+              }
+            }
+          );
+        } catch (error) {
+          const msg = error instanceof Error ? error.message : String(error);
+          logI18nAi('error', msg);
+          ExceptionHelper.show(error, 'i18n AI: generation failed');
+        }
+        break;
+      }
+
       case 'buildLocalizations': {
         const command = new CheckLocalizationCommand(this, {
           config: this.config,

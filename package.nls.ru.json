@@ -54,6 +54,22 @@
 	"xp.xpConfig.origin.idDescription": "GUID поставщика (глобальный уникальный идентификатор)",
 
 	"xp.xpConfig.logLevelDescription": "Уровень журналирования",
-	"xp.xpConfig.defaultAuthor": "Имя автора по умолчанию"
+	"xp.xpConfig.defaultAuthor": "Имя автора по умолчанию",
+
+	"xp.i18nAi.generateLocalization": "Сгенерировать локализацию (ИИ)",
+	"xp.i18nAi.previewLocalization": "Предпросмотр локализации ИИ (diff)",
+	"xp.i18nAi.validateLocalizationIds": "Проверить выравнивание LocalizationId",
+	"xp.i18nAi.setApiKey": "Задать API-ключ для локализации ИИ",
+
+	"xp.xpConfig.i18nAi.openaiBaseUrl": "Базовый URL OpenAI-совместимого API для локализации ИИ",
+	"xp.xpConfig.i18nAi.model": "Модель чата для локализации ИИ",
+	"xp.xpConfig.i18nAi.temperature": "Температура выборки для локализации ИИ",
+	"xp.xpConfig.i18nAi.lang": "Какие i18n YAML обновлять при слиянии: ru, en или оба",
+	"xp.xpConfig.i18nAi.fetchReferences": "Загружать ли URL из ExpertContext.References перед генерацией",
+	"xp.xpConfig.i18nAi.referenceFetchTimeoutMs": "Таймаут загрузки одной ссылки (мс)",
+	"xp.xpConfig.i18nAi.referenceMaxSources": "Максимум ссылок для загрузки",
+	"xp.xpConfig.i18nAi.referenceMaxCharsPerSource": "Максимум символов на страницу-источник",
+	"xp.xpConfig.i18nAi.logLevel": "Уровень журнала канала вывода локализации ИИ",
+	"xp.xpConfig.i18nAi.showOutputOnError": "Показывать канал вывода локализации ИИ при ошибке"
 }
 

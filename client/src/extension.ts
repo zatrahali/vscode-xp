@@ -36,6 +36,7 @@ import { RetroCorrelationViewController } from './views/retroCorrelation/retroCo
 import { XpHoverProvider } from './providers/xpHoverProvider';
 import { UserSettingsManager as UserSettingsManager } from './models/content/userSettingsManager';
 import { LocalizationEditorViewProvider } from './views/localization/localizationEditorViewProvider';
+import { initI18nAiCommands } from './views/localization/i18nAiCommands';
 import { CommonCommands } from './models/command/commonCommands';
 import { ToolsManager } from './models/content/toolsManager';
 import { SetKBTVersionCommand } from './models/siemj/setKBTVersionCommand';
@@ -120,6 +121,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
     ContentTreeProvider.init(config, rootPath);
     LocalizationEditorViewProvider.init(config);
+    initI18nAiCommands(config);
     UnitTestContentEditorViewProvider.init(config);
     IntegrationTestEditorViewProvider.init(config);
     MetainfoViewProvider.init(config);
@@ -133,6 +135,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
     InitKBRootCommand.init(config);
     RetroCorrelationViewController.init(config);
     CommonCommands.init(config);
+
+    config.setSIEMJVersion();
 
     siemCustomPackingTaskProvider = vscode.tasks.registerTaskProvider(
       XPPackingTaskProvider.Type,

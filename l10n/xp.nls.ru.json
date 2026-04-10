@@ -193,6 +193,8 @@
     "View.Localization.Title": "Локализация {0}",
     "View.Localization.Description": "Описание правила",
     "View.Localization.CheckLocalizations": "Проверить локализацию",
+    "View.Localization.GenerateAi": "Сгенерировать (ИИ)",
+    "View.Localization.GenerateAiDone": "ИИ: поля обновлены. Проверьте и нажмите Сохранить.",
     "View.Localization.LocalizationExamples": "Результат проверки",
     "View.Localization.LocalizationCriteria": "Условия для локализации",
     "View.Localization.Criteria": "Условие",

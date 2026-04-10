@@ -5,7 +5,7 @@
   "author": "Dmitry Fedosov (@DmitryOffsec)",
   "icon": "resources/xp.png",
   "license": "MIT",
-  "version": "3.21.2",
+  "version": "3.21.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/Security-Experts-Community/vscode-xp"
@@ -312,6 +312,21 @@
           "group": "Correlation@4"
         },
         {
+          "command": "i18nAi.generateLocalization",
+          "when": "view == KnowledgebaseTree && viewItem == Correlation",
+          "group": "Correlation@5"
+        },
+        {
+          "command": "i18nAi.previewLocalization",
+          "when": "view == KnowledgebaseTree && viewItem == Correlation",
+          "group": "Correlation@6"
+        },
+        {
+          "command": "i18nAi.validateLocalizationIds",
+          "when": "view == KnowledgebaseTree && viewItem == Correlation",
+          "group": "Correlation@7"
+        },
+        {
           "command": "IntegrationTestEditorView.showEditor",
           "when": "view == KnowledgebaseTree && viewItem == Aggregation",
           "group": "Aggregation@1"
@@ -330,6 +345,21 @@
           "command": "LocalizationView.showLocalizationEditor",
           "when": "view == KnowledgebaseTree && viewItem == Normalization",
           "group": "Normalization@2"
+        },
+        {
+          "command": "i18nAi.generateLocalization",
+          "when": "view == KnowledgebaseTree && viewItem == Normalization",
+          "group": "Normalization@3"
+        },
+        {
+          "command": "i18nAi.previewLocalization",
+          "when": "view == KnowledgebaseTree && viewItem == Normalization",
+          "group": "Normalization@4"
+        },
+        {
+          "command": "i18nAi.validateLocalizationIds",
+          "when": "view == KnowledgebaseTree && viewItem == Normalization",
+          "group": "Normalization@5"
         },
         {
           "command": "IntegrationTestEditorView.showEditor",
@@ -614,6 +644,26 @@
         "command": "xp.contentTree.verifyFolder",
         "title": "%xp.views.knowledgebaseTree.verifyFolderCommand%",
         "category": "%xp.commonCommandCategory%"
+      },
+      {
+        "command": "i18nAi.generateLocalization",
+        "title": "%xp.i18nAi.generateLocalization%",
+        "category": "%xp.commonCommandCategory%"
+      },
+      {
+        "command": "i18nAi.previewLocalization",
+        "title": "%xp.i18nAi.previewLocalization%",
+        "category": "%xp.commonCommandCategory%"
+      },
+      {
+        "command": "i18nAi.validateLocalizationIds",
+        "title": "%xp.i18nAi.validateLocalizationIds%",
+        "category": "%xp.commonCommandCategory%"
+      },
+      {
+        "command": "i18nAi.setApiKey",
+        "title": "%xp.i18nAi.setApiKey%",
+        "category": "%xp.commonCommandCategory%"
       }
     ],
     "keybindings": [
@@ -656,11 +706,11 @@
           "type": "string",
           "markdownDescription": "%xp.xpConfig.outputDirectoryPathDescription%"
         },
-				"xpConfig.lspServerExecutablePath": {
-					"type": "string",
-					"default": "",
-					"description": "%xp.xpConfig.lspServerExecutablePathDescription%"
-				},
+        "xpConfig.lspServerExecutablePath": {
+          "type": "string",
+          "default": "",
+          "description": "%xp.xpConfig.lspServerExecutablePathDescription%"
+        },
         "xpConfig.correlatorTimeout": {
           "scope": "window",
           "type": "integer",
@@ -732,6 +782,82 @@
           ],
           "default": "off",
           "description": "Трассировка коммуникации между VS Code и LSP"
+        },
+        "xpConfig.i18nAi.openaiBaseUrl": {
+          "scope": "window",
+          "type": "string",
+          "default": "https://api.openai.com/v1",
+          "description": "%xp.xpConfig.i18nAi.openaiBaseUrl%"
+        },
+        "xpConfig.i18nAi.model": {
+          "scope": "window",
+          "type": "string",
+          "default": "gpt-4o",
+          "description": "%xp.xpConfig.i18nAi.model%"
+        },
+        "xpConfig.i18nAi.temperature": {
+          "scope": "window",
+          "type": "number",
+          "default": 0.2,
+          "description": "%xp.xpConfig.i18nAi.temperature%"
+        },
+        "xpConfig.i18nAi.lang": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "ru",
+            "en",
+            "both"
+          ],
+          "default": "both",
+          "description": "%xp.xpConfig.i18nAi.lang%"
+        },
+        "xpConfig.i18nAi.fetchReferences": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "auto",
+            "required"
+          ],
+          "default": "auto",
+          "description": "%xp.xpConfig.i18nAi.fetchReferences%"
+        },
+        "xpConfig.i18nAi.referenceFetchTimeoutMs": {
+          "scope": "window",
+          "type": "number",
+          "default": 10000,
+          "description": "%xp.xpConfig.i18nAi.referenceFetchTimeoutMs%"
+        },
+        "xpConfig.i18nAi.referenceMaxSources": {
+          "scope": "window",
+          "type": "number",
+          "default": 5,
+          "description": "%xp.xpConfig.i18nAi.referenceMaxSources%"
+        },
+        "xpConfig.i18nAi.referenceMaxCharsPerSource": {
+          "scope": "window",
+          "type": "number",
+          "default": 12000,
+          "description": "%xp.xpConfig.i18nAi.referenceMaxCharsPerSource%"
+        },
+        "xpConfig.i18nAi.logLevel": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "error",
+            "warn",
+            "info",
+            "debug"
+          ],
+          "default": "info",
+          "description": "%xp.xpConfig.i18nAi.logLevel%"
+        },
+        "xpConfig.i18nAi.showOutputOnError": {
+          "scope": "window",
+          "type": "boolean",
+          "default": true,
+          "description": "%xp.xpConfig.i18nAi.showOutputOnError%"
         }
       }
     }
@@ -790,6 +916,7 @@
     "mustache": "4.1.0",
     "util": "^0.12.4",
     "uuid": "^8.3.2",
-    "xml2json-light": "^1.0.6"
+    "xml2json-light": "^1.0.6",
+    "zod": "^3.25.76"
   }
 }

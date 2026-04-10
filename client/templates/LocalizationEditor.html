@@ -18,6 +18,11 @@
 	<body>
 		
 		<div id="header" class="header__localization">
+			{{#IsI18nAiRule}}
+			<div id="navigation-ai">
+				<input id="generate_ai_loc" class="run" type="button" value="&#9889; {{Locale.GenerateAi}}">
+			</div>
+			{{/IsI18nAiRule}}
 			{{#IsTestedLocalizationsRule}}
 			<div id="navigation">
 				<input id="build_loc"  class="run" type="button" value="&#9654;   {{Locale.CheckLocalizations}}  ">
@@ -142,6 +147,15 @@
 					'EnLocalizations' : enlocalizations,
 					'LocalizationIds' : localizationIds
 				}
+			}
+
+			const generateAiButton = document.getElementById("generate_ai_loc");
+			if (generateAiButton) {
+				generateAiButton.addEventListener("click", function () {
+					vscode.postMessage({
+						command: 'generateAiLocalization'
+					});
+				});
 			}
 
 			// Нажатие на кнопку проверки локализаций.

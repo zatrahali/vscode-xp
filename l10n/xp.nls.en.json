@@ -193,6 +193,8 @@
     "View.Localization.Title": "Localization for {0}",
     "View.Localization.Description": "Rule Description",
     "View.Localization.CheckLocalizations": "Check Localization",
+    "View.Localization.GenerateAi": "Generate (AI)",
+    "View.Localization.GenerateAiDone": "i18n AI: fields updated. Review and click Save.",
     "View.Localization.LocalizationExamples": "Check Result",
     "View.Localization.LocalizationCriteria": "Localization Criteria",
     "View.Localization.Criteria": "Criteria",
