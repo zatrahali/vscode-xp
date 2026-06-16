@@ -39,6 +39,7 @@ import { LocalizationEditorViewProvider } from './views/localization/localizatio
 import { CommonCommands } from './models/command/commonCommands';
 import { ToolsManager } from './models/content/toolsManager';
 import { SetKBTVersionCommand } from './models/siemj/setKBTVersionCommand';
+import { EditorConfigRecommendation } from './ext/editorConfigRecommendation';
 
 export let Log: Logger;
 let client: LanguageClient;
@@ -143,6 +144,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
     // Расширение нативного контекстного меню.
     // TestsFormatContentMenuExtension.init(context);
+
+    // Рекомендация установки EditorConfig для корректной работы с .editorconfig.
+    EditorConfigRecommendation.init(context);
 
     // Подпись функций.
     await XpSignatureHelpProvider.init(context);
